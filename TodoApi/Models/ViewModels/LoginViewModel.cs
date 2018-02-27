@@ -1,11 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using TodoApi.Constants;
 
 namespace TodoApi.Models.ViewModels
 {
+    /// <summary>
+    /// The expected attributes when a user authenticates.
+    /// </summary>
     public class LoginViewModel
     {
+        /// <summary>
+        /// The email of a user.
+        /// </summary>
+        [Required(ErrorMessage = ErrorMessages.AccountEmailIsRequired)]
+        [DataType(DataType.EmailAddress)]
+        public string Email { get; set; }
+
+        /// <summary>
+        /// The password of a user.
+        /// </summary>
+        [Required(ErrorMessage = ErrorMessages.AccountPasswordIsRequired)]
+        [StringLength(
+            PasswordLimits.AccountMaxPasswordLength,
+            ErrorMessage = ErrorMessages.AccountPasswordInvalidLength,
+            MinimumLength = PasswordLimits.AccountMinPasswordLength)]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
     }
 }

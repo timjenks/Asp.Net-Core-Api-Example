@@ -5,7 +5,7 @@ namespace TodoApi.Constants
     /// <summary>
     /// A static collection of values that have to do with passwords.
     /// </summary>
-    public static class Password
+    public static class PasswordLimits
     {
         /// <summary>
         /// Minimum password length as string.

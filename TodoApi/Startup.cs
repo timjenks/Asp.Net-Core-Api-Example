@@ -50,7 +50,7 @@ namespace TodoApi
             // Identity
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
-                options.Password = Password.PasswordSettings;
+                options.Password = PasswordLimits.PasswordSettings;
             }).AddEntityFrameworkStores<AppDataContext>().AddDefaultTokenProviders();
 
             // JWT Authentication

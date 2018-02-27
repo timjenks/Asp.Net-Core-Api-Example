@@ -23,6 +23,41 @@
             + TodoLimits.DescriptionMaxLengthString 
             + " at most";
 
+        /// <summary>
+        /// When todo id is missing.
+        /// </summary>
         public const string TodoIdRequired = "Todo id is required";
+
+        /// <summary>
+        /// When email is missing in login or register.
+        /// </summary>
+        public const string AccountEmailIsRequired = "Email is required";
+
+        /// <summary>
+        /// When password is missing in login or register.
+        /// </summary>
+        public const string AccountPasswordIsRequired = "Password is required";
+
+        /// <summary>
+        /// When password has invalid length.
+        /// </summary>
+        public const string AccountPasswordInvalidLength =
+            "Password must be of length between "
+            + PasswordLimits.AccountMinPasswordLengthString
+            + " and "
+            + PasswordLimits.AccountMaxPasswordLengthString;
+
+        /// <summary>
+        /// When name of user is missing.
+        /// </summary>
+        public const string UserNameRequired = "Name is required";
+
+        /// <summary>
+        /// When user name (not username) is too long.
+        /// </summary>
+        public const string UserNameMaxLength =
+            "Names can be of length "
+            + UserLimits.NameMaxLengthString
+            + " at most";
     }
 }
