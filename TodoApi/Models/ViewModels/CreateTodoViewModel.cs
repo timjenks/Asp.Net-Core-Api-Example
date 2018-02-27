@@ -4,6 +4,9 @@ using TodoApi.Constants;
 
 namespace TodoApi.Models.ViewModels
 {
+    /// <summary>
+    /// The expected attributes when creating a new todo.
+    /// </summary>
     public class CreateTodoViewModel
     {
         /// <summary>
@@ -17,7 +20,7 @@ namespace TodoApi.Models.ViewModels
         /// A description of the todo.
         /// </summary>
         [Required(ErrorMessage = ErrorMessages.TodoDescriptionRequired)]
-        [MaxLength(TodoLimits.MaxLength, ErrorMessage = ErrorMessages.TodoDescriptionMaxLength)]
+        [MaxLength(TodoLimits.DescriptionMaxLength, ErrorMessage = ErrorMessages.TodoDescriptionMaxLength)]
         public string Description { get; set; }
     }
 }

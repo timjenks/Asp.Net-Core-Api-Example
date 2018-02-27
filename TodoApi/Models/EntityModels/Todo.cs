@@ -1,4 +1,5 @@
 ﻿using System;
+using TodoApi.Models.ViewModels;
 
 namespace TodoApi.Models.EntityModels
 {
@@ -11,6 +12,16 @@ namespace TodoApi.Models.EntityModels
         /// No argument constructor.
         /// </summary>
         public Todo() { }
+
+        /// <summary>
+        /// Map a view model to a corresponding entity.
+        /// </summary>
+        /// <param name="model">A model for creating todos</param>
+        public Todo(CreateTodoViewModel model)
+        {
+            Due = model.Due.Value;
+            Description = string.Copy(model.Description);
+        }
 
         /// <summary>
         /// A unique identifier for todos.
