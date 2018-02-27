@@ -25,6 +25,36 @@ namespace TodoApi.Controllers
         }
 
         /// <summary>
+        /// Get a specific todo given its id.
+        /// GET api/{version}/todo/{id}
+        /// </summary>
+        /// <param name="todoId">The id of the todo requested</param>
+        /// <returns>200 and todo dto if found, 404 otherwise</returns>
+        [HttpGet("{todoId:int}", Name = MethodNames.GetSingleTodoMethodName)]
+        public async Task<IActionResult> GetTodo(int todoId)
+        {
+            return Ok();
+        }
+
+        /// <summary>
+        /// Returning all todos.
+        /// GET api/{version}/tood
+        /// </summary>
+        /// <param name="year">With given due date year</param>
+        /// <param name="month">With given due date month</param>
+        /// <param name="day">With given due date daay</param>
+        /// <returns>200 and a list of all of the todos</returns>
+        [HttpGet("")]
+        public async Task<IActionResult> GetAllTodos(
+            [FromQuery] string year = null,
+            [FromQuery] string month = null,
+            [FromQuery] string day = null
+        )
+        {
+            return Ok();
+        }
+
+        /// <summary>
         /// Create a new todo.
         /// POST api/{version}/todo
         /// </summary>
@@ -41,9 +71,32 @@ namespace TodoApi.Controllers
             {
                 return BadRequest(ModelState);
             }
-            // todo CreatedAt...
             var id = await _todoService.CreateTodoAsync(model);
-            return StatusCode(201); // CreatedAtRoute("", new { }, null);
+            return CreatedAtRoute(MethodNames.GetSingleTodoMethodName, new { todoId = id }, null);
+        }
+
+        /// <summary>
+        /// Delete a specific todo.
+        /// DELETE api/{version}/todo/{id}
+        /// </summary>
+        /// <param name="todoId">The id of the todo requested</param>
+        /// <returns>204 if successful, 404 otherwise</returns>
+        [HttpDelete("{todoId:int}")]
+        public async Task<IActionResult> RemoveTodo(int todoId)
+        {
+            return Ok();
+        }
+
+        /// <summary>
+        /// Edit an existing todo.
+        /// PUT api/{version}/dodo
+        /// </summary>
+        /// <param name="changedTodo">Data containing id of the todo to edit and edited fields</param>
+        /// <returns>400 if invalid body, 404 if todo is not found, 200 otherwise</returns>
+        [HttpPut("")]
+        public async Task<IActionResult> EditTodo([FromBody] EditTodoViewModel changedTodo)
+        {
+            return Ok();
         }
     }
 }

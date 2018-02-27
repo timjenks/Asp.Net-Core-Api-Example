@@ -8,7 +8,7 @@
         /// <summary>
         /// When todo due date is missing.
         /// </summary>
-        public const string TodoDueRequired = "Todo required a due date";
+        public const string TodoDueRequired = "Todo due date is required";
 
         /// <summary>
         /// When todo description is missing.
@@ -22,5 +22,7 @@
             "Todo description can be of length " 
             + TodoLimits.DescriptionMaxLengthString 
             + " at most";
+
+        public const string TodoIdRequired = "Todo id is required";
     }
 }
