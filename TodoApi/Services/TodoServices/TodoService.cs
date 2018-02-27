@@ -1,11 +1,15 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TodoApi.Constants;
+using System.Linq;
 using TodoApi.Data;
+using TodoApi.Exceptions;
 using TodoApi.Models.DtoModels;
 using TodoApi.Models.EntityModels;
 using TodoApi.Models.ViewModels;
+using TodoApi.Utils.TimeUtils;
 
 namespace TodoApi.Services.TodoServices
 {
@@ -30,15 +34,27 @@ namespace TodoApi.Services.TodoServices
         }
 
         /// <inheritdoc />
-        public Task<TodoDto> GetTodoByIdAsync(int id)
+        public async Task<TodoDto> GetTodoByIdAsync(int id)
         {
-            throw new System.NotImplementedException();
+            var todo = await _db.Todo.SingleOrDefaultAsync(t => t.Id == id);
+            if (todo == null)
+            {
+                throw new TodoNotFoundException();
+            }
+            return new TodoDto(todo);
         }
 
         /// <inheritdoc />
-        public Task<IEnumerable<TodoDto>> GetAllTodosOrderedByDueAsync(string year, string month, string day)
+        public async Task<IEnumerable<TodoDto>> GetAllTodosOrderedByDueAsync(string year, string month, string day)
         {
-            throw new System.NotImplementedException();
+            // If any of the parameters is null, they are ignored.
+            if (year == null || month == null || day == null)
+            {
+                return await GetAllTodosOrderedByDueWithNoFilterAsync();
+            }
+            // if date creation was unsuccesful, we return an empty list
+            var date = QueryDateBuilder.CreateDate(year, month, day);
+            return date == null ? new List<TodoDto>() : await GetAllTodosForDayOrderedByDueAsync(date.Value);
         }
 
         /// <inheritdoc />
@@ -51,15 +67,43 @@ namespace TodoApi.Services.TodoServices
         }
 
         /// <inheritdoc />
-        public Task RemoveTodoByIdAsync(int id)
+        public async Task RemoveTodoByIdAsync(int id)
         {
-            throw new System.NotImplementedException();
+            var todo = await _db.Todo.SingleOrDefaultAsync(t => t.Id == id);
+            if (todo == null)
+            {
+                throw new TodoNotFoundException();
+            }
+            _db.Remove(todo);
+            await _db.SaveChangesAsync();
         }
 
         /// <inheritdoc />
-        public Task EditTodoAsync(EditTodoViewModel model)
+        public async Task EditTodoAsync(EditTodoViewModel model)
         {
-            throw new System.NotImplementedException();
+            var todo = await _db.Todo.SingleOrDefaultAsync(t => t.Id == model.Id);
+            if (todo == null)
+            {
+                throw new TodoNotFoundException();
+            }
+            todo.Edit(model);
+            await _db.SaveChangesAsync();
         }
+
+        private async Task<IEnumerable<TodoDto>> GetAllTodosOrderedByDueWithNoFilterAsync()
+        {
+            return await (from t in _db.Todo
+                          orderby t.Due
+                          select new TodoDto(t)).ToListAsync();
+        }
+
+        private async Task<IEnumerable<TodoDto>> GetAllTodosForDayOrderedByDueAsync(DateTime date)
+        {
+            return await (from t in _db.Todo
+                          where t.Due.Date == date
+                          orderby t.Due
+                          select new TodoDto(t)).ToListAsync();
+        }
+
     }
 }

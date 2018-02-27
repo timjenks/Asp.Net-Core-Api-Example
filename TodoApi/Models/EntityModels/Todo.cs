@@ -24,6 +24,16 @@ namespace TodoApi.Models.EntityModels
         }
 
         /// <summary>
+        /// Edit this entity using a editing view model.
+        /// </summary>
+        /// <param name="model">A view model containing changed fields</param>
+        public void Edit(EditTodoViewModel model)
+        {
+            Due = model.Due.Value;
+            Description = string.Copy(model.Description);
+        }
+
+        /// <summary>
         /// A unique identifier for todos.
         /// </summary>
         public int Id { get; set; }
