@@ -43,11 +43,7 @@ namespace TodoApi.Services.TodoServices
         /// <inheritdoc />
         public async Task<int> CreateTodoAsync(CreateTodoViewModel todo)
         {
-            var newTodo = new Todo
-            {
-                Due = todo.Due.Value,
-                Description = todo.Description
-            };
+            var newTodo = new Todo(todo);
             await _db.AddAsync(newTodo);
             await _db.SaveChangesAsync();
             return newTodo.Id;
