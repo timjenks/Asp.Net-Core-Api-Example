@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TodoApi.Data;
+using TodoApi.Models.DtoModels;
 using TodoApi.Models.EntityModels;
 using TodoApi.Models.ViewModels;
 
@@ -27,6 +29,18 @@ namespace TodoApi.Services.TodoServices
         }
 
         /// <inheritdoc />
+        public Task<TodoDto> GetTodoByIdAsync(int id)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public Task<IEnumerable<TodoDto>> GetAllTodosOrderedByDueAsync(string year, string month, string day)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <inheritdoc />
         public async Task<int> CreateTodoAsync(CreateTodoViewModel todo)
         {
             var newTodo = new Todo
@@ -37,6 +51,18 @@ namespace TodoApi.Services.TodoServices
             await _db.AddAsync(newTodo);
             await _db.SaveChangesAsync();
             return newTodo.Id;
+        }
+
+        /// <inheritdoc />
+        public Task RemoveTodoByIdAsync(int id)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public Task EditTodoAsync(EditTodoViewModel model)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
