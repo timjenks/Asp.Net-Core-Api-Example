@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using TodoApi.Constants;
+using TodoApi.Exceptions;
 using TodoApi.Models.ViewModels;
+using TodoApi.Services.AccountServices;
 
 namespace TodoApi.Controllers
 {
@@ -12,26 +14,69 @@ namespace TodoApi.Controllers
     [Route(Routes.AccountRoute)]
     public class AccountController : Controller
     {
+        private readonly AccountService _accountService;
+
         /// <summary>
-        /// 
+        /// TODO
         /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        [HttpGet("")]
-        public async Task<IActionResult> Login([FromBody] LoginViewModel model)
+        /// <param name="accountService">TODO</param>
+        public AccountController(AccountService accountService)
         {
-            return Ok();
+            _accountService = accountService;
         }
 
         /// <summary>
-        /// 
+        /// TODO
         /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
+        /// <param name="model">TODO</param>
+        /// <returns>TODO</returns>
+        [HttpGet("")]
+        public async Task<IActionResult> Login([FromBody] LoginViewModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest();
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var token = await _accountService.Login(model);
+                return Ok(token);
+            }
+            catch (LoginFailException)
+            {
+                return Unauthorized();
+            }
+        }
+
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <param name="model">TODO</param>
+        /// <returns>TODO</returns>
         [HttpPost("")]
         public async Task<IActionResult> Register([FromBody] RegisterViewModel model)
         {
-            return Ok();
+            if (model == null)
+            {
+                return BadRequest();
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var token = await _accountService.Register(model);
+                return Ok(token);
+            }
+            catch (RegisterFailException)
+            {
+                return Unauthorized();
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
+using TodoApi.Models.ViewModels;
 
 namespace TodoApi.Models.EntityModels
 {
@@ -12,6 +13,17 @@ namespace TodoApi.Models.EntityModels
         /// No argument constructor.
         /// </summary>
         public ApplicationUser() { }
+
+        /// <summary>
+        /// Map a view model to entity.
+        /// </summary>
+        /// <param name="model">A view model containing email and name</param>
+        public ApplicationUser(RegisterViewModel model)
+        {
+            Email = string.Copy(model.Email);
+            UserName = string.Copy(model.Email);
+            Name = string.Copy(model.Name);
+        }
 
         /// <summary>
         /// The name of the user (UserName field is used for email).

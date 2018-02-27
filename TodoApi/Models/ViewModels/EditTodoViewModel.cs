@@ -4,6 +4,9 @@ using TodoApi.Constants;
 
 namespace TodoApi.Models.ViewModels
 {
+    /// <summary>
+    /// The expected attributes when editing an existing todo.
+    /// </summary>
     public class EditTodoViewModel
     {
         [Required(ErrorMessage = ErrorMessages.TodoIdRequired)]

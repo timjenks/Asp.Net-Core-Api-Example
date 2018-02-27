@@ -12,10 +12,10 @@ namespace TodoApi.Controllers
     public class UserController : Controller
     {
         /// <summary>
-        /// 
+        /// TODO
         /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
+        /// <param name="userId">TODO</param>
+        /// <returns>TODO</returns>
         [HttpGet("{userId:string}")]
         public async Task<IActionResult> GetUserById(string userId)
         {
@@ -23,9 +23,9 @@ namespace TodoApi.Controllers
         }
 
         /// <summary>
-        /// 
+        /// TODO
         /// </summary>
-        /// <returns></returns>
+        /// <returns>TODO</returns>
         [HttpGet("")]
         public async Task<IActionResult> GetAllUsers()
         {
@@ -33,10 +33,10 @@ namespace TodoApi.Controllers
         }
 
         /// <summary>
-        /// 
+        /// TODO
         /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
+        /// <param name="userId">TODO</param>
+        /// <returns>TODO</returns>
         [HttpDelete("{userId:string}")]
         public async Task<IActionResult> RemoveUserById(string userId)
         {

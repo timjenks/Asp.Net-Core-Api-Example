@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using TodoApi.Constants;
 using TodoApi.Data;
 using TodoApi.Models.EntityModels;
+using TodoApi.Services.AccountServices;
 using TodoApi.Services.TodoServices;
 
 namespace TodoApi
@@ -83,6 +84,7 @@ namespace TodoApi
 
             // Inject services
             services.AddTransient<ITodoService, TodoService>();
+            services.AddTransient<IAccountService, AccountService>();
 
             services.AddCors();
             services.AddMvc();

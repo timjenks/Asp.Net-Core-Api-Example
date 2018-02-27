@@ -1,6 +1,5 @@
 ﻿namespace TodoApi.Constants
 {
-
     /// <summary>
     /// A static wrapper for various values for users.
     /// </summary>
