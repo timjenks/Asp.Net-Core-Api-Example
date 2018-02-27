@@ -7,8 +7,6 @@
   <ItemGroup>
     <Folder Include="Exceptions\" />
     <Folder Include="Models\DtoModels\" />
-    <Folder Include="Models\ViewModels\" />
-    <Folder Include="Services\" />
     <Folder Include="Utils\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>

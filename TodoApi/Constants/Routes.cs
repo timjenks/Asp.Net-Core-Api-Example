@@ -5,7 +5,7 @@
     /// support for multiple versions, so that each branch can change the
     /// version at one place.
     /// </summary>
-    public class Routes
+    public static class Routes
     {
         /// <summary>
         /// The route prefix for all controllers.

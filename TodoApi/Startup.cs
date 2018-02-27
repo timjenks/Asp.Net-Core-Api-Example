@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using TodoApi.Constants;
 using TodoApi.Data;
 using TodoApi.Models.EntityModels;
+using TodoApi.Services.TodoServices;
 
 namespace TodoApi
 {
@@ -79,6 +80,9 @@ namespace TodoApi
                         ClockSkew = TimeSpan.Zero
                     };
                 });
+
+            // Inject services
+            services.AddTransient<ITodoService, TodoService>();
 
             services.AddCors();
             services.AddMvc();
