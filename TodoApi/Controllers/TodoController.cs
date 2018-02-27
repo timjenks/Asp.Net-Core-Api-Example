@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using TodoApi.Constants;
+using TodoApi.Exceptions;
 using TodoApi.Models.ViewModels;
 using TodoApi.Services.TodoServices;
 
@@ -33,7 +34,14 @@ namespace TodoApi.Controllers
         [HttpGet("{todoId:int}", Name = MethodNames.GetSingleTodoMethodName)]
         public async Task<IActionResult> GetTodo(int todoId)
         {
-            return Ok();
+            try
+            {
+                return Ok(await _todoService.GetTodoByIdAsync(todoId));
+            }
+            catch (TodoNotFoundException)
+            {
+                return NotFound();
+            }
         }
 
         /// <summary>
@@ -51,7 +59,7 @@ namespace TodoApi.Controllers
             [FromQuery] string day = null
         )
         {
-            return Ok();
+            return Ok(await _todoService.GetAllTodosOrderedByDueAsync(year, month, day));
         }
 
         /// <summary>
@@ -84,7 +92,15 @@ namespace TodoApi.Controllers
         [HttpDelete("{todoId:int}")]
         public async Task<IActionResult> RemoveTodo(int todoId)
         {
-            return Ok();
+            try
+            {
+                await _todoService.RemoveTodoByIdAsync(todoId);
+                return NoContent();
+            }
+            catch (TodoNotFoundException)
+            {
+                return NotFound();
+            }
         }
 
         /// <summary>
@@ -96,7 +112,23 @@ namespace TodoApi.Controllers
         [HttpPut("")]
         public async Task<IActionResult> EditTodo([FromBody] EditTodoViewModel changedTodo)
         {
-            return Ok();
+            if (changedTodo == null)
+            {
+                return BadRequest();
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                await _todoService.EditTodoAsync(changedTodo);
+                return Ok();
+            }
+            catch (TodoNotFoundException)
+            {
+                return NotFound();
+            }
         }
     }
 }

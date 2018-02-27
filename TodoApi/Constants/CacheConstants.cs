@@ -11,12 +11,12 @@ namespace TodoApi.Constants
         /// <summary>
         /// The cache key for all todos.
         /// </summary>
-        public const string AllEventsCacheKey = "c_todos";
+        public const string AllTodosCacheKey = "c_todos";
 
         /// <summary>
         /// The cache key prefix for a single todo.
         /// </summary>
-        private const string SingleEventCacheKey = "c_todo";
+        private const string SingleTodoCacheKey = "c_todo";
 
         /// <summary>
         /// The cache key of a single todo.
@@ -25,7 +25,7 @@ namespace TodoApi.Constants
         /// <returns>The cache memory key for the todo with given id</returns>
         public static string GetSingleTodoCacheKey(int id)
         {
-            return SingleEventCacheKey + id;
+            return SingleTodoCacheKey + id;
         }
 
         /// <summary>

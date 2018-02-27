@@ -34,6 +34,7 @@ namespace TodoApi.Services.TodoServices
         }
 
         /// <inheritdoc />
+        /// <exception cref="TodoNotFoundException">When todo is not found</exception>
         public async Task<TodoDto> GetTodoByIdAsync(int id)
         {
             var todo = await _db.Todo.SingleOrDefaultAsync(t => t.Id == id);
@@ -67,6 +68,7 @@ namespace TodoApi.Services.TodoServices
         }
 
         /// <inheritdoc />
+        /// <exception cref="TodoNotFoundException">When todo is not found</exception>
         public async Task RemoveTodoByIdAsync(int id)
         {
             var todo = await _db.Todo.SingleOrDefaultAsync(t => t.Id == id);
@@ -79,6 +81,7 @@ namespace TodoApi.Services.TodoServices
         }
 
         /// <inheritdoc />
+        /// <exception cref="TodoNotFoundException">When todo is not found</exception>
         public async Task EditTodoAsync(EditTodoViewModel model)
         {
             var todo = await _db.Todo.SingleOrDefaultAsync(t => t.Id == model.Id);
@@ -90,6 +93,10 @@ namespace TodoApi.Services.TodoServices
             await _db.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Returns all todos with no filtering.
+        /// </summary>
+        /// <returns>List of todos</returns>
         private async Task<IEnumerable<TodoDto>> GetAllTodosOrderedByDueWithNoFilterAsync()
         {
             return await (from t in _db.Todo
@@ -97,6 +104,11 @@ namespace TodoApi.Services.TodoServices
                           select new TodoDto(t)).ToListAsync();
         }
 
+        /// <summary>
+        /// Filters the list by a date (ignoring time).
+        /// </summary>
+        /// <param name="date">Valid date to filter by</param>
+        /// <returns>List of todos</returns>
         private async Task<IEnumerable<TodoDto>> GetAllTodosForDayOrderedByDueAsync(DateTime date)
         {
             return await (from t in _db.Todo
