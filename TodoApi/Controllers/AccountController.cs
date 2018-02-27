@@ -14,13 +14,13 @@ namespace TodoApi.Controllers
     [Route(Routes.AccountRoute)]
     public class AccountController : Controller
     {
-        private readonly AccountService _accountService;
+        private readonly IAccountService _accountService;
 
         /// <summary>
         /// TODO
         /// </summary>
         /// <param name="accountService">TODO</param>
-        public AccountController(AccountService accountService)
+        public AccountController(IAccountService accountService)
         {
             _accountService = accountService;
         }

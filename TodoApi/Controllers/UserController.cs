@@ -16,7 +16,7 @@ namespace TodoApi.Controllers
         /// </summary>
         /// <param name="userId">TODO</param>
         /// <returns>TODO</returns>
-        [HttpGet("{userId:string}")]
+        [HttpGet("{userId}")]
         public async Task<IActionResult> GetUserById(string userId)
         {
             return Ok();
@@ -37,7 +37,7 @@ namespace TodoApi.Controllers
         /// </summary>
         /// <param name="userId">TODO</param>
         /// <returns>TODO</returns>
-        [HttpDelete("{userId:string}")]
+        [HttpDelete("{userId}")]
         public async Task<IActionResult> RemoveUserById(string userId)
         {
             return Ok();
