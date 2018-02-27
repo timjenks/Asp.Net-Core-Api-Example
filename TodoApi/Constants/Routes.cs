@@ -16,5 +16,15 @@
         /// The route prefix for TodoController.
         /// </summary>
         public const string TodoRoute = VersionPrefix + "todo";
+
+        /// <summary>
+        /// The route prefix for AccountController.
+        /// </summary>
+        public const string AccountRoute = VersionPrefix + "account";
+
+        /// <summary>
+        /// The route prefix for UserController.
+        /// </summary>
+        public const string UserRoute = VersionPrefix + "user";
     }
 }
