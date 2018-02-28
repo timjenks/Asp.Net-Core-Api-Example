@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using TodoApi.Models.ViewModels;
 
-namespace TodoApi.Services.AccountServices
+namespace TodoApi.Services.Interfaces
 {
     /// <summary>
     /// TODO

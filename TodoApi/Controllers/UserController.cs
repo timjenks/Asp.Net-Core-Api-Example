@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using TodoApi.Constants;
 using TodoApi.Exceptions;
-using TodoApi.Services.UserServices;
+using TodoApi.Services.Interfaces;
 
 namespace TodoApi.Controllers
 {
@@ -35,7 +35,14 @@ namespace TodoApi.Controllers
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetUserById(string userId)
         {
-            return Ok();
+            try
+            {
+                return Ok(await _userService.GetUserByIdAsync(userId));
+            }
+            catch(UserNotFoundException)
+            {
+                return NotFound();
+            }
         }
 
         /// <summary>
@@ -45,7 +52,7 @@ namespace TodoApi.Controllers
         [HttpGet("")]
         public async Task<IActionResult> GetAllUsers()
         {
-            return Ok();
+            return Ok(await _userService.GetAllUsersAsync());
         }
 
         /// <summary>

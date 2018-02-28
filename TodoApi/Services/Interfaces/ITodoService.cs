@@ -3,8 +3,9 @@ using System.Threading.Tasks;
 using TodoApi.Models.DtoModels;
 using TodoApi.Models.ViewModels;
 
-namespace TodoApi.Services.TodoServices
+namespace TodoApi.Services.Interfaces
 {
+
     /// <summary>
     /// An interface for a todo service that defines 
     /// what methods such a service must implement.

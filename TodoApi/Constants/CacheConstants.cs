@@ -21,6 +21,16 @@ namespace TodoApi.Constants
         /// <summary>
         /// TODO
         /// </summary>
+        private const string AllUsersCacheKey = "c_users";
+
+        /// <summary>
+        /// TODO
+        /// </summary>
+        private const string SingleUserCacheKey = "c_user";
+
+        /// <summary>
+        /// TODO
+        /// </summary>
         /// <param name="userId">TODO</param>
         /// <returns>TODO</returns>
         public static string GetAllTodosCacheKey(string userId)
@@ -40,9 +50,19 @@ namespace TodoApi.Constants
         }
 
         /// <summary>
+        /// TODO
+        /// </summary>
+        /// <param name="userId">TODO</param>
+        /// <returns>TODO</returns>
+        public static string GetSingleUserCacheKey(string userId)
+        {
+            return string.Format("{0}_{1}", SingleUserCacheKey, userId);
+        }
+
+        /// <summary>
         /// The default timeout of a cache memory entry.
         /// </summary>
-        public static readonly TimeSpan DefaultCacheTimeout = TimeSpan.FromHours(2);
+        public const int DefaultCacheTimeoutHours = 1;
 
         /// <summary>
         /// Create and return cache options with the default life span.
@@ -50,7 +70,8 @@ namespace TodoApi.Constants
         /// <returns>Options with life span</returns>
         public static MemoryCacheEntryOptions GetDefaultCacheOptions()
         {
-            return new MemoryCacheEntryOptions().SetSlidingExpiration(DefaultCacheTimeout);
+            return new MemoryCacheEntryOptions()
+                .SetSlidingExpiration(TimeSpan.FromHours(DefaultCacheTimeoutHours));
         }
     }
 }

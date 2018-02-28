@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TodoApi.Models.DtoModels;
 
-namespace TodoApi.Services.UserServices
+namespace TodoApi.Services.Interfaces
 {
     /// <summary>
     /// TODO

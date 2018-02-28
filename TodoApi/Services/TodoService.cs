@@ -11,9 +11,11 @@ using TodoApi.Models.EntityModels;
 using TodoApi.Models.ViewModels;
 using TodoApi.Utils.TimeUtils;
 using Microsoft.AspNetCore.Identity;
+using TodoApi.Services.Interfaces;
 
-namespace TodoApi.Services.TodoServices
+namespace TodoApi.Services
 {
+
     /// <inheritdoc />
     /// <summary>
     /// The todo service that the production API uses.
@@ -33,7 +35,7 @@ namespace TodoApi.Services.TodoServices
         public TodoService
         (
             AppDataContext db,
-            UserManager<ApplicationUser> userManager, 
+            UserManager<ApplicationUser> userManager,
             IMemoryCache cache
         )
         {
@@ -65,8 +67,8 @@ namespace TodoApi.Services.TodoServices
             }
             // if date creation was unsuccesful, we return an empty list
             var date = QueryDateBuilder.CreateDate(year, month, day);
-            return date == null ? 
-                new List<TodoDto>() : 
+            return date == null ?
+                new List<TodoDto>() :
                 await GetAllTodosForDayOrderedByDueAsync(date.Value, userId);
         }
 

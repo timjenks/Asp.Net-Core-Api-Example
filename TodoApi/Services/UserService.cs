@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,9 +8,11 @@ using TodoApi.Data;
 using TodoApi.Exceptions;
 using TodoApi.Models.DtoModels;
 using TodoApi.Models.EntityModels;
+using TodoApi.Services.Interfaces;
 
-namespace TodoApi.Services.UserServices
+namespace TodoApi.Services
 {
+
     /// <summary>
     /// TODO
     /// </summary>

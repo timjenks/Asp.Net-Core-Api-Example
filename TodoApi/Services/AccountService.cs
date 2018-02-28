@@ -13,9 +13,11 @@ using TodoApi.Constants;
 using TodoApi.Exceptions;
 using TodoApi.Models.EntityModels;
 using TodoApi.Models.ViewModels;
+using TodoApi.Services.Interfaces;
 
-namespace TodoApi.Services.AccountServices
+namespace TodoApi.Services
 {
+
     /// <summary>
     /// TODO
     /// </summary>
