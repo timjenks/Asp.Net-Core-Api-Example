@@ -30,7 +30,7 @@ namespace TodoApi.Controllers
         /// </summary>
         /// <param name="model">TODO</param>
         /// <returns>TODO</returns>
-        [HttpGet("")]
+        [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginViewModel model)
         {
             if (model == null)
@@ -57,7 +57,7 @@ namespace TodoApi.Controllers
         /// </summary>
         /// <param name="model">TODO</param>
         /// <returns>TODO</returns>
-        [HttpPost("")]
+        [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterViewModel model)
         {
             if (model == null)

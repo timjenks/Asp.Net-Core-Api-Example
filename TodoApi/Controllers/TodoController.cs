@@ -1,9 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TodoApi.Constants;
 using TodoApi.Exceptions;
 using TodoApi.Models.ViewModels;
 using TodoApi.Services.TodoServices;
+using System.Security.Claims;
 
 namespace TodoApi.Controllers
 {
@@ -12,6 +15,7 @@ namespace TodoApi.Controllers
     /// A controller for all todo related requests.
     /// </summary>
     [Route(Routes.TodoRoute)]
+    [Authorize(Roles = "Admin, User")]
     public class TodoController : Controller
     {
         private readonly ITodoService _todoService;
@@ -36,7 +40,8 @@ namespace TodoApi.Controllers
         {
             try
             {
-                return Ok(await _todoService.GetTodoByIdAsync(todoId));
+                var userId = User.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                return Ok(await _todoService.GetTodoByIdAsync(todoId, userId));
             }
             catch (TodoNotFoundException)
             {
@@ -59,7 +64,8 @@ namespace TodoApi.Controllers
             [FromQuery] string day = null
         )
         {
-            return Ok(await _todoService.GetAllTodosOrderedByDueAsync(year, month, day));
+            var userId = User.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            return Ok(await _todoService.GetAllTodosOrderedByDueAsync(year, month, day, userId));
         }
 
         /// <summary>
@@ -79,8 +85,16 @@ namespace TodoApi.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var id = await _todoService.CreateTodoAsync(model);
-            return CreatedAtRoute(MethodNames.GetSingleTodoMethodName, new { todoId = id }, null);
+            try
+            {
+                var userId = User.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                var id = await _todoService.CreateTodoAsync(model, userId);
+                return CreatedAtRoute(MethodNames.GetSingleTodoMethodName, new { todoId = id }, null);
+            }
+            catch (UserNotFoundException)
+            {
+                return Unauthorized();
+            }
         }
 
         /// <summary>
@@ -94,7 +108,8 @@ namespace TodoApi.Controllers
         {
             try
             {
-                await _todoService.RemoveTodoByIdAsync(todoId);
+                var userId = User.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                await _todoService.RemoveTodoByIdAsync(todoId, userId);
                 return NoContent();
             }
             catch (TodoNotFoundException)
@@ -122,7 +137,8 @@ namespace TodoApi.Controllers
             }
             try
             {
-                await _todoService.EditTodoAsync(changedTodo);
+                var userId = User.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                await _todoService.EditTodoAsync(changedTodo, userId);
                 return Ok();
             }
             catch (TodoNotFoundException)

@@ -17,10 +17,12 @@ namespace TodoApi.Models.EntityModels
         /// Map a view model to a corresponding entity.
         /// </summary>
         /// <param name="model">A model for creating todos</param>
-        public Todo(CreateTodoViewModel model)
+        /// <param name="user">The owner of this todo</param>
+        public Todo(CreateTodoViewModel model, ApplicationUser user)
         {
             Due = model.Due.Value;
             Description = string.Copy(model.Description);
+            Owner = user;
         }
 
         /// <summary>

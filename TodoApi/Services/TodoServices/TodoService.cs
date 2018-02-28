@@ -10,6 +10,7 @@ using TodoApi.Models.DtoModels;
 using TodoApi.Models.EntityModels;
 using TodoApi.Models.ViewModels;
 using TodoApi.Utils.TimeUtils;
+using Microsoft.AspNetCore.Identity;
 
 namespace TodoApi.Services.TodoServices
 {
@@ -20,24 +21,32 @@ namespace TodoApi.Services.TodoServices
     public class TodoService : ITodoService
     {
         private readonly AppDataContext _db;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMemoryCache _cache;
 
         /// <summary>
         /// A constructor that injects AppDataContext and MemoryCache.
         /// </summary>
         /// <param name="db">A DbContext to access a database</param>
+        /// <param name="userManager">TODO</param>
         /// <param name="cache">A cache memory to utilize RAM to save db queries</param>
-        public TodoService(AppDataContext db, IMemoryCache cache)
+        public TodoService
+        (
+            AppDataContext db,
+            UserManager<ApplicationUser> userManager, 
+            IMemoryCache cache
+        )
         {
             _db = db;
+            _userManager = userManager;
             _cache = cache;
         }
 
         /// <inheritdoc />
         /// <exception cref="TodoNotFoundException">When todo is not found</exception>
-        public async Task<TodoDto> GetTodoByIdAsync(int id)
+        public async Task<TodoDto> GetTodoByIdAsync(int id, string userId)
         {
-            var todo = await _db.Todo.SingleOrDefaultAsync(t => t.Id == id);
+            var todo = await _db.Todo.SingleOrDefaultAsync(t => t.Id == id && t.Owner.Id == userId);
             if (todo == null)
             {
                 throw new TodoNotFoundException();
@@ -46,22 +55,31 @@ namespace TodoApi.Services.TodoServices
         }
 
         /// <inheritdoc />
-        public async Task<IEnumerable<TodoDto>> GetAllTodosOrderedByDueAsync(string year, string month, string day)
+        public async Task<IEnumerable<TodoDto>> GetAllTodosOrderedByDueAsync(
+            string year, string month, string day, string userId)
         {
             // If any of the parameters is null, they are ignored.
             if (year == null || month == null || day == null)
             {
-                return await GetAllTodosOrderedByDueWithNoFilterAsync();
+                return await GetAllTodosOrderedByDueWithNoFilterAsync(userId);
             }
             // if date creation was unsuccesful, we return an empty list
             var date = QueryDateBuilder.CreateDate(year, month, day);
-            return date == null ? new List<TodoDto>() : await GetAllTodosForDayOrderedByDueAsync(date.Value);
+            return date == null ? 
+                new List<TodoDto>() : 
+                await GetAllTodosForDayOrderedByDueAsync(date.Value, userId);
         }
 
         /// <inheritdoc />
-        public async Task<int> CreateTodoAsync(CreateTodoViewModel todo)
+        /// <exception cref="UserNotFoundException">When todo is not found</exception>
+        public async Task<int> CreateTodoAsync(CreateTodoViewModel todo, string userId)
         {
-            var newTodo = new Todo(todo);
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                throw new UserNotFoundException();
+            }
+            var newTodo = new Todo(todo, user);
             await _db.AddAsync(newTodo);
             await _db.SaveChangesAsync();
             return newTodo.Id;
@@ -69,9 +87,9 @@ namespace TodoApi.Services.TodoServices
 
         /// <inheritdoc />
         /// <exception cref="TodoNotFoundException">When todo is not found</exception>
-        public async Task RemoveTodoByIdAsync(int id)
+        public async Task RemoveTodoByIdAsync(int id, string userId)
         {
-            var todo = await _db.Todo.SingleOrDefaultAsync(t => t.Id == id);
+            var todo = await _db.Todo.SingleOrDefaultAsync(t => t.Id == id && t.Owner.Id == userId);
             if (todo == null)
             {
                 throw new TodoNotFoundException();
@@ -82,9 +100,9 @@ namespace TodoApi.Services.TodoServices
 
         /// <inheritdoc />
         /// <exception cref="TodoNotFoundException">When todo is not found</exception>
-        public async Task EditTodoAsync(EditTodoViewModel model)
+        public async Task EditTodoAsync(EditTodoViewModel model, string userId)
         {
-            var todo = await _db.Todo.SingleOrDefaultAsync(t => t.Id == model.Id);
+            var todo = await _db.Todo.SingleOrDefaultAsync(t => t.Id == model.Id && t.Owner.Id == userId);
             if (todo == null)
             {
                 throw new TodoNotFoundException();
@@ -97,9 +115,10 @@ namespace TodoApi.Services.TodoServices
         /// Returns all todos with no filtering.
         /// </summary>
         /// <returns>List of todos</returns>
-        private async Task<IEnumerable<TodoDto>> GetAllTodosOrderedByDueWithNoFilterAsync()
+        private async Task<IEnumerable<TodoDto>> GetAllTodosOrderedByDueWithNoFilterAsync(string userId)
         {
             return await (from t in _db.Todo
+                          where t.Owner.Id == userId
                           orderby t.Due
                           select new TodoDto(t)).ToListAsync();
         }
@@ -109,10 +128,10 @@ namespace TodoApi.Services.TodoServices
         /// </summary>
         /// <param name="date">Valid date to filter by</param>
         /// <returns>List of todos</returns>
-        private async Task<IEnumerable<TodoDto>> GetAllTodosForDayOrderedByDueAsync(DateTime date)
+        private async Task<IEnumerable<TodoDto>> GetAllTodosForDayOrderedByDueAsync(DateTime date, string userId)
         {
             return await (from t in _db.Todo
-                          where t.Due.Date == date
+                          where t.Due.Date == date && t.Owner.Id == userId
                           orderby t.Due
                           select new TodoDto(t)).ToListAsync();
         }

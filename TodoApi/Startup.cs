@@ -14,6 +14,7 @@ using TodoApi.Data;
 using TodoApi.Models.EntityModels;
 using TodoApi.Services.AccountServices;
 using TodoApi.Services.TodoServices;
+using TodoApi.Services.UserServices;
 
 namespace TodoApi
 {
@@ -85,6 +86,7 @@ namespace TodoApi
             // Inject services
             services.AddTransient<ITodoService, TodoService>();
             services.AddTransient<IAccountService, AccountService>();
+            services.AddTransient<IUserService, UserService>();
 
             services.AddCors();
             services.AddMvc();

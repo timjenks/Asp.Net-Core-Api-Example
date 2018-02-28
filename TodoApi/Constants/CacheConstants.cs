@@ -19,13 +19,24 @@ namespace TodoApi.Constants
         private const string SingleTodoCacheKey = "c_todo";
 
         /// <summary>
+        /// TODO
+        /// </summary>
+        /// <param name="userId">TODO</param>
+        /// <returns>TODO</returns>
+        public static string GetAllTodosCacheKey(string userId)
+        {
+            return string.Format("{0}_{1}", AllTodosCacheKey, userId);
+        }
+
+        /// <summary>
         /// The cache key of a single todo.
         /// </summary>
         /// <param name="id">The id of an todo</param>
+        /// <param name="userId">The id of the owner</param>
         /// <returns>The cache memory key for the todo with given id</returns>
-        public static string GetSingleTodoCacheKey(int id)
+        public static string GetSingleTodoCacheKey(int id, string userId)
         {
-            return SingleTodoCacheKey + id;
+            return string.Format("{0}_{1}_{2}", SingleTodoCacheKey, id, userId);
         }
 
         /// <summary>
