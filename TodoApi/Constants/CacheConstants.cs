@@ -21,12 +21,17 @@ namespace TodoApi.Constants
         /// <summary>
         /// TODO
         /// </summary>
-        private const string AllUsersCacheKey = "c_users";
+        public const string AllUsersCacheKey = "c_users";
 
         /// <summary>
         /// TODO
         /// </summary>
         private const string SingleUserCacheKey = "c_user";
+
+        /// <summary>
+        /// The default timeout of a cache memory entry.
+        /// </summary>
+        private const int DefaultCacheTimeoutHours = 1;
 
         /// <summary>
         /// TODO
@@ -70,11 +75,6 @@ namespace TodoApi.Constants
         {
             return string.Format("{0}_{1}", SingleUserCacheKey, userId);
         }
-
-        /// <summary>
-        /// The default timeout of a cache memory entry.
-        /// </summary>
-        public const int DefaultCacheTimeoutHours = 1;
 
         /// <summary>
         /// Create and return cache options with the default life span.

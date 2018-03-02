@@ -148,7 +148,10 @@ namespace TodoApi.Services
                                where t.Owner.Id == userId
                                orderby t.Due
                                select new TodoDto(t)).ToListAsync();
-                _cache.Set(cacheKey, CacheConstants.GetDefaultCacheOptions());
+                if (todos.Count() > 0)
+                {
+                    _cache.Set(cacheKey, CacheConstants.GetDefaultCacheOptions());
+                }
             }
             return todos;
         }
@@ -167,7 +170,10 @@ namespace TodoApi.Services
                                where t.Due.Date == date && t.Owner.Id == userId
                                orderby t.Due
                                select new TodoDto(t)).ToListAsync();
-                _cache.Set(cacheKey, CacheConstants.GetDefaultCacheOptions());
+                if (todos.Count() > 0)
+                {
+                    _cache.Set(cacheKey, CacheConstants.GetDefaultCacheOptions());
+                }
             }
             return todos;
         }

@@ -4,6 +4,7 @@ using Microsoft.Extensions.Caching.Memory;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TodoApi.Constants;
 using TodoApi.Data;
 using TodoApi.Exceptions;
 using TodoApi.Models.DtoModels;
@@ -43,17 +44,28 @@ namespace TodoApi.Services
         /// <inheritdoc />
         public async Task<IEnumerable<ApplicationUserDto>> GetAllUsersAsync()
         {
-            return await _userManager.Users.Select(u => new ApplicationUserDto(u)).ToListAsync();
+            var cacheKey = CacheConstants.AllUsersCacheKey;
+            if (!_cache.TryGetValue(cacheKey, out IEnumerable<ApplicationUserDto> users))
+            {
+                users = await _userManager.Users.Select(u => new ApplicationUserDto(u)).ToListAsync();
+                _cache.Set(cacheKey, users, CacheConstants.GetDefaultCacheOptions());
+            }
+            return users;
         }
 
         /// <inheritdoc />
         /// <exception cref="TODO">TODO</exception>
         public async Task<ApplicationUserDto> GetUserByIdAsync(string userId)
         {
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
+            var cacheKey = CacheConstants.GetSingleUserCacheKey(userId);
+            if (!_cache.TryGetValue(cacheKey, out ApplicationUser user))
             {
-                throw new UserNotFoundException();
+                user = await _userManager.FindByIdAsync(userId);
+                if (user == null)
+                {
+                    throw new UserNotFoundException();
+                }
+                _cache.Set(cacheKey, user, CacheConstants.GetDefaultCacheOptions());
             }
             return new ApplicationUserDto(user);
         }
@@ -69,13 +81,24 @@ namespace TodoApi.Services
                 throw new UserNotFoundException();
             }
             await _db.Entry(userToRemove).Collection(u => u.Todos).LoadAsync();
+
+            foreach (Todo todo in userToRemove.Todos)
+            {
+                _cache.Remove(CacheConstants.GetSingleTodoCacheKey(todo.Id, userToRemove.Id));
+                _cache.Remove(CacheConstants.GetAllTodosForDayCacheKey(userToRemove.Id, todo.Due.Date));
+            }
+            _cache.Remove(CacheConstants.GetAllTodosCacheKey(userToRemove.Id));
             _db.RemoveRange(userToRemove.Todos);
+
             var res = await _userManager.DeleteAsync(userToRemove);
             if (!res.Succeeded)
             {
                 throw new RemoveUserFailedException();
             }
             await _db.SaveChangesAsync();
+
+            _cache.Remove(CacheConstants.GetSingleUserCacheKey(userToRemove.Id));
+            _cache.Remove(CacheConstants.AllUsersCacheKey);
         }
     }
 }
