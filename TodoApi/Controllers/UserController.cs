@@ -18,9 +18,9 @@ namespace TodoApi.Controllers
         private readonly IUserService _userService;
 
         /// <summary>
-        /// TODO
+        /// Constructor that injects a service.
         /// </summary>
-        /// <param name="userService">TODO</param>
+        /// <param name="userService">A service that implements IUserService</param>
         public UserController(IUserService userService)
         {
             _userService = userService;
@@ -28,10 +28,11 @@ namespace TodoApi.Controllers
 
 
         /// <summary>
-        /// TODO
+        /// Get a specific user given his id.
+        /// GET api/{version}/user/{id}
         /// </summary>
-        /// <param name="userId">TODO</param>
-        /// <returns>TODO</returns>
+        /// <param name="userId">The id of the requested user</param>
+        /// <returns>200 and user dto if successful, 404 otherwise</returns>
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetUserById(string userId)
         {
@@ -46,9 +47,10 @@ namespace TodoApi.Controllers
         }
 
         /// <summary>
-        /// TODO
+        /// Get all users.
+        /// GET api/{version}/user
         /// </summary>
-        /// <returns>TODO</returns>
+        /// <returns>200 and a list of user dto</returns>
         [HttpGet("")]
         public async Task<IActionResult> GetAllUsers()
         {
@@ -56,10 +58,11 @@ namespace TodoApi.Controllers
         }
 
         /// <summary>
-        /// TODO
+        /// Delete a specific user.
+        /// DELETE api/{version}/user/{id}
         /// </summary>
-        /// <param name="userId">TODO</param>
-        /// <returns>TODO</returns>
+        /// <param name="userId">The id of the requested user</param>
+        /// <returns>204 if successful, 404 if user is not found, 520 otherwise</returns>
         [HttpDelete("{userId}")]
         public async Task<IActionResult> RemoveUserById(string userId)
         {

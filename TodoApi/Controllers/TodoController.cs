@@ -40,7 +40,8 @@ namespace TodoApi.Controllers
         {
             try
             {
-                var userId = User.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                var userId = User.Claims.SingleOrDefault(c => 
+                    c.Type == ClaimTypes.NameIdentifier).Value;
                 return Ok(await _todoService.GetTodoByIdAsync(todoId, userId));
             }
             catch (TodoNotFoundException)
@@ -91,7 +92,11 @@ namespace TodoApi.Controllers
                 var userId = User.Claims.SingleOrDefault(c => 
                     c.Type == ClaimTypes.NameIdentifier).Value;
                 var id = await _todoService.CreateTodoAsync(model, userId);
-                return CreatedAtRoute(MethodNames.GetSingleTodoMethodName, new { todoId = id }, null);
+                return CreatedAtRoute(
+                    MethodNames.GetSingleTodoMethodName,
+                    new { todoId = id }, 
+                    null
+                );
             }
             catch (UserNotFoundException)
             {

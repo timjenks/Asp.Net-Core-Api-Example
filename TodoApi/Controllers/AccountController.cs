@@ -17,19 +17,21 @@ namespace TodoApi.Controllers
         private readonly IAccountService _accountService;
 
         /// <summary>
-        /// TODO
+        /// Constructor that injects a service.
         /// </summary>
-        /// <param name="accountService">TODO</param>
+        /// <param name="accountService">A service that implements IAccountService</param>
         public AccountController(IAccountService accountService)
         {
             _accountService = accountService;
         }
 
         /// <summary>
-        /// TODO
+        /// Request a token for an existing user.
+        /// POST api/{version}/account/login
         /// </summary>
-        /// <param name="model">TODO</param>
-        /// <returns>TODO</returns>
+        /// <param name="model">A model with login information</param>
+        /// <returns>200 and a bearer token if successful, 
+        /// 400 if missing data, 401 otherwise</returns>
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginViewModel model)
         {
@@ -53,10 +55,12 @@ namespace TodoApi.Controllers
         }
 
         /// <summary>
-        /// TODO
+        /// Request a token for a new user.
+        /// POST api/{version}/account/register
         /// </summary>
-        /// <param name="model">TODO</param>
-        /// <returns>TODO</returns>
+        /// <param name="model">A model with register information</param>
+        /// <returns>201 and a bearer token if successful, 
+        /// 400 if missing data, 401 otherwise</returns>
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterViewModel model)
         {
@@ -71,7 +75,7 @@ namespace TodoApi.Controllers
             try
             {
                 var token = await _accountService.Register(model);
-                return Ok(token);
+                return StatusCode(201, token);
             }
             catch (RegisterFailException)
             {
