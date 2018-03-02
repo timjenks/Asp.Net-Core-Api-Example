@@ -39,6 +39,18 @@ namespace TodoApi.Constants
         }
 
         /// <summary>
+        /// TODO
+        /// </summary>
+        /// <param name="userId">TODO</param>
+        /// <param name="date">TODO</param>
+        /// <returns>TODO</returns>
+        public static string GetAllTodosForDayCacheKey(string userId, DateTime date)
+        {
+            return string.Format("{0}_{1}_{2}_{3}", 
+                GetAllTodosCacheKey(userId), date.Year, date.Month, date.Day);
+        }
+
+        /// <summary>
         /// The cache key of a single todo.
         /// </summary>
         /// <param name="id">The id of an todo</param>

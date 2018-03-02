@@ -12,6 +12,7 @@ using TodoApi.Models.ViewModels;
 using TodoApi.Utils.TimeUtils;
 using Microsoft.AspNetCore.Identity;
 using TodoApi.Services.Interfaces;
+using TodoApi.Constants;
 
 namespace TodoApi.Services
 {
@@ -48,10 +49,15 @@ namespace TodoApi.Services
         /// <exception cref="TodoNotFoundException">When todo is not found</exception>
         public async Task<TodoDto> GetTodoByIdAsync(int id, string userId)
         {
-            var todo = await _db.Todo.SingleOrDefaultAsync(t => t.Id == id && t.Owner.Id == userId);
-            if (todo == null)
+            var cacheKey = CacheConstants.GetSingleTodoCacheKey(id, userId);
+            if (!_cache.TryGetValue(cacheKey, out Todo todo))
             {
-                throw new TodoNotFoundException();
+                todo = await _db.Todo.SingleOrDefaultAsync(t => t.Id == id && t.Owner.Id == userId);
+                if (todo == null)
+                {
+                    throw new TodoNotFoundException();
+                }
+                _cache.Set(cacheKey, todo, CacheConstants.GetDefaultCacheOptions());
             }
             return new TodoDto(todo);
         }
@@ -84,6 +90,10 @@ namespace TodoApi.Services
             var newTodo = new Todo(todo, user);
             await _db.AddAsync(newTodo);
             await _db.SaveChangesAsync();
+            _cache.Set(CacheConstants.GetSingleTodoCacheKey(newTodo.Id, userId),
+                newTodo, CacheConstants.GetDefaultCacheOptions());
+            _cache.Remove(CacheConstants.GetAllTodosCacheKey(userId));
+            _cache.Remove(CacheConstants.GetAllTodosForDayCacheKey(userId, newTodo.Due));
             return newTodo.Id;
         }
 
@@ -98,6 +108,9 @@ namespace TodoApi.Services
             }
             _db.Remove(todo);
             await _db.SaveChangesAsync();
+            _cache.Remove(CacheConstants.GetSingleTodoCacheKey(id, userId));
+            _cache.Remove(CacheConstants.GetAllTodosCacheKey(userId));
+            _cache.Remove(CacheConstants.GetAllTodosForDayCacheKey(userId, todo.Due));
         }
 
         /// <inheritdoc />
@@ -109,8 +122,17 @@ namespace TodoApi.Services
             {
                 throw new TodoNotFoundException();
             }
+            var oldDate = todo.Due;
             todo.Edit(model);
             await _db.SaveChangesAsync();
+            _cache.Set(CacheConstants.GetSingleTodoCacheKey(todo.Id, userId),
+                todo, CacheConstants.GetDefaultCacheOptions());
+            _cache.Remove(CacheConstants.GetAllTodosCacheKey(userId));
+            _cache.Remove(CacheConstants.GetAllTodosForDayCacheKey(userId, oldDate));
+            if (oldDate.Date != todo.Due.Date)
+            {
+                _cache.Remove(CacheConstants.GetAllTodosForDayCacheKey(userId, todo.Due));
+            }
         }
 
         /// <summary>
@@ -119,10 +141,16 @@ namespace TodoApi.Services
         /// <returns>List of todos</returns>
         private async Task<IEnumerable<TodoDto>> GetAllTodosOrderedByDueWithNoFilterAsync(string userId)
         {
-            return await (from t in _db.Todo
-                          where t.Owner.Id == userId
-                          orderby t.Due
-                          select new TodoDto(t)).ToListAsync();
+            var cacheKey = CacheConstants.GetAllTodosCacheKey(userId);
+            if (!_cache.TryGetValue(cacheKey, out IEnumerable<TodoDto> todos))
+            {
+                todos = await (from t in _db.Todo
+                               where t.Owner.Id == userId
+                               orderby t.Due
+                               select new TodoDto(t)).ToListAsync();
+                _cache.Set(cacheKey, CacheConstants.GetDefaultCacheOptions());
+            }
+            return todos;
         }
 
         /// <summary>
@@ -132,11 +160,16 @@ namespace TodoApi.Services
         /// <returns>List of todos</returns>
         private async Task<IEnumerable<TodoDto>> GetAllTodosForDayOrderedByDueAsync(DateTime date, string userId)
         {
-            return await (from t in _db.Todo
-                          where t.Due.Date == date && t.Owner.Id == userId
-                          orderby t.Due
-                          select new TodoDto(t)).ToListAsync();
+            var cacheKey = CacheConstants.GetAllTodosForDayCacheKey(userId, date);
+            if (!_cache.TryGetValue(cacheKey, out IEnumerable<TodoDto> todos))
+            {
+                todos = await (from t in _db.Todo
+                               where t.Due.Date == date && t.Owner.Id == userId
+                               orderby t.Due
+                               select new TodoDto(t)).ToListAsync();
+                _cache.Set(cacheKey, CacheConstants.GetDefaultCacheOptions());
+            }
+            return todos;
         }
-
     }
 }
