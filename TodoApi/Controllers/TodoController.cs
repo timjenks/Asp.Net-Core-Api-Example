@@ -64,7 +64,8 @@ namespace TodoApi.Controllers
             [FromQuery] string day = null
         )
         {
-            var userId = User.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            var userId = User.Claims.SingleOrDefault(c => 
+                c.Type == ClaimTypes.NameIdentifier).Value;
             return Ok(await _todoService.GetAllTodosOrderedByDueAsync(year, month, day, userId));
         }
 
@@ -87,7 +88,8 @@ namespace TodoApi.Controllers
             }
             try
             {
-                var userId = User.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                var userId = User.Claims.SingleOrDefault(c => 
+                    c.Type == ClaimTypes.NameIdentifier).Value;
                 var id = await _todoService.CreateTodoAsync(model, userId);
                 return CreatedAtRoute(MethodNames.GetSingleTodoMethodName, new { todoId = id }, null);
             }
@@ -108,7 +110,8 @@ namespace TodoApi.Controllers
         {
             try
             {
-                var userId = User.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                var userId = User.Claims.SingleOrDefault(c => 
+                    c.Type == ClaimTypes.NameIdentifier).Value;
                 await _todoService.RemoveTodoByIdAsync(todoId, userId);
                 return NoContent();
             }
@@ -137,7 +140,8 @@ namespace TodoApi.Controllers
             }
             try
             {
-                var userId = User.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                var userId = User.Claims.SingleOrDefault(c => 
+                    c.Type == ClaimTypes.NameIdentifier).Value;
                 await _todoService.EditTodoAsync(changedTodo, userId);
                 return Ok();
             }
