@@ -3,7 +3,7 @@
 namespace TodoApi.Exceptions
 {
     /// <summary>
-    /// TODO
+    /// Thrown in service layer if register fails.
     /// </summary>
     public class RegisterFailException : Exception { }
 }

@@ -3,7 +3,7 @@
 namespace TodoApi.Exceptions
 {
     /// <summary>
-    /// TODO
+    /// Thrown in service layer if login fails.
     /// </summary>
     public class LoginFailException : Exception { }
 }

@@ -3,7 +3,7 @@
 namespace TodoApi.Exceptions
 {
     /// <summary>
-    /// TODO
+    /// Thrown in service when user is not found.
     /// </summary>
     public class UserNotFoundException : Exception { }
 }
