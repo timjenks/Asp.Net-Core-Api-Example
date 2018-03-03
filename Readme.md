@@ -2,7 +2,7 @@
 
 Example restful api project in dotnet core.
 
-## Featuers
+## Features
 - Authentication with bearer tokens
 - Role based authentication decorators
 - Caching

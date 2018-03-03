@@ -7,6 +7,7 @@ using Xunit;
 
 namespace Tests.ModelsTests.EntityModelsTests
 {
+    /// Testing ApplicationUser entity class.
     public class ApplicationUserTest
     {
         [Fact]
