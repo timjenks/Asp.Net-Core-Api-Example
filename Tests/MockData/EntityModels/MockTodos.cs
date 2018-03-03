@@ -10,9 +10,14 @@ namespace Tests.MockData.EntityModels
     public static class MockTodos
     {
         /// <summary>
+        /// The first id for mock todo data.
+        /// </summary>
+        private const int FirstId = 90210;
+
+        /// <summary>
         /// First id, and for each added is incremented by one.
         /// </summary>
-        private static int FirstId = 90210;
+        private static int FirstIdRunner = FirstId;
 
         /// <summary>
         /// Helper to create todo which handles id and owner.
@@ -27,9 +32,9 @@ namespace Tests.MockData.EntityModels
                 Id = FirstId,
                 Due = due,
                 Description = description,
-                Owner = MockApplicationUsers.Get((FirstId >> 1) - (90210 >> 1))
+                Owner = MockApplicationUsers.Get((FirstIdRunner >> 1) - (FirstId >> 1))
             };
-            FirstId++;
+            FirstIdRunner++;
             return todo;
         }
 
