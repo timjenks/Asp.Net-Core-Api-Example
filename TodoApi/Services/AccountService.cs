@@ -17,9 +17,9 @@ using TodoApi.Services.Interfaces;
 
 namespace TodoApi.Services
 {
-
+    /// <inheritdoc />
     /// <summary>
-    /// TODO
+    /// The account service that the production API uses.
     /// </summary>
     public class AccountService : IAccountService
     {
@@ -28,8 +28,11 @@ namespace TodoApi.Services
         private readonly IConfiguration _configuration;
 
         /// <summary>
-        /// TODO
+        /// A constructor that injects SignInManager, UserManager and IConfiguration.
         /// </summary>
+        /// <param name="userManager">User manager for Application users</param>
+        /// <param name="signInManager">Sign in manager for Application users</param>
+        /// <param name="configuration">Configurations from json files</param>
         public AccountService(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
@@ -45,12 +48,14 @@ namespace TodoApi.Services
         /// <exception cref="LoginFailException">When user is not found</exception>
         public async Task<string> Login(LoginViewModel model)
         {
-            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
+            var result = await _signInManager
+                .PasswordSignInAsync(model.Email, model.Password, false, false);
             if (!result.Succeeded)
             {
                 throw new LoginFailException();
             }
-            var appUser = await _userManager.Users.SingleOrDefaultAsync(r => r.UserName == model.Email);
+            var appUser = await _userManager.Users.SingleOrDefaultAsync(
+                r => r.UserName == model.Email);
             return await GenerateJwtToken(appUser);
         }
 
@@ -70,16 +75,19 @@ namespace TodoApi.Services
         }
 
         /// <summary>
-        /// TODO
+        /// Create token for a user.
         /// </summary>
-        /// <param name="user">TODO</param>
-        /// <returns>TODO</returns>
+        /// <param name="user">An ApplicationUser entity</param>
+        /// <returns>A valid token for the given user</returns>
         private async Task<string> GenerateJwtToken(ApplicationUser user)
         {
             var claims = await getClaims(user);
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["SecretKey"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expires = DateTime.Now.AddDays(Convert.ToDouble(_configuration["TokenExpireDays"]));
+            var key = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(_configuration["SecretKey"]));
+            var creds = new SigningCredentials(
+                key, SecurityAlgorithms.HmacSha256);
+            var expires = DateTime.Now.AddDays(
+                Convert.ToDouble(_configuration["TokenExpireDays"]));
 
             var token = new JwtSecurityToken(
                 _configuration["Issuer"],
@@ -93,19 +101,20 @@ namespace TodoApi.Services
         }
 
         /// <summary>
-        /// TODO
+        /// Create claims from user entity. 
         /// </summary>
-        /// <param name="user">TODO</param>
-        /// <returns>TODO</returns>
+        /// <param name="user">An ApplicationUser entity</param>
+        /// <returns>A list of claims that includes email, id and name</returns>
         private async Task<List<Claim>> getClaims(ApplicationUser user)
         {
-            var roleClaims = (await _userManager.GetRolesAsync(user)).Select(role => new Claim(ClaimTypes.Role, role));
+            var roleClaims = (await _userManager.GetRolesAsync(user))
+                .Select(role => new Claim(ClaimTypes.Role, role));
             var claims = new List<Claim>(4 + roleClaims.Count())
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
-                new Claim(ClaimTypes.Name, user.UserName)
+                new Claim(ClaimTypes.Name, user.Name)
             };
             claims.AddRange(roleClaims);
             return claims;

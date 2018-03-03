@@ -13,9 +13,9 @@ using TodoApi.Services.Interfaces;
 
 namespace TodoApi.Services
 {
-
+    /// <inheritdoc />
     /// <summary>
-    /// TODO
+    /// The user service that the production API uses.
     /// </summary>
     public class UserService : IUserService
     {
@@ -24,11 +24,11 @@ namespace TodoApi.Services
         private readonly IMemoryCache _cache;
 
         /// <summary>
-        /// TODO
+        /// A constructor that injects AppDataContext, UserManager and MemoryCache.
         /// </summary>
-        /// <param name="db">TODO</param>
-        /// <param name="userManager">TODO</param>
-        /// <param name="cache">TODO</param>
+        /// <param name="db">A DbContext to access a database</param>
+        /// <param name="userManager">User manager for Application users</param>
+        /// <param name="cache">A cache memory to utilize RAM to save db queries</param>
         public UserService
         (
             AppDataContext db,
@@ -42,19 +42,7 @@ namespace TodoApi.Services
         }
 
         /// <inheritdoc />
-        public async Task<IEnumerable<ApplicationUserDto>> GetAllUsersAsync()
-        {
-            var cacheKey = CacheConstants.AllUsersCacheKey;
-            if (!_cache.TryGetValue(cacheKey, out IEnumerable<ApplicationUserDto> users))
-            {
-                users = await _userManager.Users.Select(u => new ApplicationUserDto(u)).ToListAsync();
-                _cache.Set(cacheKey, users, CacheConstants.GetDefaultCacheOptions());
-            }
-            return users;
-        }
-
-        /// <inheritdoc />
-        /// <exception cref="TODO">TODO</exception>
+        /// <exception cref="UserNotFoundException">Thrown when user is not found</exception>
         public async Task<ApplicationUserDto> GetUserByIdAsync(string userId)
         {
             var cacheKey = CacheConstants.GetSingleUserCacheKey(userId);
@@ -71,8 +59,24 @@ namespace TodoApi.Services
         }
 
         /// <inheritdoc />
-        /// <exception cref="TODO">TODO</exception>
-        /// <exception cref="TODO">TODO</exception>
+        public async Task<IEnumerable<ApplicationUserDto>> GetAllUsersOrderedByNameAsync()
+        {
+            var cacheKey = CacheConstants.AllUsersCacheKey;
+            if (!_cache.TryGetValue(cacheKey, out IEnumerable<ApplicationUserDto> users))
+            {
+                users = await _userManager
+                        .Users
+                        .Select(u => new ApplicationUserDto(u))
+                        .OrderBy(u => u.Name)
+                        .ToListAsync();
+                _cache.Set(cacheKey, users, CacheConstants.GetDefaultCacheOptions());
+            }
+            return users;
+        }
+
+        /// <inheritdoc />
+        /// <exception cref="UserNotFoundException">Thrown when user is not found</exception>
+        /// <exception cref="RemoveUserFailedException">Thrown if we fail to remove user</exception>
         public async Task RemoveUserByIdAsync(string userId)
         {
             var userToRemove = await _userManager.FindByIdAsync(userId);
@@ -82,10 +86,13 @@ namespace TodoApi.Services
             }
             await _db.Entry(userToRemove).Collection(u => u.Todos).LoadAsync();
 
+            // Clear cached todos owned by the user
             foreach (Todo todo in userToRemove.Todos)
             {
-                _cache.Remove(CacheConstants.GetSingleTodoCacheKey(todo.Id, userToRemove.Id));
-                _cache.Remove(CacheConstants.GetAllTodosForDayCacheKey(userToRemove.Id, todo.Due.Date));
+                _cache.Remove(CacheConstants.GetSingleTodoCacheKey(
+                    todo.Id, userToRemove.Id));
+                _cache.Remove(CacheConstants.GetAllTodosForDayCacheKey(
+                    userToRemove.Id, todo.Due.Date));
             }
             _cache.Remove(CacheConstants.GetAllTodosCacheKey(userToRemove.Id));
             _db.RemoveRange(userToRemove.Todos);
@@ -97,6 +104,7 @@ namespace TodoApi.Services
             }
             await _db.SaveChangesAsync();
 
+            // Clear user if cached and all user list.
             _cache.Remove(CacheConstants.GetSingleUserCacheKey(userToRemove.Id));
             _cache.Remove(CacheConstants.AllUsersCacheKey);
         }

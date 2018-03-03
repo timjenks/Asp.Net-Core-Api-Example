@@ -9,6 +9,9 @@ namespace TodoApi.Models.ViewModels
     /// </summary>
     public class EditTodoViewModel
     {
+        /// <summary>
+        /// The id of the todo to edit.
+        /// </summary>
         [Required(ErrorMessage = ErrorMessages.TodoIdRequired)]
         public int? Id { get; set; }
 

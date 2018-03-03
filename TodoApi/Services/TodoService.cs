@@ -16,7 +16,6 @@ using TodoApi.Constants;
 
 namespace TodoApi.Services
 {
-
     /// <inheritdoc />
     /// <summary>
     /// The todo service that the production API uses.
@@ -28,10 +27,10 @@ namespace TodoApi.Services
         private readonly IMemoryCache _cache;
 
         /// <summary>
-        /// A constructor that injects AppDataContext and MemoryCache.
+        /// A constructor that injects AppDataContext, UserManager and MemoryCache.
         /// </summary>
         /// <param name="db">A DbContext to access a database</param>
-        /// <param name="userManager">TODO</param>
+        /// <param name="userManager">User manager for Application users</param>
         /// <param name="cache">A cache memory to utilize RAM to save db queries</param>
         public TodoService
         (
@@ -47,12 +46,13 @@ namespace TodoApi.Services
 
         /// <inheritdoc />
         /// <exception cref="TodoNotFoundException">When todo is not found</exception>
-        public async Task<TodoDto> GetTodoByIdAsync(int id, string userId)
+        public async Task<TodoDto> GetTodoByIdAsync(int todoId, string userId)
         {
-            var cacheKey = CacheConstants.GetSingleTodoCacheKey(id, userId);
+            var cacheKey = CacheConstants.GetSingleTodoCacheKey(todoId, userId);
             if (!_cache.TryGetValue(cacheKey, out Todo todo))
             {
-                todo = await _db.Todo.SingleOrDefaultAsync(t => t.Id == id && t.Owner.Id == userId);
+                todo = await _db.Todo.SingleOrDefaultAsync(t => 
+                    t.Id == todoId && t.Owner.Id == userId);
                 if (todo == null)
                 {
                     throw new TodoNotFoundException();
@@ -90,25 +90,30 @@ namespace TodoApi.Services
             var newTodo = new Todo(todo, user);
             await _db.AddAsync(newTodo);
             await _db.SaveChangesAsync();
+
+            // Add to single cache and clear list cache
             _cache.Set(CacheConstants.GetSingleTodoCacheKey(newTodo.Id, userId),
                 newTodo, CacheConstants.GetDefaultCacheOptions());
             _cache.Remove(CacheConstants.GetAllTodosCacheKey(userId));
             _cache.Remove(CacheConstants.GetAllTodosForDayCacheKey(userId, newTodo.Due));
+
             return newTodo.Id;
         }
 
         /// <inheritdoc />
         /// <exception cref="TodoNotFoundException">When todo is not found</exception>
-        public async Task RemoveTodoByIdAsync(int id, string userId)
+        public async Task RemoveTodoByIdAsync(int todoId, string userId)
         {
-            var todo = await _db.Todo.SingleOrDefaultAsync(t => t.Id == id && t.Owner.Id == userId);
+            var todo = await _db.Todo.SingleOrDefaultAsync(t => t.Id == todoId && t.Owner.Id == userId);
             if (todo == null)
             {
                 throw new TodoNotFoundException();
             }
             _db.Remove(todo);
             await _db.SaveChangesAsync();
-            _cache.Remove(CacheConstants.GetSingleTodoCacheKey(id, userId));
+
+            // Clear all related caches
+            _cache.Remove(CacheConstants.GetSingleTodoCacheKey(todoId, userId));
             _cache.Remove(CacheConstants.GetAllTodosCacheKey(userId));
             _cache.Remove(CacheConstants.GetAllTodosForDayCacheKey(userId, todo.Due));
         }
@@ -125,6 +130,8 @@ namespace TodoApi.Services
             var oldDate = todo.Due;
             todo.Edit(model);
             await _db.SaveChangesAsync();
+
+            // Set cache for single and clear related lists
             _cache.Set(CacheConstants.GetSingleTodoCacheKey(todo.Id, userId),
                 todo, CacheConstants.GetDefaultCacheOptions());
             _cache.Remove(CacheConstants.GetAllTodosCacheKey(userId));
