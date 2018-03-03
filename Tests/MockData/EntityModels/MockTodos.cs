@@ -29,7 +29,7 @@ namespace Tests.MockData.EntityModels
         {
             var todo = new Todo
             {
-                Id = FirstId,
+                Id = FirstIdRunner,
                 Due = due,
                 Description = description,
                 Owner = MockApplicationUsers.Get((FirstIdRunner >> 1) - (FirstId >> 1))
