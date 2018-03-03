@@ -45,31 +45,36 @@ namespace Tests.MockData.EntityModels
         private static readonly ApplicationUser[] Data =
         {
             // User 0
-            ConstructUser(
+            ConstructUser
+            (
                 "f093c069-c93a-4cf1-9abe-cff674b93989", 
                 "John Carpenter",
                 "carpenter@john.com"
             ),
             // User 1
-            ConstructUser(
+            ConstructUser
+            (
                 "bf1f782e-1847-4adc-8da8-31a5125c2a5e", 
                 "John Carmack",
                 "carmack@john.com"
             ),
             // User 2
-            ConstructUser(
+            ConstructUser
+            (
                 "789c0f29-1abd-45f9-a9ce-09151fa5ae99",
                 "John Rambo",
                 "rambo@john.com"
             ),
             // User 3
-            ConstructUser(
+            ConstructUser
+            (
                 "2706a570-ed3c-4fcf-8c7b-8985dcba844b",
                 "John Cleese",
                 "cleese@john.com"
             ),
             // User 4
-            ConstructUser(
+            ConstructUser
+            (
                 "c995b669-c620-43c4-b238-7356b44d6932",
                 "John Goodman",
                 "goodman@john.com"
@@ -81,13 +86,15 @@ namespace Tests.MockData.EntityModels
                 "malkovich@john.com"
             ),
             // User 6
-            ConstructUser(
+            ConstructUser
+            (
                 "fd82177c-9e4b-4723-89f3-854ed0a45006",
                 "John the Revelator",
                 "therevelator@john.com"
             ),
             // User 7
-            ConstructUser(
+            ConstructUser
+            (
                 "08417a3d-d67f-4fae-a853-b675870d22c0",
                 "John Adams",
                 "adams@john.com"
@@ -99,7 +106,8 @@ namespace Tests.MockData.EntityModels
                 "stockton@john.com"
             ),
             // User 9
-            ConstructUser(
+            ConstructUser
+            (
                 "dae85cd3-2664-4270-bcda-c37ac75e07dd",
                 "John Candy",
                 "candy@john.com"
@@ -133,10 +141,10 @@ namespace Tests.MockData.EntityModels
         /// Get some mock user entities. It will only contain copied instances.
         /// </summary>
         /// <param name="indices">Which users we want</param>
-        /// <returns>A list with some mocked user entity</returns>
+        /// <returns>A list with some mocked user entities</returns>
         public static IEnumerable<ApplicationUser> GetSome(params int[] indices)
         {
-            var copyList = new List<ApplicationUser>(Data.Length);
+            var copyList = new List<ApplicationUser>(indices.Length);
             foreach (var index in indices)
             {
                 copyList.Add(Get(index));

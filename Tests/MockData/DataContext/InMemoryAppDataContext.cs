@@ -1,6 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using TodoApi.Data;
 
 namespace Tests.MockData.DataContext
