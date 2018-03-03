@@ -101,7 +101,7 @@ namespace Tests.MockData.EntityModels
             CreateTodo
             (
                     new DateTime(2032,7,3,23,20,0),
-                    "See Videodrome, long live the new flesh"
+                    "Get the Videodrome, long live the new flesh"
             ),
             // todo 10
             CreateTodo

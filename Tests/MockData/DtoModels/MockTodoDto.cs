@@ -17,16 +17,16 @@ namespace Tests.MockData.DtoModels
             // Index: 0
             new TodoDto
             {
-                Id = 0,
-                Due = new DateTime(0, 0, 0, 0, 0, 0),
-                Description = ""
+                Id = 3333,
+                Due = new DateTime(2010, 2, 10, 18, 0, 0),
+                Description = "Step right up"
             },
             // Index: 1
             new TodoDto
             {
-                Id = 0,
-                Due = new DateTime(0, 0, 0, 0, 0, 0),
-                Description = ""
+                Id = 2525,
+                Due = new DateTime(2020, 3, 11, 19, 30, 0),
+                Description = "Tango till they're sore"
             }
         };
 
