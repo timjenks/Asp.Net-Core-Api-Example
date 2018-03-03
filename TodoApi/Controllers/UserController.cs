@@ -54,7 +54,7 @@ namespace TodoApi.Controllers
         [HttpGet("")]
         public async Task<IActionResult> GetAllUsers()
         {
-            return Ok(await _userService.GetAllUsersAsync());
+            return Ok(await _userService.GetAllUsersOrderedByNameAsync());
         }
 
         /// <summary>
