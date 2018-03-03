@@ -17,4 +17,12 @@
     <ProjectReference Include="..\TodoApi\TodoApi.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ModelsTests\" />
+    <Folder Include="ControllersTests\" />
+    <Folder Include="IntegrationTests\" />
+    <Folder Include="ServicesTests\" />
+    <Folder Include="UtilsTests\" />
+  </ItemGroup>
+
 </Project>
