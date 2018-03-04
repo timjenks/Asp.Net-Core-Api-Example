@@ -77,6 +77,10 @@ namespace TodoApi.Controllers
                 var token = await _accountService.Register(model);
                 return StatusCode(201, token);
             }
+            catch (PasswordModelException)
+            {
+                return BadRequest(PasswordLimits.SettingsErrorMessages);
+            }
             catch (RegisterFailException)
             {
                 return Unauthorized();

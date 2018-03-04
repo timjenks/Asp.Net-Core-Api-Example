@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
 
 namespace TodoApi.Constants
 {
@@ -30,7 +32,7 @@ namespace TodoApi.Constants
         /// <summary>
         /// Password options to use in Asp.Net Identity.
         /// </summary>
-        public static PasswordOptions PasswordSettings = new PasswordOptions()
+        public static readonly PasswordOptions PasswordSettings = new PasswordOptions()
         {
             RequiredLength = AccountMinPasswordLength,
             RequiredUniqueChars = 4,
@@ -39,5 +41,40 @@ namespace TodoApi.Constants
             RequireNonAlphanumeric = true,
             RequireUppercase = true
         };
+
+        /// <summary>
+        /// Set of all possible password error codes.
+        /// </summary>
+        public static readonly HashSet<string> SettingsErrorMessages = GetErrorCodes();
+
+        /// <summary>
+        /// Construct a set of possible error codes from password settings.
+        /// </summary>
+        /// <returns>A hashset of strings, containing error codes</returns>
+        private static HashSet<string> GetErrorCodes()
+        {
+            var set = new HashSet<string>();
+            if (PasswordSettings.RequiredUniqueChars > 0)
+            {
+                set.Add("PasswordRequiresUniqueChars");
+            }
+            if (PasswordSettings.RequireDigit)
+            {
+                set.Add("PasswordRequiresDigit");
+            }
+            if (PasswordSettings.RequireLowercase)
+            {
+                set.Add("PasswordRequiresLower");
+            }
+            if (PasswordSettings.RequireUppercase)
+            {
+                set.Add("PasswordRequiresUpper");
+            }
+            if (PasswordSettings.RequireNonAlphanumeric)
+            {
+                set.Add("PasswordRequiresNonAlphanumeric");
+            }
+            return set;
+        }
     }
 }

@@ -13,6 +13,7 @@ namespace TodoApi.Models.ViewModels
         /// </summary>
         [Required(ErrorMessage = ErrorMessages.AccountEmailIsRequired)]
         [DataType(DataType.EmailAddress)]
+        [EmailAddress]
         public string Email { get; set; }
 
         /// <summary>
@@ -23,7 +24,7 @@ namespace TodoApi.Models.ViewModels
             PasswordLimits.AccountMaxPasswordLength,
             ErrorMessage = ErrorMessages.AccountPasswordInvalidLength,
             MinimumLength = PasswordLimits.AccountMinPasswordLength)]
-        [DataType(DataType.Password)]
+        [DataType(DataType.Password)] //PasswordLimits.PasswordSettings
         public string Password { get; set; }
     }
 }

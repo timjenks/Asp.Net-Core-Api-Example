@@ -67,6 +67,15 @@ namespace TodoApi.Services
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
             {
+                var modelStatesErrors = result.Errors
+                                              .Select(y => y.Code)
+                                              .ToHashSet()
+                                              .Intersect(PasswordLimits.SettingsErrorMessages)
+                                              .Count();
+                if (modelStatesErrors > 0)
+                {
+                    throw new PasswordModelException();
+                }
                 throw new RegisterFailException();
             }
             await _signInManager.SignInAsync(user, false);
