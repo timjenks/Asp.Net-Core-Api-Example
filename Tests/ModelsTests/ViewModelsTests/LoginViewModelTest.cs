@@ -102,7 +102,7 @@ namespace Tests.ModelsTests.ViewModelsTests
             // Arrange
             var model = new LoginViewModel
             {
-                Email = "groove@heart.com",
+                Email = "southern@man.com",
             };
 
             // Act
@@ -120,7 +120,7 @@ namespace Tests.ModelsTests.ViewModelsTests
             // Arrange
             var model = new LoginViewModel
             {
-                Email = "groove@heart.com",
+                Email = "harvest@moon.com",
                 Password = "Aa#4"
             };
 
@@ -140,7 +140,7 @@ namespace Tests.ModelsTests.ViewModelsTests
             var len = PasswordLimits.AccountMaxPasswordLength + 5;
             var model = new LoginViewModel
             {
-                Email = "groove@heart.com",
+                Email = "old@man.com",
                 Password = new StringBuilder(len).Insert(0, "Aa#4", len >> 2).ToString()
             };
 

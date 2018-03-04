@@ -20,6 +20,7 @@ namespace TodoApi.Models.ViewModels
         /// </summary>
         [Required(ErrorMessage = ErrorMessages.AccountEmailIsRequired)]
         [DataType(DataType.EmailAddress)]
+        [EmailAddress]
         public string Email { get; set; }
 
         /// <summary>
