@@ -133,7 +133,9 @@ namespace Tests.MockData.EntityModels
                 Email = string.Copy(Data[index].Email),
                 UserName = string.Copy(Data[index].UserName),
                 EmailConfirmed = Data[index].EmailConfirmed,
-                PasswordHash = string.Copy(Data[index].PasswordHash)
+                PasswordHash = string.Copy(Data[index].PasswordHash),
+                NormalizedEmail = Data[index].Email.ToUpper(),
+                NormalizedUserName = Data[index].Email.ToUpper()
             };
         }
 

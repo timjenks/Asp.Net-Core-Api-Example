@@ -1,8 +1,9 @@
 ﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Tests.MockData.EntityModels;
 using TodoApi.Data;
 
-namespace Tests.MockData.DataContext
+namespace Tests.MockData.Data
 {
     /// <inheritdoc />
     /// <summary>
@@ -18,10 +19,27 @@ namespace Tests.MockData.DataContext
         {
             Database.OpenConnection();
             Database.EnsureCreated();
+
+            PopulateDatabaseWithMockData();
         }
 
-        // TODO:
-        // Create methods to add collections of mock data
+        /// <summary>
+        /// Fill the in memory database with our mock data.
+        /// </summary>
+        private void PopulateDatabaseWithMockData()
+        {
+            Roles.Add(MockRoles.Admin);
+            Roles.Add(MockRoles.User);
+            var allUsers = MockApplicationUsers.GetAll();
+            Users.AddRange(allUsers);
+            SaveChanges();
+            foreach (var user in allUsers)
+            {
+                UserRoles.Add(MockUserRoles.GetUserRoleForUser(user.Id));
+            }
+            Todo.AddRange(MockTodos.GetAll());
+            SaveChanges();
+        }
 
         /// <summary>
         /// A option creator, that sets our context to a in-memory sqlite database. 

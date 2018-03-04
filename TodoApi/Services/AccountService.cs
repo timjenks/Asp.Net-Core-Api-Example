@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -48,14 +47,16 @@ namespace TodoApi.Services
         /// <exception cref="LoginFailException">When user is not found</exception>
         public async Task<string> Login(LoginViewModel model)
         {
-            var result = await _signInManager
-                .PasswordSignInAsync(model.Email, model.Password, false, false);
+            var appUser = await _userManager.FindByEmailAsync(model.Email);
+            if (appUser == null)
+            {
+                throw new LoginFailException();
+            }
+            var result = await _signInManager.PasswordSignInAsync(appUser, model.Password, false, false);
             if (!result.Succeeded)
             {
                 throw new LoginFailException();
             }
-            var appUser = await _userManager.Users.SingleOrDefaultAsync(
-                r => r.UserName == model.Email);
             return await GenerateJwtToken(appUser);
         }
 
