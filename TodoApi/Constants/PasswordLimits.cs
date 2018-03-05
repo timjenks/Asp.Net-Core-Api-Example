@@ -30,12 +30,17 @@ namespace TodoApi.Constants
         public const int AccountMaxPasswordLength = 25;
 
         /// <summary>
+        /// The minimum of unique characters in the password.
+        /// </summary>
+        public const int AccountMinUniqueChars = 4;
+
+        /// <summary>
         /// Password options to use in Asp.Net Identity.
         /// </summary>
         public static readonly PasswordOptions PasswordSettings = new PasswordOptions()
         {
             RequiredLength = AccountMinPasswordLength,
-            RequiredUniqueChars = 4,
+            RequiredUniqueChars = AccountMinUniqueChars,
             RequireDigit = true,
             RequireLowercase = true,
             RequireNonAlphanumeric = true,
