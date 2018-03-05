@@ -36,7 +36,10 @@ namespace Tests.ControllersTests
             // Arrange
             const string field = "apple-error";
             const string errorMessage = "how do you like them apples";
-            var service = new MockAccountService { MLogin = (model) => "Doesn't really matter a second time" };
+            var service = new MockAccountService
+            {
+                MLogin = (model) => "Doesn't really matter a second time"
+            };
             var controller = new AccountController(service);
             controller.ModelState.AddModelError(field, errorMessage);
 

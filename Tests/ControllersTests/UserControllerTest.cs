@@ -58,7 +58,7 @@ namespace Tests.ControllersTests
         }
 
         [Fact]
-        public async Task GetAllUsers_ListOfEvents_Ok()
+        public async Task GetAllUsers_ListOfUsers_Ok()
         {
             // Arrange
             var service = new MockUserService
