@@ -9,6 +9,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using TodoApi.Constants;
+using TodoApi.Data;
 using TodoApi.Exceptions;
 using TodoApi.Models.EntityModels;
 using TodoApi.Models.ViewModels;
@@ -25,22 +26,26 @@ namespace TodoApi.Services
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
+        private readonly AppDataContext _db;
 
         /// <summary>
-        /// A constructor that injects SignInManager, UserManager and IConfiguration.
+        /// A constructor that injects SignInManager, UserManager, IConfiguration and AppDataContext.
         /// </summary>
         /// <param name="userManager">User manager for Application users</param>
         /// <param name="signInManager">Sign in manager for Application users</param>
         /// <param name="configuration">Configurations from json files</param>
+        /// <param name="db">The app data context</param>
         public AccountService(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            IConfiguration configuration
+            IConfiguration configuration,
+            AppDataContext db
         )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
+            _db = db;
         }
 
         /// <inheritdoc />
@@ -81,6 +86,7 @@ namespace TodoApi.Services
             }
             await _signInManager.SignInAsync(user, false);
             await _userManager.AddToRoleAsync(user, Roles.User);
+            await _db.SaveChangesAsync();
             return await GenerateJwtToken(user);
         }
 

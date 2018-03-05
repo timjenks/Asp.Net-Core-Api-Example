@@ -33,7 +33,7 @@ namespace Tests.ServicesTests
             var userManager = new MockUserManager(_ctx);
             var signInManager = new MockSignInManager(userManager);
             _config = new MockConfiguration();
-            _service = new AccountService(userManager, signInManager, _config);
+            _service = new AccountService(userManager, signInManager, _config, _ctx);
         }
 
         [Fact]

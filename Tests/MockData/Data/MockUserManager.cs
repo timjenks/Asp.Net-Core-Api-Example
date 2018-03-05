@@ -40,20 +40,5 @@ namespace Tests.MockData.Data
         {
             _ctx = ctx;
         }
-
-        /// <summary>
-        /// When user manager is asked to add user to a role, this is run in stead.
-        /// </summary>
-        /// <param name="user">Instance of the user</param>
-        /// <param name="role">Name of the role</param>
-        /// <returns>Successs is always returned</returns>
-        public override async Task<IdentityResult> AddToRoleAsync(ApplicationUser user, string role)
-        {
-            var roleId = role.ToUpper() == "ADMIN" ? "314" : "2718";
-            var ur = new IdentityUserRole<string> { UserId = user.Id, RoleId = roleId };
-            _ctx.UserRoles.Add(ur);
-            await _ctx.SaveChangesAsync();
-            return IdentityResult.Success;
-        }
     }
 }
