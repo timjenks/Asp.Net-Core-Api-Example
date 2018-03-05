@@ -6,7 +6,6 @@ using Tests.MockData.ViewModels;
 using TodoApi.Constants;
 using TodoApi.Controllers;
 using TodoApi.Exceptions;
-using TodoApi.Services.Interfaces;
 using Xunit;
 
 namespace Tests.ControllersTests

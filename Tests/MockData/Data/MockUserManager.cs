@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -13,10 +12,6 @@ namespace Tests.MockData.Data
     /// </summary>
     public class MockUserManager : UserManager<ApplicationUser>
     {
-        /// <summary>
-        /// The in memory data context.
-        /// </summary>
-        private readonly AppDataContext _ctx;
 
         /// <summary>
         /// Calls super class with a store from the context and 
@@ -27,8 +22,8 @@ namespace Tests.MockData.Data
         /// <param name="ctx">In memory application db context</param>
         public MockUserManager(AppDataContext ctx) : base
         (
-            new UserStore<ApplicationUser>(ctx),
-            null,                                                       // IOptions <IdentityOptions>
+            new UserStore<ApplicationUser>(ctx),                        // IUserManager<ApplicationUser>
+            null,                                                       // IOptions<IdentityOptions>
             new PasswordHasher<ApplicationUser>(),                      // IPasswordHasher<ApplicationUser> 
             new[] { new MockUserValidator() },                          // IEnumerable<IUserValidator<ApplicationUser>> 
             new[] { new MockPasswordValidator() },                      // IEnumerable<IPasswordValidator<ApplicationUser>>
@@ -38,7 +33,6 @@ namespace Tests.MockData.Data
             new Mock<ILogger<UserManager<ApplicationUser>>>().Object    // ILogger<UserManager<ApplicationUser>>
         )
         {
-            _ctx = ctx;
         }
     }
 }

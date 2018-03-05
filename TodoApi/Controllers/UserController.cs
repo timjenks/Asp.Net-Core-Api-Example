@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 using TodoApi.Constants;
 using TodoApi.Exceptions;
@@ -16,6 +17,11 @@ namespace TodoApi.Controllers
     public class UserController : Controller
     {
         private readonly IUserService _userService;
+
+        public Task<NotFoundResult> GetUserById(object id)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Constructor that injects a service.
