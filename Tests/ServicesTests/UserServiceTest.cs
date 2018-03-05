@@ -19,14 +19,17 @@ namespace Tests.ServicesTests
     {
         private readonly UserService _service;
         private readonly AppDataContext _ctx;
-
+        
+        /// <summary>
+        /// Before each.
+        /// </summary>
         public UserServiceTest()
         {
             _ctx = new InMemoryAppDataContext();
             var userManager = new MockUserManager(_ctx);
             _service = new UserService(_ctx, userManager, new MemoryCache(new MemoryCacheOptions()));
         }
-
+        
         [Fact]
         public async Task GetUserByIdAsync_NonExistingUser_UserNotFoundException()
         {
@@ -83,6 +86,39 @@ namespace Tests.ServicesTests
                     Assert.True(dto.Name.CompareTo(last.Name) >= 0);
                 }
                 last = dto;
+            }
+        }
+
+        [Fact]
+        public async Task RemoveUserByIdAsync_NonExistingUser_UserNotFoundException()
+        {
+            // Arrange
+            var unknownId = "45788fc6-03b9-4285-b3cf-47599921dcc4";
+
+            // Act
+            // Assert
+            await Assert.ThrowsAsync<UserNotFoundException>(() => _service.RemoveUserByIdAsync(unknownId));
+        }
+
+        [Fact]
+        public async Task RemoveUserByIdAsync_ExistingUser_UserAndAllTodosRemoved()
+        {
+            // Arrange
+            var userToRemove = MockApplicationUsers.Get(0);
+            var userId = userToRemove.Id;
+            var userFoundBefore = _ctx.Users.Where(w => w.Id == userId) != null;
+            var todosToRemove = _ctx.Todo.Where(w => w.Owner.Id == userToRemove.Id).ToList();
+
+            // Act
+            await _service.RemoveUserByIdAsync(userId);
+
+            // Assert
+            Assert.True(userFoundBefore);
+            Assert.NotEmpty(todosToRemove);
+            Assert.Null(_ctx.Users.SingleOrDefault(w => w.Id == userId));
+            foreach (var todo in todosToRemove)
+            {
+                Assert.Null(_ctx.Todo.SingleOrDefault(w => w.Id == todo.Id));
             }
         }
     }

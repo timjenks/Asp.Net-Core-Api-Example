@@ -97,11 +97,7 @@ namespace TodoApi.Services
             _cache.Remove(CacheConstants.GetAllTodosCacheKey(userToRemove.Id));
             _db.RemoveRange(userToRemove.Todos);
 
-            var res = await _userManager.DeleteAsync(userToRemove);
-            if (!res.Succeeded)
-            {
-                throw new RemoveUserFailedException();
-            }
+            await _userManager.DeleteAsync(userToRemove);
             await _db.SaveChangesAsync();
 
             // Clear user if cached and all user list.

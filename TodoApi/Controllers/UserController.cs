@@ -75,10 +75,6 @@ namespace TodoApi.Controllers
             {
                 return NotFound();
             }
-            catch (RemoveUserFailedException)
-            {
-                return StatusCode(520);
-            }
         }
     }
 }
