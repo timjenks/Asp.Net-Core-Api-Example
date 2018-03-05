@@ -12,8 +12,7 @@ using Xunit;
 namespace Tests.ServicesTests
 {
     /// <summary>
-    /// Testing UserService with in memory sqlite database,
-    /// mock config, user manager and sign in manager.
+    /// Testing UserService with in memory sqlite database and mock user manager.
     /// </summary>
     public class UserServiceTest
     {
