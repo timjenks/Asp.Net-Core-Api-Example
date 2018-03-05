@@ -12,7 +12,7 @@ namespace Tests.MockData.EntityModels
         /// <summary>
         /// The first id for mock todo data.
         /// </summary>
-        private const int FirstId = 90210;
+        public const int FirstId = 90210;
 
         /// <summary>
         /// First id, and for each added is incremented by one.
