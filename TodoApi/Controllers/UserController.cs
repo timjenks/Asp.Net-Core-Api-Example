@@ -18,11 +18,6 @@ namespace TodoApi.Controllers
     {
         private readonly IUserService _userService;
 
-        public Task<NotFoundResult> GetUserById(object id)
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>
         /// Constructor that injects a service.
         /// </summary>

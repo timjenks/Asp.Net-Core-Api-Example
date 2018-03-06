@@ -103,7 +103,7 @@ namespace Tests.ControllersTests
             var controller = new AccountController(service);
 
             // Act
-            var result = await controller.Login(null) as BadRequestResult;
+            var result = await controller.Register(null) as BadRequestResult;
 
             // Assert
             Assert.NotNull(result);
