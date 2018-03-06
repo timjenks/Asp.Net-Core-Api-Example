@@ -8,6 +8,8 @@ using TodoApi.Utils.Constants;
 using TodoApi.Models.DtoModels;
 using TodoApi.Models.EntityModels;
 using Xunit;
+using System.Linq;
+using System;
 
 namespace Tests.IntegrationTests
 {
@@ -30,7 +32,6 @@ namespace Tests.IntegrationTests
         }
 
         #region GetUser
-
 
         [Fact]
         public async Task GetUserById_NoToken_Unauthorized()
@@ -116,6 +117,173 @@ namespace Tests.IntegrationTests
 
         #endregion
 
+        #region GetAllUsers
+
+        [Fact]
+        public async Task GetAllUsers_NoToken_Unauthorized()
+        {
+            // Arrange
+            var userToFind = MockApplicationUsers.Get(4);
+            var path = Routes.UserRoute;
+
+            // Act
+            var response = await _endSystems.Get(path);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Unauthorized, response.Code);
+
+            // Tear down
+            _endSystems.Dispose();
+        }
+
+        [Fact]
+        public async Task GetAllUsers_NonAdmin_Forbidden()
+        {
+            // Arrange
+            var user = MockApplicationUsers.Get(5);
+            var path = Routes.UserRoute;
+            var token = await GetToken(user);
+            _endSystems.SetBearerToken(token);
+
+            // Act
+            var response = await _endSystems.Get(path);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Forbidden, response.Code);
+
+            // Tear down
+            _endSystems.Dispose();
+        }
+
+        [Fact]
+        public async Task GetAllUsers_AdminRequesting_OkWithAllUsersInOrder()
+        {
+            // Arrange
+            var requestingUser = MockApplicationUsers.Get(0);
+            var path = Routes.UserRoute;
+            var token = await GetToken(requestingUser);
+            _endSystems.SetBearerToken(token);
+            var expectedDtos = 
+                MockApplicationUsers
+                .GetAll()
+                .OrderBy(w => w.Name)
+                .Select(z => new ApplicationUserDto(z))
+                .ToArray();
+            var first = true;
+            ApplicationUserDto last = null;
+
+            // Act
+            var response = await _endSystems.Get(path);
+            var dtos = JsonStringSerializer.GetListOfApplicationUserDto(response.Body);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.Code);
+            Assert.Equal(expectedDtos.Length, dtos.Length);
+            for (var i = 0; i < dtos.Length; i++)
+            {
+                Assert.Equal(expectedDtos[i].Id, dtos[i].Id);
+                Assert.Equal(expectedDtos[i].Email, dtos[i].Email);
+                Assert.Equal(expectedDtos[i].Name, dtos[i].Name);
+                if (first)
+                {
+                    first = false;
+                }
+                else
+                {
+                    Assert.True(string.Compare(dtos[i].Name, last.Name, StringComparison.Ordinal) >= 0);
+                }
+                last = dtos[i];
+            }
+
+            // Tear down
+            _endSystems.Dispose();
+        }
+
+        #endregion
+
+        #region Delete
+
+        [Fact]
+        public async Task RemoveUserById_NoToken_Unauthorized()
+        {
+            // Arrange
+            var userToRemove = MockApplicationUsers.Get(4);
+            var path = $"{Routes.UserRoute}/{userToRemove.Id}";
+
+            // Act
+            var response = await _endSystems.Delete(path);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Unauthorized, response.Code);
+
+            // Tear down
+            _endSystems.Dispose();
+        }
+
+        [Fact]
+        public async Task RemoveUserById_NonAdmin_Forbidden()
+        {
+            // Arrange
+            var userThatRomves = MockApplicationUsers.Get(1);
+            var userToRemove = MockApplicationUsers.Get(4);
+            var path = $"{Routes.UserRoute}/{userToRemove.Id}";
+            var token = await GetToken(userThatRomves);
+            _endSystems.SetBearerToken(token);
+
+            // Act
+            var response = await _endSystems.Delete(path);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Forbidden, response.Code);
+
+            // Tear down
+            _endSystems.Dispose();
+        }
+
+        [Fact]
+        public async Task RemoveUserById_NonExistingUser_NotFound()
+        {
+            // Arrange
+            var adminUser = MockApplicationUsers.Get(0);
+            const string userIdToRemove = "c09fda23-61c4-49db-873d-eb86224befea";
+            var path = $"{Routes.UserRoute}/{userIdToRemove}";
+            var token = await GetToken(adminUser);
+            _endSystems.SetBearerToken(token);
+
+            // Act
+            var response = await _endSystems.Delete(path);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.NotFound, response.Code);
+
+            // Tear down
+            _endSystems.Dispose();
+        }
+
+        [Fact]
+        public async Task RemoveUserById_ExistingUser_NoContent()
+        {
+            // Arrange
+            var adminUser = MockApplicationUsers.Get(0);
+            var userToRemove = MockApplicationUsers.Get(7);
+            var path = $"{Routes.UserRoute}/{userToRemove.Id}";
+            var token = await GetToken(adminUser);
+            _endSystems.SetBearerToken(token);
+
+            // Act
+            var deleteResponse = await _endSystems.Delete(path);
+            var getResponse = await _endSystems.Get(path);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.NoContent, deleteResponse.Code);
+            Assert.Equal(HttpStatusCode.NotFound, getResponse.Code);
+
+            // Tear down
+            _endSystems.Dispose();
+        }
+
+        #endregion
+
         #region Helpers
 
         public async Task<string> GetToken(ApplicationUser user)
@@ -134,14 +302,3 @@ namespace Tests.IntegrationTests
         #endregion
     }
 }
-
-/*
-
-            var user = MockApplicationUsers.Get(0);
-            var token = await GetToken(user);
-            _endSystems.SetBearerToken(token);
-
-            var path = Routes.UserRoute + "/" + MockApplicationUsers.Get(4).Id;
-
-            var response = await _endSystems.Get(path);
-*/

@@ -41,9 +41,10 @@ namespace Tests.IntegrationTests
         {
             // Arrange
             var content = new StringContent("Home is where I want to be Pick me up and turn me around I feel numb, born with a weak heart I guess I must be having fun");
+            var path = $"{Routes.AccountRoute}/login";
 
             // Act
-            var response = await _endSystems.Post(Routes.AccountRoute + "/login", content, "application/text");
+            var response = await _endSystems.Post(path, content, "application/text");
 
             // Assert
             Assert.Equal(HttpStatusCode.UnsupportedMediaType, response.Code);
@@ -57,9 +58,10 @@ namespace Tests.IntegrationTests
         {
             // Arrange
             var content = new StringContent("");
+            var path = $"{Routes.AccountRoute}/login";
 
             // Act
-            var response = await _endSystems.Post(Routes.AccountRoute + "/login", content);
+            var response = await _endSystems.Post(path, content);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, response.Code);
@@ -73,9 +75,10 @@ namespace Tests.IntegrationTests
         {
             // Arrange
             var content = new StringContent("{}");
+            var path = $"{Routes.AccountRoute}/login";
 
             // Act
-            var response = await _endSystems.Post(Routes.AccountRoute + "/login", content);
+            var response = await _endSystems.Post(path, content);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, response.Code);
@@ -90,9 +93,10 @@ namespace Tests.IntegrationTests
             // Arrange
             var body = StringJsonBuilder.LoginJsonBody("invalid@mail.com", "J0hn_Carmack");
             var content = new StringContent(body);
+            var path = $"{Routes.AccountRoute}/login";
 
             // Act
-            var response = await _endSystems.Post(Routes.AccountRoute + "/login", content);
+            var response = await _endSystems.Post(path, content);
 
             // Assert
             Assert.Equal(HttpStatusCode.Unauthorized, response.Code);
@@ -108,9 +112,10 @@ namespace Tests.IntegrationTests
             var user = MockApplicationUsers.Get(6);
             var body = StringJsonBuilder.LoginJsonBody(user.Email, "A-Am-N0t-C0rrect");
             var content = new StringContent(body);
+            var path = $"{Routes.AccountRoute}/login";
 
             // Act
-            var response = await _endSystems.Post(Routes.AccountRoute + "/login", content);
+            var response = await _endSystems.Post(path, content);
 
             // Assert
             Assert.Equal(HttpStatusCode.Unauthorized, response.Code);
@@ -124,13 +129,14 @@ namespace Tests.IntegrationTests
         {
             // Arrange
             var user = MockApplicationUsers.Get(6);
+            var path = $"{Routes.AccountRoute}/login";
             var body = StringJsonBuilder.LoginJsonBody(user.Email, MockApplicationUsers.UniversalPassword);
             var content = new StringContent(body);
             var role = MockRoles.Admin.Id == MockUserRoles.GetUserRoleForUser(user.Id).RoleId 
                 ? MockRoles.Admin : MockRoles.User;
 
             // Act
-            var response = await _endSystems.Post(Routes.AccountRoute + "/login", content);
+            var response = await _endSystems.Post(path, content);
             var token = response.Body;
 
             // Assert
@@ -150,9 +156,10 @@ namespace Tests.IntegrationTests
         {
             // Arrange
             var content = new StringContent("Home, is where I want to be But I guess I'm already there I come home, she lifted up her wings I guess that this must be the place");
+            var path = $"{Routes.AccountRoute}/register";
 
             // Act
-            var response = await _endSystems.Post(Routes.AccountRoute + "/register", content, "application/text");
+            var response = await _endSystems.Post(path, content, "application/text");
 
             // Assert
             Assert.Equal(HttpStatusCode.UnsupportedMediaType, response.Code);
@@ -166,9 +173,10 @@ namespace Tests.IntegrationTests
         {
             // Arrange
             var content = new StringContent("");
+            var path = $"{Routes.AccountRoute}/register";
 
             // Act
-            var response = await _endSystems.Post(Routes.AccountRoute + "/register", content);
+            var response = await _endSystems.Post(path, content);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, response.Code);
@@ -182,9 +190,10 @@ namespace Tests.IntegrationTests
         {
             // Arrange
             var content = new StringContent("{}");
+            var path = $"{Routes.AccountRoute}/register";
 
             // Act
-            var response = await _endSystems.Post(Routes.AccountRoute + "/register", content);
+            var response = await _endSystems.Post(path, content);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, response.Code);
@@ -199,9 +208,10 @@ namespace Tests.IntegrationTests
             // Arrange
             var body = StringJsonBuilder.RegisterJsonBody("The Message", "grandmaster@flash.com", "onlylowercases");
             var content = new StringContent(body);
+            var path = $"{Routes.AccountRoute}/register";
 
             // Act
-            var response = await _endSystems.Post(Routes.AccountRoute + "/register", content);
+            var response = await _endSystems.Post(path, content);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, response.Code);
@@ -217,9 +227,10 @@ namespace Tests.IntegrationTests
             var user = MockApplicationUsers.Get(8);
             var body = StringJsonBuilder.RegisterJsonBody(user.Name, user.Email, MockApplicationUsers.UniversalPassword);
             var content = new StringContent(body);
+            var path = $"{Routes.AccountRoute}/register";
 
             // Act
-            var response = await _endSystems.Post(Routes.AccountRoute + "/register", content);
+            var response = await _endSystems.Post(path, content);
 
             // Assert
             Assert.Equal(HttpStatusCode.Unauthorized, response.Code);
@@ -251,10 +262,12 @@ namespace Tests.IntegrationTests
             );
             var registerContent = new StringContent(registerBody);
             var loginContent = new StringContent(loginBody);
+            var registerPath = $"{Routes.AccountRoute}/register";
+            var loginPath = $"{Routes.AccountRoute}/login";
 
             // Act
-            var registerResponse = await _endSystems.Post(Routes.AccountRoute + "/register", registerContent);
-            var loginResponse = await _endSystems.Post(Routes.AccountRoute + "/login", loginContent);
+            var registerResponse = await _endSystems.Post(registerPath, registerContent);
+            var loginResponse = await _endSystems.Post(loginPath, loginContent);
             var registerToken = registerResponse.Body;
             var loginToken = loginResponse.Body;
 

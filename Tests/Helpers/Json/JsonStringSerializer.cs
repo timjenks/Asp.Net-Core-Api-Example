@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
 using TodoApi.Models.DtoModels;
 
 namespace Tests.Helpers.Json
@@ -25,6 +27,21 @@ namespace Tests.Helpers.Json
                     new JTokenReader(JObject.Parse(body)), 
                     typeof(ApplicationUserDto)
                 );
+        }
+
+        /// <summary>
+        /// Convert a string json body to a array of user dtos.
+        /// </summary>
+        /// <param name="body">The json object as string</param>
+        /// <returns>An array of users extracted from json</returns>
+        public static ApplicationUserDto[] GetListOfApplicationUserDto(string body)
+        {
+            return (ApplicationUserDto[])Serializer
+                    .Deserialize
+                    (
+                        new JTokenReader(JArray.Parse(body)),
+                        typeof(ApplicationUserDto[])
+                    );
         }
     }
 }
