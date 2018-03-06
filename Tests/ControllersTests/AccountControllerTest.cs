@@ -76,13 +76,13 @@ namespace Tests.ControllersTests
         public async Task Login_Valid_OkWithToken()
         {
             // Arrange
-            var mockToken = "This is not a love-token song";
+            const string mockToken = "This is not a love-token song";
             var service = new MockAccountService { MLogin = (model) => string.Copy(mockToken) };
             var controller = new AccountController(service);
 
             // Act
             var result = await controller.Login(MockLoginViewModel.Get(1)) as OkObjectResult;
-            var tokenReceived = result.Value as string;
+            var tokenReceived = result?.Value as string;
 
             // Assert
             Assert.NotNull(result);
@@ -141,7 +141,7 @@ namespace Tests.ControllersTests
 
             // Act
             var result = await controller.Register(MockRegisterViewModel.Get(1)) as BadRequestObjectResult;
-            var errorMessage = result.Value as HashSet<string>;
+            var errorMessage = result?.Value as HashSet<string>;
 
             // Assert
             Assert.NotNull(result);
@@ -175,7 +175,7 @@ namespace Tests.ControllersTests
 
             // Act
             var result = await controller.Register(MockRegisterViewModel.Get(0)) as ObjectResult;
-            var tokenReceived = result.Value as string;
+            var tokenReceived = result?.Value as string;
 
             // Assert
             Assert.NotNull(result);

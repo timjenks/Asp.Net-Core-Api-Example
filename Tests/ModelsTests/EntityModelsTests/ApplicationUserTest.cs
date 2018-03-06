@@ -57,18 +57,19 @@ namespace Tests.ModelsTests.EntityModelsTests
         [Fact]
         public void ApplicationUser_Setter_Modifies()
         {
-
             // Arrange
             var user = MockApplicationUsers.Get(0);
 
             // Act
             user.Name = "Snake Plissken";
             user.Todos = new HashSet<Todo> { MockTodos.Get(5) };
+            var todos = user.Todos.SingleOrDefault();
 
             // Assert
             Assert.Equal("Snake Plissken", user.Name);
             Assert.Single(user.Todos);
-            Assert.Equal(MockTodos.Get(5).Id, user.Todos.SingleOrDefault().Id);
+            Assert.NotNull(todos);
+            Assert.Equal(MockTodos.Get(5).Id, todos.Id);
         }
     }
 }

@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
+using Tests.Helpers.Models;
 using Tests.MockData.ViewModels;
-using Tests.Models.Helpers;
 using TodoApi.Constants;
 using TodoApi.Models.ViewModels;
 using Xunit;

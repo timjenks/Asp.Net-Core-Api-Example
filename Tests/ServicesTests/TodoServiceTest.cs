@@ -36,7 +36,7 @@ namespace Tests.ServicesTests
         public async Task GetTodoByIdAsync_NonExistingTodo_TodoNotFoundException()
         {
             // Arrange
-            var nonExistingId = 0;
+            const int nonExistingId = 0;
             var userId = MockApplicationUsers.Get(4).Id;
 
             // Act
@@ -50,7 +50,7 @@ namespace Tests.ServicesTests
         {
             // Arrange
             var todoId = MockTodos.Get(7).Id;
-            var userId = "c54a85fa-ca7c-49d7-b830-6b07ea49cfa8";
+            const string userId = "c54a85fa-ca7c-49d7-b830-6b07ea49cfa8";
 
             // Act
             // Assert
@@ -63,10 +63,11 @@ namespace Tests.ServicesTests
         {
             // Arrange
             var todo = MockTodos.Get(2);
-            var user = MockApplicationUsers.GetAll().Where(w => w.Id != todo.Owner.Id).FirstOrDefault();
+            var user = MockApplicationUsers.GetAll().FirstOrDefault(w => w.Id != todo.Owner.Id);
 
             // Act
             // Assert
+            Assert.NotNull(user);
             await Assert.ThrowsAsync<TodoNotFoundException>(
                 () => _service.GetTodoByIdAsync(todo.Id, user.Id));
         }
@@ -76,9 +77,10 @@ namespace Tests.ServicesTests
         {
             // Arrange
             var todo = MockTodos.Get(5);
-            var user = MockApplicationUsers.GetAll().Where(w => w.Id == todo.Owner.Id).SingleOrDefault();
+            var user = MockApplicationUsers.GetAll().SingleOrDefault(w => w.Id == todo.Owner.Id);
 
             // Act
+            Assert.NotNull(user);
             var dto = await _service.GetTodoByIdAsync(todo.Id, user.Id);
 
             // Assert
@@ -99,10 +101,10 @@ namespace Tests.ServicesTests
             var todosOwnedByOwner = _ctx.Todo.Where(w => w.Owner.Id == owner.Id).Select(z => z.Id).ToHashSet();
 
             // Act
-            var all = await _service.GetAllTodosOrderedByDueAsync(null, "5", "1", owner.Id);
+            var all = (await _service.GetAllTodosOrderedByDueAsync(null, "5", "1", owner.Id)).ToArray();
 
             // Assert
-            Assert.Equal(todosOwnedByOwner.Count(), all.Count());
+            Assert.Equal(todosOwnedByOwner.Count, all.Length);
             foreach (var dto in all)
             {
                 Assert.Contains(dto.Id, todosOwnedByOwner);
@@ -117,10 +119,10 @@ namespace Tests.ServicesTests
             var todosOwnedByOwner = _ctx.Todo.Where(w => w.Owner.Id == owner.Id).Select(z => z.Id).ToHashSet();
 
             // Act
-            var all = await _service.GetAllTodosOrderedByDueAsync("1999", null, "1", owner.Id);
+            var all = (await _service.GetAllTodosOrderedByDueAsync("1999", null, "1", owner.Id)).ToArray();
 
             // Assert
-            Assert.Equal(todosOwnedByOwner.Count(), all.Count());
+            Assert.Equal(todosOwnedByOwner.Count, all.Length);
             foreach (var dto in all)
             {
                 Assert.Contains(dto.Id, todosOwnedByOwner);
@@ -135,10 +137,10 @@ namespace Tests.ServicesTests
             var todosOwnedByOwner = _ctx.Todo.Where(w => w.Owner.Id == owner.Id).Select(z => z.Id).ToHashSet();
 
             // Act
-            var all = await _service.GetAllTodosOrderedByDueAsync("1999", "11", null, owner.Id);
+            var all = (await _service.GetAllTodosOrderedByDueAsync("1999", "11", null, owner.Id)).ToArray();
 
             // Assert
-            Assert.Equal(todosOwnedByOwner.Count(), all.Count());
+            Assert.Equal(todosOwnedByOwner.Count, all.Length);
             foreach (var dto in all)
             {
                 Assert.Contains(dto.Id, todosOwnedByOwner);
@@ -180,7 +182,7 @@ namespace Tests.ServicesTests
         public async Task GetAllTodosOrderedByDueAsync_NoFilterNonExistingUser_EmptyList()
         {
             // Arrange
-            var userId = "c54a85fa-ca7c-49d7-b830-6b07ea49cfa8";
+            const string userId = "c54a85fa-ca7c-49d7-b830-6b07ea49cfa8";
 
             // Act
             var all = await _service.GetAllTodosOrderedByDueAsync(null, null, null, userId);
@@ -193,7 +195,7 @@ namespace Tests.ServicesTests
         public async Task GetAllTodosOrderedByDueAsync_ValidFilterNonExistingUser_EmptyList()
         {
             // Arrange
-            var userId = "c54a85fa-ca7c-49d7-b830-6b07ea49cfa8";
+            const string userId = "c54a85fa-ca7c-49d7-b830-6b07ea49cfa8";
 
             // Act
             var all = await _service.GetAllTodosOrderedByDueAsync("2000", "5", "20", userId);
@@ -210,7 +212,7 @@ namespace Tests.ServicesTests
         public async Task CreateTodoAsync_NonExistingUser_UserNotFoundException()
         {
             // Arrange
-            var userId = "c54a85fa-ca7c-49d7-b830-6b07ea49cfa8";
+            const string userId = "c54a85fa-ca7c-49d7-b830-6b07ea49cfa8";
             var model = new CreateTodoViewModel
             {
                 Description = "Buy a pie from Frank Pepe's",
@@ -236,7 +238,7 @@ namespace Tests.ServicesTests
 
             // Act
             var id = await _service.CreateTodoAsync(model, userId);
-            var todo = _ctx.Todo.Where(z => z.Id == expectedId && z.Owner.Id == userId).SingleOrDefault();
+            var todo = _ctx.Todo.SingleOrDefault(z => z.Id == expectedId && z.Owner.Id == userId);
 
             // Assert
             Assert.Equal(expectedId, id);
@@ -254,7 +256,7 @@ namespace Tests.ServicesTests
         {
             // Arrange
             var userId = MockApplicationUsers.Get(0).Id;
-            var todoId = 0;
+            const int todoId = 0;
 
             // Act
             // Assert
@@ -265,7 +267,7 @@ namespace Tests.ServicesTests
         public async Task RemoveTodoByIdAsync_NonExistingUser_TodoNotFoundException()
         {
             // Arrange
-            var userId = "c54a85fa-ca7c-49d7-b830-6b07ea49cfa8";
+            const string userId = "c54a85fa-ca7c-49d7-b830-6b07ea49cfa8";
             var todoId = MockTodos.Get(3).Id;
 
             // Act
@@ -278,17 +280,18 @@ namespace Tests.ServicesTests
         {
             // Arrange
             var user = MockApplicationUsers.Get(4);
-            var todo = _ctx.Todo.Where(z => z.Owner.Id == user.Id).FirstOrDefault();
-            var ownedBefore = _ctx.Todo.Where(z => z.Owner.Id == user.Id).Count();
-            var foundBefore = _ctx.Todo.Where(z => z.Id == todo.Id).SingleOrDefault() != null;
+            var todo = _ctx.Todo.FirstOrDefault(z => z.Owner.Id == user.Id);
+            var ownedBefore = _ctx.Todo.Count(z => z.Owner.Id == user.Id);
+            var foundBefore = _ctx.Todo.SingleOrDefault(z => z.Id == todo.Id) != null;
 
             // Act
+            Assert.NotNull(todo);
             await _service.RemoveTodoByIdAsync(todo.Id, user.Id);
 
             // Assert
             Assert.True(foundBefore);
-            Assert.Null(_ctx.Todo.Where(z => z.Id == todo.Id).SingleOrDefault());
-            Assert.Equal(ownedBefore - 1, _ctx.Todo.Where(z => z.Owner.Id == user.Id).Count());
+            Assert.Null(_ctx.Todo.SingleOrDefault(z => z.Id == todo.Id));
+            Assert.Equal(ownedBefore - 1, _ctx.Todo.Count(z => z.Owner.Id == user.Id));
         }
 
         #endregion
@@ -316,7 +319,7 @@ namespace Tests.ServicesTests
         public async Task EditTodoAsync_NonExistingUser_TodoNotFoundException()
         {
             // Arrange
-            var userId = "c54a85fa-ca7c-49d7-b830-6b07ea49cfa8";
+            const string userId = "c54a85fa-ca7c-49d7-b830-6b07ea49cfa8";
             var todo = MockTodos.Get(3);
             var model = new EditTodoViewModel
             {
@@ -335,7 +338,8 @@ namespace Tests.ServicesTests
         {
             // Arrange
             var user = MockApplicationUsers.Get(4);
-            var todo = _ctx.Todo.Where(z => z.Owner.Id == user.Id).FirstOrDefault();
+            var todo = _ctx.Todo.FirstOrDefault(z => z.Owner.Id == user.Id);
+            Assert.NotNull(todo);
             var model = new EditTodoViewModel
             {
                 Id = todo.Id,
@@ -345,9 +349,10 @@ namespace Tests.ServicesTests
 
             // Act
             await _service.EditTodoAsync(model, user.Id);
-            var changedTodo = _ctx.Todo.Where(z => z.Id == todo.Id).SingleOrDefault();
+            var changedTodo = _ctx.Todo.SingleOrDefault(z => z.Id == todo.Id);
 
             // Assert
+            Assert.NotNull(changedTodo);
             Assert.Equal(new DateTime(2020, 1, 1, 0, 0, 0), changedTodo.Due);
             Assert.Equal("Catch Mr. X", changedTodo.Description);
         }

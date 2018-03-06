@@ -1,18 +1,19 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using TodoApi.Data;
 using TodoApi.Models.EntityModels;
 
 namespace Tests.MockData.Data
 {
+    /// <inheritdoc />
     /// <summary>
     /// Mock for the user manager that actually uses the in memory database.
     /// </summary>
     public class MockUserManager : UserManager<ApplicationUser>
     {
-
+        /// <inheritdoc />
         /// <summary>
         /// Calls super class with a store from the context and 
         /// various other properties. The properties are passed
@@ -20,7 +21,7 @@ namespace Tests.MockData.Data
         /// Others might have to add more or possibly mock.
         /// </summary>
         /// <param name="ctx">In memory application db context</param>
-        public MockUserManager(AppDataContext ctx) : base
+        public MockUserManager(DbContext ctx) : base
         (
             new UserStore<ApplicationUser>(ctx),                        // IUserManager<ApplicationUser>
             null,                                                       // IOptions<IdentityOptions>

@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Tests.Helpers.EndSystems;
+using Tests.Helpers.Json;
 using Tests.MockData.EntityModels;
 using TodoApi.Constants;
 using TodoApi.Models.EntityModels;
@@ -49,25 +50,7 @@ namespace Tests.IntegrationTests
         {
             Assert.NotNull(user);
             Assert.NotNull(user.Email);
-            var body = new StringBuilder(26 + user.Email.Length + MockApplicationUsers.UniversalPassword.Length)
-                .Append('{')
-                .Append('"')
-                .Append("Email")
-                .Append('"')
-                .Append(':')
-                .Append('"')
-                .Append(user.Email)
-                .Append('"')
-                .Append(',')
-                .Append('"')
-                .Append("Password")
-                .Append('"')
-                .Append(':')
-                .Append('"')
-                .Append(MockApplicationUsers.UniversalPassword)
-                .Append('"')
-                .Append('}')
-                .ToString();
+            var body = StringJsonBuilder.LoginJsonBody(user.Email, MockApplicationUsers.UniversalPassword);
             var content = new StringContent(body);
             var response = await _endSystems.Post(Routes.AccountRoute + "/login", content);
             Assert.NotNull(response);

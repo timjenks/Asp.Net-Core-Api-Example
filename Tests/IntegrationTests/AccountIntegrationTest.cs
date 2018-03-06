@@ -1,12 +1,13 @@
-﻿using Jwt;
+﻿using System;
+using Jwt;
 using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 using Tests.Helpers.EndSystems;
+using Tests.Helpers.Json;
 using Tests.MockData.Data;
 using Tests.MockData.EntityModels;
 using TodoApi.Constants;
@@ -87,7 +88,7 @@ namespace Tests.IntegrationTests
         public async Task PostAccountLogin_NonExistingUser_Unauthorized()
         {
             // Arrange
-            var body = ConstructLoginBody("invalid@mail.com", "J0hn_Carmack");
+            var body = StringJsonBuilder.LoginJsonBody("invalid@mail.com", "J0hn_Carmack");
             var content = new StringContent(body);
 
             // Act
@@ -105,7 +106,7 @@ namespace Tests.IntegrationTests
         {
             // Arrange
             var user = MockApplicationUsers.Get(6);
-            var body = ConstructLoginBody(user.Email, "A-Am-N0t-C0rrect");
+            var body = StringJsonBuilder.LoginJsonBody(user.Email, "A-Am-N0t-C0rrect");
             var content = new StringContent(body);
 
             // Act
@@ -123,7 +124,7 @@ namespace Tests.IntegrationTests
         {
             // Arrange
             var user = MockApplicationUsers.Get(6);
-            var body = ConstructLoginBody(user.Email, MockApplicationUsers.UniversalPassword);
+            var body = StringJsonBuilder.LoginJsonBody(user.Email, MockApplicationUsers.UniversalPassword);
             var content = new StringContent(body);
             var role = MockRoles.Admin.Id == MockUserRoles.GetUserRoleForUser(user.Id).RoleId 
                 ? MockRoles.Admin : MockRoles.User;
@@ -196,7 +197,7 @@ namespace Tests.IntegrationTests
         public async Task PostAccountRegiser_WeakPassword_BadRequest()
         {
             // Arrange
-            var body = ConstructRegisterBody("The Message", "grandmaster@flash.com", "onlylowercases");
+            var body = StringJsonBuilder.RegisterJsonBody("The Message", "grandmaster@flash.com", "onlylowercases");
             var content = new StringContent(body);
 
             // Act
@@ -214,7 +215,7 @@ namespace Tests.IntegrationTests
         {
             // Arrange
             var user = MockApplicationUsers.Get(8);
-            var body = ConstructRegisterBody(user.Name, user.Email, MockApplicationUsers.UniversalPassword);
+            var body = StringJsonBuilder.RegisterJsonBody(user.Name, user.Email, MockApplicationUsers.UniversalPassword);
             var content = new StringContent(body);
 
             // Act
@@ -237,13 +238,13 @@ namespace Tests.IntegrationTests
                 Email = "police@thieves.com",
                 UserName = "police@thieves.com"
             };
-            var registerBody = ConstructRegisterBody
+            var registerBody = StringJsonBuilder.RegisterJsonBody
             (
                 user.Name, 
                 user.Email,
                 MockApplicationUsers.UniversalPassword
             );
-            var loginBody = ConstructLoginBody
+            var loginBody = StringJsonBuilder.LoginJsonBody
             (
                 user.Email,
                 MockApplicationUsers.UniversalPassword
@@ -271,78 +272,30 @@ namespace Tests.IntegrationTests
 
         #region Helpers
 
-        private void CheckToken(IdentityRole role, ApplicationUser user, 
+        /// <summary>
+        /// Assertion for token.
+        /// </summary>
+        /// <param name="role">The role of the user. Singular only!</param>
+        /// <param name="user">The owner of the token</param>
+        /// <param name="token">The token as string</param>
+        /// <param name="checkId">Optional parameter on if the id should be checked</param>
+        /// <exception cref="ArgumentNullException">If parameters are null</exception>
+        private static void CheckToken(IdentityRole role, ApplicationUser user, 
             string token, bool checkId = true)
         {
+            if (role == null) throw new ArgumentNullException(nameof(role));
+            if (user == null) throw new ArgumentNullException(nameof(user));
+            if (token == null) throw new ArgumentNullException(nameof(token));
+            var check = checkId;
             var data = JsonWebToken.Decode(token, new MockConfiguration()["SecretKey"]);
             var json = JObject.Parse(data);
             Assert.Equal(user.Email, json.GetValue("sub"));
-            if (checkId)
+            if (check)
             {
                 Assert.Equal(user.Id, json.GetValue(ClaimTypes.NameIdentifier));
             }
             Assert.Equal(user.Name, json.GetValue(ClaimTypes.Name));
             Assert.Equal(role.Name, json.GetValue(ClaimTypes.Role));
-        }
-
-        /// <summary>
-        /// Create a json string from given fields.
-        /// </summary>
-        private string ConstructRegisterBody(string name, string email, string password)
-        {
-            return new StringBuilder(36 + name.Length + email.Length + password.Length)
-                .Append('{')
-                .Append('"')
-                .Append("Email")
-                .Append('"')
-                .Append(':')
-                .Append('"')
-                .Append(email)
-                .Append('"')
-                .Append(',')
-                .Append('"')
-                .Append("Password")
-                .Append('"')
-                .Append(':')
-                .Append('"')
-                .Append(password)
-                .Append('"')
-                .Append(',')
-                .Append('"')
-                .Append("Name")
-                .Append('"')
-                .Append(':')
-                .Append('"')
-                .Append(name)
-                .Append('"')
-                .Append('}')
-                .ToString();
-        }
-
-        /// <summary>
-        /// Create a json string from given fields.
-        /// </summary>
-        private string ConstructLoginBody(string email, string password)
-        {
-            return new StringBuilder(26 + email.Length + password.Length)
-                .Append('{')
-                .Append('"')
-                .Append("Email")
-                .Append('"')
-                .Append(':')
-                .Append('"')
-                .Append(email)
-                .Append('"')
-                .Append(',')
-                .Append('"')
-                .Append("Password")
-                .Append('"')
-                .Append(':')
-                .Append('"')
-                .Append(password)
-                .Append('"')
-                .Append('}')
-                .ToString();
         }
 
         #endregion

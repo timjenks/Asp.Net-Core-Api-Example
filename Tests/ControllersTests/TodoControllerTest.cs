@@ -32,7 +32,7 @@ namespace Tests.ControllersTests
             };
             var controller = new TodoController(service);
             MockClaims.AddUserIdClaim(controller, "I am just gonna throw an exception anyway");
-            var tId = 665;
+            const int tId = 665;
 
             // Act
             var result = await controller.GetTodo(tId) as NotFoundResult;
@@ -52,11 +52,11 @@ namespace Tests.ControllersTests
             };
             var controller = new TodoController(service);
             MockClaims.AddUserIdClaim(controller, MockApplicationUsers.Get(5).Id);
-            var tId = 10101;
+            const int tId = 10101;
 
             // Act
             var result = await controller.GetTodo(tId) as OkObjectResult;
-            var dto = result.Value as TodoDto;
+            var dto = result?.Value as TodoDto;
 
             // Assert
             Assert.NotNull(result);
@@ -88,7 +88,7 @@ namespace Tests.ControllersTests
 
             // Act
             var result = await controller.GetAllTodos() as OkObjectResult;
-            var list = result.Value as TodoDto[];
+            var list = result?.Value as TodoDto[];
 
             // Assert
             Assert.NotNull(result);

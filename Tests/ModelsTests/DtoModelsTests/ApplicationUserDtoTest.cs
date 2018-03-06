@@ -1,5 +1,4 @@
-﻿using System;
-using Tests.MockData.DtoModels;
+﻿using Tests.MockData.DtoModels;
 using Tests.MockData.EntityModels;
 using TodoApi.Models.DtoModels;
 using Xunit;

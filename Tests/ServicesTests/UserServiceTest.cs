@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using System;
+using Microsoft.Extensions.Caching.Memory;
 using System.Linq;
 using System.Threading.Tasks;
 using Tests.MockData.Data;
@@ -35,7 +36,7 @@ namespace Tests.ServicesTests
         public async Task GetUserByIdAsync_NonExistingUser_UserNotFoundException()
         {
             // Arrange
-            var unknownId = "45788fc6-03b9-4285-b3cf-47599921dcc4";
+            const string unknownId = "45788fc6-03b9-4285-b3cf-47599921dcc4";
 
             // Act
             // Assert
@@ -69,11 +70,11 @@ namespace Tests.ServicesTests
             var allIds = MockApplicationUsers.GetAll().Select(w => w.Id).ToHashSet();
 
             // Act
-            var allUsers = await _service.GetAllUsersOrderedByNameAsync();
+            var allUsers = (await _service.GetAllUsersOrderedByNameAsync()).ToArray();
             var dtoIds = allUsers.Select(w => w.Id).ToHashSet();
 
             // Assert
-            Assert.Equal(allIds.Count(), dtoIds.Count());
+            Assert.Equal(allIds.Count, dtoIds.Count);
             foreach (var id in dtoIds)
             {
                 Assert.Contains(id, allIds);
@@ -88,7 +89,7 @@ namespace Tests.ServicesTests
                 }
                 else
                 {
-                    Assert.True(dto.Name.CompareTo(last.Name) >= 0);
+                    Assert.True(string.Compare(dto.Name, last.Name, StringComparison.Ordinal) >= 0);
                 }
                 last = dto;
             }
@@ -102,7 +103,7 @@ namespace Tests.ServicesTests
         public async Task RemoveUserByIdAsync_NonExistingUser_UserNotFoundException()
         {
             // Arrange
-            var unknownId = "45788fc6-03b9-4285-b3cf-47599921dcc4";
+            const string unknownId = "45788fc6-03b9-4285-b3cf-47599921dcc4";
 
             // Act
             // Assert
@@ -115,7 +116,7 @@ namespace Tests.ServicesTests
             // Arrange
             var userToRemove = MockApplicationUsers.Get(0);
             var userId = userToRemove.Id;
-            var userFoundBefore = _ctx.Users.Where(w => w.Id == userId) != null;
+            var userFoundBefore = _ctx.Users.SingleOrDefault(w => w.Id == userId) != null;
             var todosToRemove = _ctx.Todo.Where(w => w.Owner.Id == userToRemove.Id).ToList();
 
             // Act

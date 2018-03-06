@@ -48,7 +48,7 @@ namespace Tests.ControllersTests
 
             // Act
             var result = await controller.GetUserById(MockApplicationUserDto.Get(0).Id) as OkObjectResult;
-            var dto = result.Value as ApplicationUserDto;
+            var dto = result?.Value as ApplicationUserDto;
 
             // Assert
             Assert.NotNull(result);
@@ -79,7 +79,7 @@ namespace Tests.ControllersTests
 
             // Act
             var result = await controller.GetAllUsers() as OkObjectResult;
-            var list = result.Value as ApplicationUserDto[];
+            var list = result?.Value as ApplicationUserDto[];
 
             // Assert
             Assert.NotNull(result);

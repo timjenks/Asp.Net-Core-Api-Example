@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Tests.Models.Helpers
+namespace Tests.Helpers.Models
 {
     /// <summary>
     /// Static wrapper for a model validation method.

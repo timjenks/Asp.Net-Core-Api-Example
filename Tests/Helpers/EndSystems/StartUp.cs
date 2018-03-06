@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Text;
 using Tests.MockData.Data;
 using Tests.MockData.EntityModels;
@@ -123,7 +124,7 @@ namespace Tests.Helpers.EndSystems
         {
             db.Roles.Add(MockRoles.Admin);
             db.Roles.Add(MockRoles.User);
-            var allUsers = MockApplicationUsers.GetAll();
+            var allUsers = MockApplicationUsers.GetAll().ToArray();
             db.Users.AddRange(allUsers);
             db.SaveChanges();
             foreach (var user in allUsers)

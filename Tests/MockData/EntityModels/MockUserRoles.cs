@@ -13,7 +13,7 @@ namespace Tests.MockData.EntityModels
         /// <summary>
         /// A dictionary between user ids and their role.
         /// </summary>
-        private static Dictionary<string, IdentityUserRole<string>> Data = InitialzieData();
+        private static readonly Dictionary<string, IdentityUserRole<string>> Data = InitialzieData();
 
         /// <summary>
         /// Get the UserRole for the userId. In this scenario, each one has only one
@@ -37,7 +37,7 @@ namespace Tests.MockData.EntityModels
         /// <returns>A dictionary with the first user as admin, rest as users</returns>
         private static Dictionary<string, IdentityUserRole<string>> InitialzieData()
         {
-            var allUsers = MockApplicationUsers.GetAll();
+            var allUsers = MockApplicationUsers.GetAll().ToArray();
             var mapInitSize = (int)(allUsers.Count() * 1.5);
             var hashMap = new Dictionary<string, IdentityUserRole<string>>(mapInitSize);
             var first = true;

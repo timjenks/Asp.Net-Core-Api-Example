@@ -7,11 +7,13 @@ using TodoApi.Models.EntityModels;
 
 namespace Tests.MockData.Data
 {
+    /// <inheritdoc />
     /// <summary>
     /// Validator for password error based on our settings.
     /// </summary>
     public class MockPasswordValidator : IPasswordValidator<ApplicationUser>
     {
+        /// <inheritdoc />
         /// <summary>
         /// Validated our password and sets errors if any.
         /// </summary>
@@ -51,7 +53,7 @@ namespace Tests.MockData.Data
                 errors.Add(new IdentityError { Code = "PasswordRequiresNonAlphanumeric", Description = "X" });
             }
 
-            return errors.Count() > 0 ? IdentityResult.Failed(errors.ToArray()) : IdentityResult.Success;
+            return errors.Any() ? IdentityResult.Failed(errors.ToArray()) : IdentityResult.Success;
         }
 
         /// <summary>
@@ -59,7 +61,7 @@ namespace Tests.MockData.Data
         /// </summary>
         /// <param name="pw">Password as a sting</param>
         /// <returns>True if does contain, false otherwise</returns>
-        private bool HasEnoughUniqueChars(string pw)
+        private static bool HasEnoughUniqueChars(string pw)
         {
             return pw.ToCharArray().ToHashSet().Count() >= PasswordLimits.AccountMinUniqueChars;
         }
@@ -69,9 +71,9 @@ namespace Tests.MockData.Data
         /// </summary>
         /// <param name="pw">Password as a sting</param>
         /// <returns>True if not needed or does contain, false otherwise</returns>
-        private bool HasDigit(string pw)
+        private static bool HasDigit(string pw)
         {
-            return !PasswordLimits.PasswordSettings.RequireDigit || pw.Any(c => char.IsDigit(c));
+            return !PasswordLimits.PasswordSettings.RequireDigit || pw.Any(char.IsDigit);
         }
 
         /// <summary>
@@ -79,9 +81,9 @@ namespace Tests.MockData.Data
         /// </summary>
         /// <param name="pw">Password as a sting</param>
         /// <returns>True if not needed or does contain, false otherwise</returns>
-        private bool HasUpper(string pw)
+        private static bool HasUpper(string pw)
         {
-            return !PasswordLimits.PasswordSettings.RequireUppercase || pw.Any(c => char.IsUpper(c));
+            return !PasswordLimits.PasswordSettings.RequireUppercase || pw.Any(char.IsUpper);
         }
 
         /// <summary>
@@ -89,9 +91,9 @@ namespace Tests.MockData.Data
         /// </summary>
         /// <param name="pw">Password as a sting</param>
         /// <returns>True if not needed or does contain, false otherwise</returns>
-        private bool HasLower(string pw)
+        private static bool HasLower(string pw)
         {
-            return !PasswordLimits.PasswordSettings.RequireLowercase || pw.Any(c => char.IsLower(c));
+            return !PasswordLimits.PasswordSettings.RequireLowercase || pw.Any(char.IsLower);
         }
 
         /// <summary>
@@ -99,9 +101,9 @@ namespace Tests.MockData.Data
         /// </summary>
         /// <param name="pw">Password as a sting</param>
         /// <returns>True if not needed or does contain, false otherwise</returns>
-        private bool HasNonAlphanumeric(string pw)
+        private static bool HasNonAlphanumeric(string pw)
         {
-            return !PasswordLimits.PasswordSettings.RequireNonAlphanumeric || !pw.All(c => char.IsLetterOrDigit(c));
+            return !PasswordLimits.PasswordSettings.RequireNonAlphanumeric || !pw.All(char.IsLetterOrDigit);
         }
     }
 }

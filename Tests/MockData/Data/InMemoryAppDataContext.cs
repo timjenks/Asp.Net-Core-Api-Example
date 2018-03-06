@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using System.Linq;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Tests.MockData.EntityModels;
 using TodoApi.Data;
@@ -30,7 +31,7 @@ namespace Tests.MockData.Data
         {
             Roles.Add(MockRoles.Admin);
             Roles.Add(MockRoles.User);
-            var allUsers = MockApplicationUsers.GetAll();
+            var allUsers = MockApplicationUsers.GetAll().ToArray();
             Users.AddRange(allUsers);
             SaveChanges();
             foreach (var user in allUsers)

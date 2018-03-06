@@ -13,6 +13,7 @@ namespace Tests.Helpers.EndSystems
     /// </summary>
     public class MockServerAndClient
     {
+        private const string BaseAddress = "http://localhost";
         private readonly TestServer _server;
         private readonly HttpClient _client;
 
@@ -22,17 +23,13 @@ namespace Tests.Helpers.EndSystems
         public MockServerAndClient()
         {
             var builder = new WebHostBuilder()
-                //.UseContentRoot(@"...")
                 .UseEnvironment("Development")
                 .UseStartup<StartUp>()
                 .UseApplicationInsights();
 
-
             _server = new TestServer(builder);
             _client = _server.CreateClient();
-            _client.BaseAddress = new Uri("http://localhost");
-
-            
+            _client.BaseAddress = new Uri(BaseAddress);
         }
         
         /// <summary>
@@ -41,7 +38,8 @@ namespace Tests.Helpers.EndSystems
         /// <param name="token">A bearer token</param>
         public void SetBearerToken(string token)
         {
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            _client.DefaultRequestHeaders.Authorization = 
+                new AuthenticationHeaderValue("Bearer", token);
         }
 
         /// <summary>
@@ -67,6 +65,7 @@ namespace Tests.Helpers.EndSystems
         /// </summary>
         /// <param name="route">The route for the request (without host)</param>
         /// <param name="content">The json object from the client</param>
+        /// <param name="mediaType">Optional parameter for content type</param>
         /// <returns>The response from the server (asynchronous)</returns>
         public async Task<MockResponse> Post(string route, 
             HttpContent content, string mediaType = "application/json")
@@ -80,6 +79,7 @@ namespace Tests.Helpers.EndSystems
         /// </summary>
         /// <param name="route">The route for the request (without host)</param>
         /// <param name="content">The json object from the client</param>
+        /// <param name="mediaType">Optional parameter for content type</param>
         /// <returns>The response from the server (asynchronous)</returns>
         public async Task<MockResponse> Put(string route, 
             HttpContent content, string mediaType = "application/json")

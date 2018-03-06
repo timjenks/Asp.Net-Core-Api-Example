@@ -10,6 +10,7 @@ using TodoApi.Models.EntityModels;
 
 namespace Tests.MockData.Data
 {
+    /// <inheritdoc />
     /// <summary>
     /// Mock of a sign in manager. It only implements the 
     /// method that are used in this project but more can
@@ -22,6 +23,7 @@ namespace Tests.MockData.Data
     /// </summary>
     public class MockSignInManager : SignInManager<ApplicationUser>
     {
+        /// <inheritdoc />
         /// <summary>
         /// Takes a usermanager but mocks all other object past to super class.
         /// </summary>
@@ -35,6 +37,7 @@ namespace Tests.MockData.Data
                   new Mock<IAuthenticationSchemeProvider>().Object)
         { }
 
+        /// <inheritdoc />
         /// <summary>
         /// When signed in, we look for a user with this email and
         /// check if the password matches the universal password
@@ -53,6 +56,7 @@ namespace Tests.MockData.Data
             return userFound && passwordCorrect ? SignInResult.Success : SignInResult.Failed;
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Does nothing.
         /// </summary>
