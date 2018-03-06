@@ -43,5 +43,35 @@ namespace Tests.Helpers.Json
                         typeof(ApplicationUserDto[])
                     );
         }
+
+        /// <summary>
+        /// Convert a string json body to a todo.
+        /// </summary>
+        /// <param name="body">The json object as string</param>
+        /// <returns>A todo extracted from the json object</returns>
+        public static TodoDto GetTodoDto(string body)
+        {
+            return (TodoDto)Serializer
+                .Deserialize
+                (
+                    new JTokenReader(JObject.Parse(body)),
+                    typeof(TodoDto)
+                );
+        }
+
+        /// <summary>
+        /// Convert a string json body to a array of todo dtos.
+        /// </summary>
+        /// <param name="body">The json object as string</param>
+        /// <returns>A todo of users extracted from json</returns>
+        public static TodoDto[] GetListOfTodoto(string body)
+        {
+            return (TodoDto[])Serializer
+                    .Deserialize
+                    (
+                        new JTokenReader(JArray.Parse(body)),
+                        typeof(TodoDto[])
+                    );
+        }
     }
 }

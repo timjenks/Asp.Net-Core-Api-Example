@@ -104,7 +104,7 @@ namespace Tests.IntegrationTests
             // Act
             var response = await _endSystems.Get(path);
             var dto = JsonStringSerializer.GetApplicationUserDto(response.Body);
-            
+
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.Code);
             Assert.Equal(expectedDto.Id, dto.Id);
@@ -286,11 +286,17 @@ namespace Tests.IntegrationTests
 
         #region Helpers
 
-        public async Task<string> GetToken(ApplicationUser user)
+        /// <summary>
+        /// Login with a user and return the token as string.
+        /// </summary>
+        /// <param name="user">A user to login</param>
+        /// <returns>A token as string</returns>
+        private async Task<string> GetToken(ApplicationUser user)
         {
             Assert.NotNull(user);
             Assert.NotNull(user.Email);
-            var body = StringJsonBuilder.LoginJsonBody(user.Email, MockApplicationUsers.UniversalPassword);
+            var body = StringJsonBuilder.LoginJsonBody(
+                user.Email, MockApplicationUsers.UniversalPassword);
             var content = new StringContent(body);
             var response = await _endSystems.Post(Routes.AccountRoute + "/login", content);
             Assert.NotNull(response);
