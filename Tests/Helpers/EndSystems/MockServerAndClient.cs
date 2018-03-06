@@ -31,6 +31,25 @@ namespace Tests.Helpers.EndSystems
             _server = new TestServer(builder);
             _client = _server.CreateClient();
             _client.BaseAddress = new Uri("http://localhost");
+
+            
+        }
+        
+        /// <summary>
+        /// Add a bearer token to default request headers.
+        /// </summary>
+        /// <param name="token">A bearer token</param>
+        public void SetBearerToken(string token)
+        {
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        }
+
+        /// <summary>
+        /// Clear the default request headers of Authentication field.
+        /// </summary>
+        public void RemoveBearerTokeN()
+        {
+            _client.DefaultRequestHeaders.Remove("Authentication");
         }
 
         /// <summary>
@@ -41,17 +60,6 @@ namespace Tests.Helpers.EndSystems
         public async Task<MockResponse> Get(string route)
         {
             return await Response(await _client.GetAsync(route));
-        }
-
-        public async Task<MockResponse> Get(string route, string token)
-        {
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_client.BaseAddress + "/" + route),
-                Method = HttpMethod.Get
-            };
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            return await Response(await _client.SendAsync(request));
         }
 
         /// <summary>
