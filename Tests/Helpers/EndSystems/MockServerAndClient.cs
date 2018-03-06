@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
@@ -39,8 +40,18 @@ namespace Tests.Helpers.EndSystems
         /// <returns>The response from the server (asynchronous)</returns>
         public async Task<MockResponse> Get(string route)
         {
-            var x = await _client.GetAsync(route);
-            return await Response(x);
+            return await Response(await _client.GetAsync(route));
+        }
+
+        public async Task<MockResponse> GetWithToken(string route, string token)
+        {
+            var request = new HttpRequestMessage
+            {
+                RequestUri = new Uri(_client.BaseAddress + "/" + route),
+                Method = HttpMethod.Get
+            };
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            return await Response(await _client.SendAsync(request));
         }
 
         /// <summary>

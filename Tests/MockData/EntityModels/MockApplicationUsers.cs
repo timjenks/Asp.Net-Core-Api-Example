@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using TodoApi.Models.EntityModels;
 
 namespace Tests.MockData.EntityModels
@@ -135,7 +136,16 @@ namespace Tests.MockData.EntityModels
                 EmailConfirmed = Data[index].EmailConfirmed,
                 PasswordHash = string.Copy(Data[index].PasswordHash),
                 NormalizedEmail = Data[index].Email.ToUpper(),
-                NormalizedUserName = Data[index].Email.ToUpper()
+                NormalizedUserName = Data[index].Email.ToUpper(),
+                ConcurrencyStamp = "3d0a9526-9c68-429c-be85-07a5cfbf408b",
+                SecurityStamp = "52bc0b3a-d753-4f0f-b701-55e7f345eda5",
+                TwoFactorEnabled = false,
+                PhoneNumber = null,
+                PhoneNumberConfirmed = false,
+                AccessFailedCount = 0,
+                LockoutEnabled = true,
+                LockoutEnd = null,
+                Todos = new Collection<Todo>()
             };
         }
 

@@ -9,6 +9,8 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using Tests.MockData.Data;
+using Tests.MockData.EntityModels;
 using TodoApi.Constants;
 using TodoApi.Data;
 using TodoApi.Models.EntityModels;
@@ -28,7 +30,7 @@ namespace Tests.Helpers.EndSystems
         /// <param name="configuration">The configureation injected</param>
         public StartUp(IConfiguration configuration)
         {
-            Configuration = configuration;
+            Configuration = new MockConfiguration();
         }
 
         /// <summary>
@@ -83,6 +85,7 @@ namespace Tests.Helpers.EndSystems
             services.AddTransient<ITodoService, TodoService>();
             services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IConfiguration, MockConfiguration>();
 
             services.AddCors();
             services.AddMvc();
@@ -99,7 +102,6 @@ namespace Tests.Helpers.EndSystems
                 app.UseDeveloperExceptionPage();
                 var db = app.ApplicationServices.GetService<AppDataContext>();
                 FillDatabase(db);
-                db.SaveChanges();
             }
 
             app.UseCors(builder =>
@@ -117,11 +119,19 @@ namespace Tests.Helpers.EndSystems
         /// Fills the database with mock data.
         /// </summary>
         /// <param name="db">The database to add to</param>
-        private static void FillDatabase(DbContext db)
+        private static void FillDatabase(AppDataContext db)
         {
-            //AddRoles(db);
-            //AddUsers(db);
-            //AddTodos(db);
+            db.Roles.Add(MockRoles.Admin);
+            db.Roles.Add(MockRoles.User);
+            var allUsers = MockApplicationUsers.GetAll();
+            db.Users.AddRange(allUsers);
+            db.SaveChanges();
+            foreach (var user in allUsers)
+            {
+                db.UserRoles.Add(MockUserRoles.GetUserRoleForUser(user.Id));
+            }
+            db.Todo.AddRange(MockTodos.GetAll());
+            db.SaveChanges();
         }
     }
 }
