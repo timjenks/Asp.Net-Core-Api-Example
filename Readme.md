@@ -9,5 +9,5 @@ Example restful api project in dotnet core.
 - Two tables, users and todos, with one-to-many relations.
 - Dependency injection
 - MS SQL server database
-- 100% coverage in all layers (in progress...)
+- 100% coverage in all layers
 - 100% coverage in integration test (in progress...)
