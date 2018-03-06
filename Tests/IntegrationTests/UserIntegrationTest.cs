@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Tests.Helpers.EndSystems;
 using Tests.Helpers.Json;
 using Tests.MockData.EntityModels;
 using TodoApi.Constants;
+using TodoApi.Models.DtoModels;
 using TodoApi.Models.EntityModels;
 using Xunit;
 
@@ -30,19 +29,92 @@ namespace Tests.IntegrationTests
             _endSystems = new MockServerAndClient();
         }
 
+        #region GetUser
+
+
         [Fact]
-        public async Task GetUserId_()
+        public async Task GetUserById_NoToken_Unauthorized()
         {
-            var user = MockApplicationUsers.Get(0);
-            var token = await GetToken(user);
-            _endSystems.SetBearerToken(token);
+            // Arrange
+            var userToFind = MockApplicationUsers.Get(4);
+            var path = $"{Routes.UserRoute}/{userToFind.Id}";
 
-            var path = Routes.UserRoute + "/" + MockApplicationUsers.Get(4).Id;
-
+            // Act
             var response = await _endSystems.Get(path);
 
-            var x = 55;
+            // Assert
+            Assert.Equal(HttpStatusCode.Unauthorized, response.Code);
+
+            // Tear down
+            _endSystems.Dispose();
         }
+
+        [Fact]
+        public async Task GetUserById_NonAdmin_Forbidden()
+        {
+            // Arrange
+            var userToRequest = MockApplicationUsers.Get(9);
+            var userToFind = MockApplicationUsers.Get(4);
+            var path = $"{Routes.UserRoute}/{userToFind.Id}";
+            var token = await GetToken(userToRequest);
+            _endSystems.SetBearerToken(token);
+
+            // Act
+            var response = await _endSystems.Get(path);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Forbidden, response.Code);
+
+            // Tear down
+            _endSystems.Dispose();
+        }
+
+        [Fact]
+        public async Task GetUserById_NonExistingUser_NotFound()
+        {
+            // Arrange
+            var adminToRequest = MockApplicationUsers.Get(0);
+            const string userIdToFind = "7039d78b-a954-4552-af92-e7a1b90bbd9e";
+            var path = $"{Routes.UserRoute}/{userIdToFind}";
+            var token = await GetToken(adminToRequest);
+            _endSystems.SetBearerToken(token);
+
+            // Act
+            var response = await _endSystems.Get(path);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.NotFound, response.Code);
+
+            // Tear down
+            _endSystems.Dispose();
+        }
+
+        [Fact]
+        public async Task GetUserById_ExistingUser_Ok()
+        {
+            // Arrange
+            var adminToRequest = MockApplicationUsers.Get(0);
+            var userToFind = MockApplicationUsers.Get(1);
+            var expectedDto = new ApplicationUserDto(userToFind);
+            var path = $"{Routes.UserRoute}/{userToFind.Id}";
+            var token = await GetToken(adminToRequest);
+            _endSystems.SetBearerToken(token);
+
+            // Act
+            var response = await _endSystems.Get(path);
+            var dto = JsonStringSerializer.GetApplicationUserDto(response.Body);
+            
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.Code);
+            Assert.Equal(expectedDto.Id, dto.Id);
+            Assert.Equal(expectedDto.Email, dto.Email);
+            Assert.Equal(expectedDto.Name, dto.Name);
+
+            // Tear down
+            _endSystems.Dispose();
+        }
+
+        #endregion
 
         #region Helpers
 
@@ -62,3 +134,14 @@ namespace Tests.IntegrationTests
         #endregion
     }
 }
+
+/*
+
+            var user = MockApplicationUsers.Get(0);
+            var token = await GetToken(user);
+            _endSystems.SetBearerToken(token);
+
+            var path = Routes.UserRoute + "/" + MockApplicationUsers.Get(4).Id;
+
+            var response = await _endSystems.Get(path);
+*/
