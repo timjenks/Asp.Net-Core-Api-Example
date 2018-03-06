@@ -10,6 +10,8 @@ namespace Tests.MockData.ViewModels
     /// </summary>
     public static class MockLoginViewModel
     {
+        #region Data
+
         /// <summary>
         /// Array of Mock data.
         /// </summary>
@@ -28,6 +30,10 @@ namespace Tests.MockData.ViewModels
                 Password = MockApplicationUsers.UniversalPassword
             },
         };
+
+        #endregion
+
+        #region Getters
 
         /// <summary>
         /// Get a single mock view model for login info.
@@ -79,5 +85,7 @@ namespace Tests.MockData.ViewModels
             }
             return copyList;
         }
+
+        #endregion
     }
 }

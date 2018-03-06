@@ -28,7 +28,9 @@ namespace Tests.ServicesTests
             var userManager = new MockUserManager(_ctx);
             _service = new UserService(_ctx, userManager, new MemoryCache(new MemoryCacheOptions()));
         }
-        
+
+        #region GetUser
+
         [Fact]
         public async Task GetUserByIdAsync_NonExistingUser_UserNotFoundException()
         {
@@ -55,6 +57,10 @@ namespace Tests.ServicesTests
             Assert.Equal(userToFind.Email, dto.Email);
             Assert.Equal(userToFind.Name, dto.Name);
         }
+
+        #endregion
+
+        #region GetAllUsers
 
         [Fact]
         public async Task GetAllUsersOrderedByNameAsync_AllInMockAndInOrder()
@@ -88,6 +94,10 @@ namespace Tests.ServicesTests
             }
         }
 
+        #endregion
+
+        #region Remove
+
         [Fact]
         public async Task RemoveUserByIdAsync_NonExistingUser_UserNotFoundException()
         {
@@ -120,5 +130,7 @@ namespace Tests.ServicesTests
                 Assert.Null(_ctx.Todo.SingleOrDefault(w => w.Id == todo.Id));
             }
         }
+
+        #endregion
     }
 }

@@ -9,6 +9,8 @@ namespace Tests.MockData.DtoModels
     /// </summary>
     public static class MockTodoDto
     {
+        #region Data
+
         /// <summary>
         /// Array of Mock data.
         /// </summary>
@@ -29,6 +31,10 @@ namespace Tests.MockData.DtoModels
                 Description = "Tango till they're sore"
             }
         };
+
+        #endregion
+
+        #region Getters
 
         /// <summary>
         /// Get a single mock todo dto. The instance is copied from the array.
@@ -78,5 +84,7 @@ namespace Tests.MockData.DtoModels
             }
             return copyList;
         }
+
+        #endregion
     }
 }

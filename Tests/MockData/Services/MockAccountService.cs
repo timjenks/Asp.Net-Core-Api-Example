@@ -11,6 +11,8 @@ namespace Tests.MockData.Services
     /// </summary>
     public class MockAccountService : IAccountService
     {
+        #region Method Variables
+
         /// <summary>
         /// A method to control what Login does. Needs to be set in test.
         /// </summary>
@@ -20,6 +22,10 @@ namespace Tests.MockData.Services
         /// A method to control what Register does. Needs to be set in test.
         /// </summary>
         public Func<RegisterViewModel, string> MRegister { get; set; }
+
+        #endregion
+
+        #region Methods implmented
 
         /// <inheritdoc />
         public async Task<string> Login(LoginViewModel model)
@@ -34,5 +40,7 @@ namespace Tests.MockData.Services
             await Task.Run(() => { });
             return MRegister(model);
         }
+
+        #endregion
     }
 }

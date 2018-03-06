@@ -9,6 +9,8 @@ namespace Tests.MockData.EntityModels
     /// </summary>
     public static class MockTodos
     {
+        #region Data
+
         /// <summary>
         /// The first id for mock todo data.
         /// </summary>
@@ -165,6 +167,10 @@ namespace Tests.MockData.EntityModels
             ),
         };
 
+        #endregion
+
+        #region Getters
+
         /// <summary>
         /// Get a single mock todo entity. The instance is copied from the array.
         /// </summary>
@@ -222,5 +228,7 @@ namespace Tests.MockData.EntityModels
             }
             return copyList;
         }
+
+        #endregion
     }
 }

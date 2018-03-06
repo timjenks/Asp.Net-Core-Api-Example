@@ -10,6 +10,8 @@ namespace Tests.MockData.ViewModels
     /// </summary>
     public static class MockEditTodoViewModel
     {
+        #region Data
+
         /// <summary>
         /// Array of Mock data.
         /// </summary>
@@ -30,6 +32,10 @@ namespace Tests.MockData.ViewModels
                 Due = new DateTime(2019, 11, 17, 22, 0, 0)
             },
         };
+
+        #endregion
+
+        #region Getters
 
         /// <summary>
         /// Get a single mock view model for todo editing. 
@@ -81,5 +87,7 @@ namespace Tests.MockData.ViewModels
             }
             return copyList;
         }
+
+        #endregion
     }
 }

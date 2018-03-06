@@ -12,6 +12,8 @@ namespace Tests.MockData.Services
     /// </summary>
     public class MockUserService : IUserService
     {
+        #region Method Variables
+
         /// <summary>
         /// A method to control what GetAllUsersOrderedByNameAsync does. Needs to be set in test.
         /// </summary>
@@ -26,6 +28,10 @@ namespace Tests.MockData.Services
         /// A method to control what RemoveUserByIdAsync does. Needs to be set in test.
         /// </summary>
         public Action<string> MRemoveUserByIdAsync { get; set; }
+
+        #endregion
+
+        #region Methods implmented
 
         /// <inheritdoc />
         public async Task<IEnumerable<ApplicationUserDto>> GetAllUsersOrderedByNameAsync()
@@ -47,5 +53,7 @@ namespace Tests.MockData.Services
             await Task.Run(() => { });
             MRemoveUserByIdAsync(userId);
         }
+
+        #endregion
     }
 }

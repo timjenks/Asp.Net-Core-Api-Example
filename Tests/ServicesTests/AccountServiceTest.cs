@@ -36,6 +36,8 @@ namespace Tests.ServicesTests
             _service = new AccountService(userManager, signInManager, _config, _ctx);
         }
 
+        #region Login
+
         [Fact]
         public async Task Login_NonExistingUser_LoginFailException()
         {
@@ -83,6 +85,10 @@ namespace Tests.ServicesTests
             // Assert
             CheckToken(token, user);
         }
+
+        #endregion
+
+        #region Register
 
         [Fact]
         public async Task Register_ExistingUser_RegisterFailException()
@@ -137,6 +143,10 @@ namespace Tests.ServicesTests
             CheckToken(token, user);
         }
 
+        #endregion
+
+        #region Helpers
+
         /// <summary>
         /// Helper for validating tokens for users with assertion.
         /// </summary>
@@ -157,5 +167,7 @@ namespace Tests.ServicesTests
             Assert.Equal(user.Name, json.GetValue(ClaimTypes.Name));
             Assert.Equal(role, json.GetValue(ClaimTypes.Role));
         }
+
+        #endregion
     }
 }

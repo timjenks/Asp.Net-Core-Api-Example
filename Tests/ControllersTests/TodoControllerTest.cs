@@ -20,6 +20,8 @@ namespace Tests.ControllersTests
     /// </summary>
     public class TodoControllerTest
     {
+        #region GetTodo
+
         [Fact]
         public async Task GetTodo_NonExisting_TodoNotFoundException()
         {
@@ -65,6 +67,10 @@ namespace Tests.ControllersTests
             Assert.Equal(MockTodoDto.Get(0).Description, dto.Description);
         }
 
+        #endregion
+
+        #region GetAllTodods
+
         [Fact]
         public async Task GetAllTodos_ListOfTodos_Ok()
         {
@@ -96,6 +102,10 @@ namespace Tests.ControllersTests
             Assert.Equal(MockTodoDto.Get(1).Due, list[1].Due);
             Assert.Equal(MockTodoDto.Get(1).Description, list[1].Description);
         }
+
+        #endregion
+
+        #region Create
 
         [Fact]
         public async Task CreateTodo_NullModel_BadRequest()
@@ -178,6 +188,10 @@ namespace Tests.ControllersTests
             Assert.Equal(id, result.RouteValues.GetValueOrDefault("todoId"));
         }
 
+        #endregion
+
+        #region Remove
+
         [Fact]
         public async Task RemoveTodo_InvalidTodo_TodoNotFoundException()
         {
@@ -217,6 +231,10 @@ namespace Tests.ControllersTests
             Assert.NotNull(result);
             Assert.Equal(204, result.StatusCode);
         }
+
+        #endregion
+
+        #region Edit
 
         [Fact]
         public async Task EditTodo_NullModel_BadRequest()
@@ -293,5 +311,7 @@ namespace Tests.ControllersTests
             Assert.NotNull(result);
             Assert.Equal(200, result.StatusCode);
         }
+
+        #endregion
     }
 }

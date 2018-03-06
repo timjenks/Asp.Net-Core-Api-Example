@@ -13,6 +13,8 @@ namespace Tests.MockData.Services
     /// </summary>
     public class MockTodoService : ITodoService
     {
+        #region Method Variables
+
         /// <summary>
         /// A method to control what CreateTodoAsync does. Needs to be set in test.
         /// </summary>
@@ -37,6 +39,10 @@ namespace Tests.MockData.Services
         /// A method to control what RemoveTodoByIdAsync does. Needs to be set in test.
         /// </summary>
         public Action<int, string> MRemoveTodoByIdAsync { get; set; }
+
+        #endregion
+
+        #region Methods implmented
 
         /// <inheritdoc />
         public async Task<int> CreateTodoAsync(CreateTodoViewModel todo, string userId)
@@ -72,5 +78,7 @@ namespace Tests.MockData.Services
             await Task.Run(() => { });
             MRemoveTodoByIdAsync(todoId, userId);
         }
+
+        #endregion
     }
 }

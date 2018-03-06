@@ -16,6 +16,8 @@ namespace Tests.ControllersTests
     /// </summary>
     public class UserControllerTest
     {
+        #region GetUser
+
         [Fact]
         public async Task GetUserById_NonExistingUser_UserNotFoundException()
         {
@@ -57,6 +59,10 @@ namespace Tests.ControllersTests
             Assert.Equal(MockApplicationUserDto.Get(0).Name, dto.Name);
         }
 
+        #endregion
+
+        #region GetAllUsers
+
         [Fact]
         public async Task GetAllUsers_ListOfUsers_Ok()
         {
@@ -88,8 +94,12 @@ namespace Tests.ControllersTests
             Assert.Equal(MockApplicationUserDto.Get(1).Name, list[1].Name);
         }
 
+        #endregion
+
+        #region Remove
+
         [Fact]
-        public async Task GetAllUsers_NonExistingUser_UserNotFoundException()
+        public async Task RemoveUserById_NonExistingUser_UserNotFoundException()
         {
             // Arrange
             var service = new MockUserService
@@ -108,7 +118,7 @@ namespace Tests.ControllersTests
         }
 
         [Fact]
-        public async Task GetAllUsers_ExistingUser_NoContent()
+        public async Task RemoveUserById_ExistingUser_NoContent()
         {
             // Arrange
             var service = new MockUserService { MRemoveUserByIdAsync = (userId) => { } };
@@ -122,5 +132,7 @@ namespace Tests.ControllersTests
             Assert.NotNull(result);
             Assert.Equal(204, result.StatusCode);
         }
+
+        #endregion
     }
 }

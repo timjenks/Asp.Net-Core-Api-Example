@@ -10,6 +10,8 @@ namespace Tests.MockData.EntityModels
     /// </summary>
     public static class MockApplicationUsers
     {
+        #region Data
+
         /// <summary>
         /// The shared password for all users.
         /// </summary>
@@ -115,6 +117,10 @@ namespace Tests.MockData.EntityModels
             ),
         };
 
+        #endregion
+
+        #region Getters
+
         /// <summary>
         /// Get a single mock user entity. The instance is copied from the array.
         /// </summary>
@@ -177,5 +183,7 @@ namespace Tests.MockData.EntityModels
             }
             return copyList;
         }
+
+        #endregion
     }
 }

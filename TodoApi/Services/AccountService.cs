@@ -90,6 +90,8 @@ namespace TodoApi.Services
             return await GenerateJwtToken(user);
         }
 
+        #region Helpers
+
         /// <summary>
         /// Create token for a user.
         /// </summary>
@@ -135,5 +137,7 @@ namespace TodoApi.Services
             claims.AddRange(roleClaims);
             return claims;
         }
+
+        #endregion
     }
 }

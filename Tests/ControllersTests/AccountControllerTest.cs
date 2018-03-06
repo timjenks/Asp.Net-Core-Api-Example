@@ -15,6 +15,8 @@ namespace Tests.ControllersTests
     /// </summary>
     public class AccountControllerTest
     {
+        #region Login
+
         [Fact]
         public async Task Login_NullModel_BadRequest()
         {
@@ -88,6 +90,10 @@ namespace Tests.ControllersTests
             Assert.NotNull(tokenReceived);
             Assert.Equal(string.Copy(mockToken), tokenReceived);
         }
+
+        #endregion
+
+        #region Register
 
         [Fact]
         public async Task Register_NullModel_BadRequest()
@@ -177,5 +183,7 @@ namespace Tests.ControllersTests
             Assert.NotNull(tokenReceived);
             Assert.Equal(string.Copy(mockToken), tokenReceived);
         }
+
+        #endregion
     }
 }

@@ -20,7 +20,7 @@ namespace Tests.MockData.Controllers
         {
             var mockContext = new Mock<HttpContext>(MockBehavior.Strict);
             mockContext
-                .SetupGet(hc => hc.User.Claims)
+                .SetupGet(z => z.User.Claims)
                 .Returns(new List<Claim>()
                 {
                     new Claim(ClaimTypes.NameIdentifier, userId)

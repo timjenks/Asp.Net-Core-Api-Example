@@ -142,6 +142,8 @@ namespace TodoApi.Services
             }
         }
 
+        #region Helpers
+
         /// <summary>
         /// Returns all todos with no filtering.
         /// </summary>
@@ -184,5 +186,7 @@ namespace TodoApi.Services
             }
             return todos;
         }
+
+        #endregion
     }
 }

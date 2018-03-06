@@ -10,6 +10,8 @@ namespace Tests.MockData.ViewModels
     /// </summary>
     public static class MockRegisterViewModel
     {
+        #region Data
+
         /// <summary>
         /// Array of Mock data.
         /// </summary>
@@ -30,6 +32,10 @@ namespace Tests.MockData.ViewModels
                 Name = "Sofia Kovalevskaya"
             },
         };
+
+        #endregion
+
+        #region Getters
 
         /// <summary>
         /// Get a single mock view model for user registration.
@@ -82,5 +88,7 @@ namespace Tests.MockData.ViewModels
             }
             return copyList;
         }
+
+        #endregion
     }
 }

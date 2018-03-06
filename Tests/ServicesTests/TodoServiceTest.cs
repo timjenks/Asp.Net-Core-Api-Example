@@ -30,6 +30,8 @@ namespace Tests.ServicesTests
             _service = new TodoService(_ctx, userManager, new MemoryCache(new MemoryCacheOptions()));
         }
 
+        #region GetTodo
+
         [Fact]
         public async Task GetTodoByIdAsync_NonExistingTodo_TodoNotFoundException()
         {
@@ -84,6 +86,10 @@ namespace Tests.ServicesTests
             Assert.Equal(todo.Description, dto.Description);
             Assert.Equal(todo.Due, dto.Due);
         }
+
+        #endregion
+
+        #region GetAllTodos
 
         [Fact]
         public async Task GetAllTodosOrderedByDueAsync_MissingYearInFilter_AllDtosForOwner()
@@ -196,6 +202,10 @@ namespace Tests.ServicesTests
             Assert.Empty(all);
         }
 
+        #endregion
+
+        #region Create
+
         [Fact]
         public async Task CreateTodoAsync_NonExistingUser_UserNotFoundException()
         {
@@ -234,6 +244,10 @@ namespace Tests.ServicesTests
             Assert.Equal("Get a cone from Milkcraft", todo.Description);
             Assert.Equal(new DateTime(2019, 5, 1, 12, 0, 0), todo.Due);
         }
+
+        #endregion
+
+        #region Delete
 
         [Fact]
         public async Task RemoveTodoByIdAsync_NonExistingTodo_TodoNotFoundException()
@@ -276,6 +290,10 @@ namespace Tests.ServicesTests
             Assert.Null(_ctx.Todo.Where(z => z.Id == todo.Id).SingleOrDefault());
             Assert.Equal(ownedBefore - 1, _ctx.Todo.Where(z => z.Owner.Id == user.Id).Count());
         }
+
+        #endregion
+
+        #region Edit
 
         [Fact]
         public async Task EditTodoAsync_NonExistingTodo_TodoNotFoundException()
@@ -333,5 +351,7 @@ namespace Tests.ServicesTests
             Assert.Equal(new DateTime(2020, 1, 1, 0, 0, 0), changedTodo.Due);
             Assert.Equal("Catch Mr. X", changedTodo.Description);
         }
+
+        #endregion
     }
 }
