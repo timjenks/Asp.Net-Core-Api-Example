@@ -36,6 +36,22 @@ namespace Tests.IntegrationTests
         #region Login
 
         [Fact]
+        public async Task PostAccountLogin_InvalidContentType_UnsupportedMediaType()
+        {
+            // Arrange
+            var content = new StringContent("Home is where I want to be Pick me up and turn me around I feel numb, born with a weak heart I guess I must be having fun");
+
+            // Act
+            var response = await _endSystems.Post(Routes.AccountRoute + "/login", content, "application/text");
+
+            // Assert
+            Assert.Equal(HttpStatusCode.UnsupportedMediaType, response.Code);
+
+            // Tear down
+            _endSystems.Dispose();
+        }
+
+        [Fact]
         public async Task PostAccountLogin_NoContent_BadRequest()
         {
             // Arrange
@@ -127,6 +143,22 @@ namespace Tests.IntegrationTests
         #endregion
 
         #region Register
+
+        [Fact]
+        public async Task PostAccountRegister_InvalidContentType_UnsupportedMediaType()
+        {
+            // Arrange
+            var content = new StringContent("Home, is where I want to be But I guess I'm already there I come home, she lifted up her wings I guess that this must be the place");
+
+            // Act
+            var response = await _endSystems.Post(Routes.AccountRoute + "/register", content, "application/text");
+
+            // Assert
+            Assert.Equal(HttpStatusCode.UnsupportedMediaType, response.Code);
+
+            // Tear down
+            _endSystems.Dispose();
+        }
 
         [Fact]
         public async Task PostAccountRegiser_NoContent_BadRequest()

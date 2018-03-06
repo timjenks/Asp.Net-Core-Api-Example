@@ -43,7 +43,7 @@ namespace Tests.Helpers.EndSystems
             return await Response(await _client.GetAsync(route));
         }
 
-        public async Task<MockResponse> GetWithToken(string route, string token)
+        public async Task<MockResponse> Get(string route, string token)
         {
             var request = new HttpRequestMessage
             {
@@ -60,9 +60,10 @@ namespace Tests.Helpers.EndSystems
         /// <param name="route">The route for the request (without host)</param>
         /// <param name="content">The json object from the client</param>
         /// <returns>The response from the server (asynchronous)</returns>
-        public async Task<MockResponse> Post(string route, HttpContent content)
+        public async Task<MockResponse> Post(string route, 
+            HttpContent content, string mediaType = "application/json")
         {
-            content.Headers.ContentType.MediaType = "application/json";
+            content.Headers.ContentType.MediaType = mediaType;
             return await Response(await _client.PostAsync(route, content));
         }
 
@@ -72,9 +73,10 @@ namespace Tests.Helpers.EndSystems
         /// <param name="route">The route for the request (without host)</param>
         /// <param name="content">The json object from the client</param>
         /// <returns>The response from the server (asynchronous)</returns>
-        public async Task<MockResponse> Put(string route, HttpContent content)
+        public async Task<MockResponse> Put(string route, 
+            HttpContent content, string mediaType = "application/json")
         {
-            content.Headers.ContentType.MediaType = "application/json";
+            content.Headers.ContentType.MediaType = mediaType;
             return await Response(await _client.PutAsync(route, content));
         }
 
