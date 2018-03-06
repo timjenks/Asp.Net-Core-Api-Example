@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 
-namespace TodoApi.Constants
+namespace TodoApi.Utils.Constants
 {
     /// <summary>
     /// A static collection of values that have to do with passwords.

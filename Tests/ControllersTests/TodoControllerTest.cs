@@ -7,7 +7,7 @@ using Tests.MockData.DtoModels;
 using Tests.MockData.EntityModels;
 using Tests.MockData.Services;
 using Tests.MockData.ViewModels;
-using TodoApi.Constants;
+using TodoApi.Utils.Constants;
 using TodoApi.Controllers;
 using TodoApi.Exceptions;
 using TodoApi.Models.DtoModels;

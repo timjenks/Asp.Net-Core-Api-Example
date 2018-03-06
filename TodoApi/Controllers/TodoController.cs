@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TodoApi.Constants;
+using TodoApi.Utils.Constants;
 using TodoApi.Exceptions;
 using TodoApi.Models.ViewModels;
 using TodoApi.Services.Interfaces;

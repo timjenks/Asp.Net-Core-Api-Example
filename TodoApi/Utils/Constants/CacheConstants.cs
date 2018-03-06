@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using System;
 
-namespace TodoApi.Constants
+namespace TodoApi.Utils.Constants
 {
     /// <summary>
     /// A static container of keys for cache memory and other settings.

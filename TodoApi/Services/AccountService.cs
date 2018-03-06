@@ -8,7 +8,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using TodoApi.Constants;
+using TodoApi.Utils.Constants;
 using TodoApi.Data;
 using TodoApi.Exceptions;
 using TodoApi.Models.EntityModels;

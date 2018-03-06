@@ -1,4 +1,4 @@
-﻿namespace TodoApi.Constants
+﻿namespace TodoApi.Utils.Constants
 {
     /// <summary>
     /// A static class containing routes prefixes. This is done to simplify

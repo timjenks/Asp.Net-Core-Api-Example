@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TodoApi.Constants;
+using TodoApi.Utils.Constants;
 using TodoApi.Models.EntityModels;
 
 namespace Tests.MockData.Data

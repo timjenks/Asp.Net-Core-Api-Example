@@ -4,7 +4,7 @@ using Microsoft.Extensions.Caching.Memory;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TodoApi.Constants;
+using TodoApi.Utils.Constants;
 using TodoApi.Data;
 using TodoApi.Exceptions;
 using TodoApi.Models.DtoModels;

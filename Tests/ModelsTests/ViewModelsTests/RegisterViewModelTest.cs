@@ -2,7 +2,7 @@
 using System.Text;
 using Tests.Helpers.Models;
 using Tests.MockData.ViewModels;
-using TodoApi.Constants;
+using TodoApi.Utils.Constants;
 using TodoApi.Models.ViewModels;
 using Xunit;
 

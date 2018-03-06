@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using TodoApi.Constants;
+using TodoApi.Utils.Constants;
 using TodoApi.Exceptions;
 using TodoApi.Models.ViewModels;
 using TodoApi.Services.Interfaces;

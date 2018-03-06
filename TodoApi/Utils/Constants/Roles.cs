@@ -1,4 +1,4 @@
-﻿namespace TodoApi.Constants
+﻿namespace TodoApi.Utils.Constants
 {
     /// <summary>
     /// A static collection of names of roles.

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using TodoApi.Constants;
+using TodoApi.Utils.Constants;
 using TodoApi.Data;
 using TodoApi.Models.EntityModels;
 using TodoApi.Services;

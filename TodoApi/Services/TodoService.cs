@@ -12,7 +12,7 @@ using TodoApi.Models.ViewModels;
 using TodoApi.Utils.TimeUtils;
 using Microsoft.AspNetCore.Identity;
 using TodoApi.Services.Interfaces;
-using TodoApi.Constants;
+using TodoApi.Utils.Constants;
 
 namespace TodoApi.Services
 {

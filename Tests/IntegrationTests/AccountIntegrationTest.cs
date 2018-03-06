@@ -10,7 +10,7 @@ using Tests.Helpers.EndSystems;
 using Tests.Helpers.Json;
 using Tests.MockData.Data;
 using Tests.MockData.EntityModels;
-using TodoApi.Constants;
+using TodoApi.Utils.Constants;
 using TodoApi.Models.EntityModels;
 using Xunit;
 

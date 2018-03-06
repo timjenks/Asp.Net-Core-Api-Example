@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using TodoApi.Constants;
+using TodoApi.Utils.Constants;
 
 namespace TodoApi.Models.ViewModels
 {

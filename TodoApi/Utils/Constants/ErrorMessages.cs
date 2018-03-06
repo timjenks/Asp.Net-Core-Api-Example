@@ -1,4 +1,4 @@
-﻿namespace TodoApi.Constants
+﻿namespace TodoApi.Utils.Constants
 {
     /// <summary>
     /// A static wrapper for error messages used in view models.

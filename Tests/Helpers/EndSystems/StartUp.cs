@@ -12,7 +12,7 @@ using System.Linq;
 using System.Text;
 using Tests.MockData.Data;
 using Tests.MockData.EntityModels;
-using TodoApi.Constants;
+using TodoApi.Utils.Constants;
 using TodoApi.Data;
 using TodoApi.Models.EntityModels;
 using TodoApi.Services;
