@@ -35,7 +35,7 @@ namespace TodoApi.Constants
         /// <returns>The cache memory key owned for all todos owned by a user</returns>
         public static string GetAllTodosCacheKey(string userId)
         {
-            return string.Format("{0}_{1}", AllTodosCacheKey, userId);
+            return $"{AllTodosCacheKey}_{userId}";
         }
 
         /// <summary>
@@ -46,8 +46,7 @@ namespace TodoApi.Constants
         /// <returns>The cache memory key for owned todos on a date</returns>
         public static string GetAllTodosForDayCacheKey(string userId, DateTime date)
         {
-            return string.Format("{0}_{1}_{2}_{3}", 
-                GetAllTodosCacheKey(userId), date.Year, date.Month, date.Day);
+            return $"{GetAllTodosCacheKey(userId)}_{date.Year}_{date.Month}_{date.Day}";
         }
 
         /// <summary>
@@ -58,7 +57,7 @@ namespace TodoApi.Constants
         /// <returns>The cache memory key for the todo with given id</returns>
         public static string GetSingleTodoCacheKey(int todoId, string userId)
         {
-            return string.Format("{0}_{1}_{2}", SingleTodoCacheKey, todoId, userId);
+            return $"{SingleTodoCacheKey}_{todoId}_{userId}";
         }
 
         /// <summary>
@@ -68,7 +67,7 @@ namespace TodoApi.Constants
         /// <returns>the cache memory key for the user with given id</returns>
         public static string GetSingleUserCacheKey(string userId)
         {
-            return string.Format("{0}_{1}", SingleUserCacheKey, userId);
+            return $"{SingleUserCacheKey}_{userId}";
         }
 
         /// <summary>

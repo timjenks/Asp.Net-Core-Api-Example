@@ -24,7 +24,7 @@ namespace TodoApi.Models.ViewModels
             PasswordLimits.AccountMaxPasswordLength,
             ErrorMessage = ErrorMessages.AccountPasswordInvalidLength,
             MinimumLength = PasswordLimits.AccountMinPasswordLength)]
-        [DataType(DataType.Password)] //PasswordLimits.PasswordSettings
+        [DataType(DataType.Password)]
         public string Password { get; set; }
     }
 }

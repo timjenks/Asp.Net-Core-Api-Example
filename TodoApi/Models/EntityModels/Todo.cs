@@ -20,7 +20,8 @@ namespace TodoApi.Models.EntityModels
         /// <param name="user">The owner of this todo</param>
         public Todo(CreateTodoViewModel model, ApplicationUser user)
         {
-            Due = model.Due.Value;
+            //Due = model.Due.Value;
+            if (model.Due != null) Due = model.Due.Value;
             Description = string.Copy(model.Description);
             Owner = user;
         }
@@ -31,7 +32,7 @@ namespace TodoApi.Models.EntityModels
         /// <param name="model">A view model containing changed fields</param>
         public void Edit(EditTodoViewModel model)
         {
-            Due = model.Due.Value;
+            if (model.Due != null) Due = model.Due.Value;
             Description = string.Copy(model.Description);
         }
 

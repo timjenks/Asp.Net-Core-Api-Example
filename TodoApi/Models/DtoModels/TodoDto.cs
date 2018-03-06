@@ -16,7 +16,7 @@ namespace TodoApi.Models.DtoModels
         /// <summary>
         /// Converts a todo entity model to its corresponding data transfer object.
         /// </summary>
-        /// <param name="evt">An entity model for a todo</param>
+        /// <param name="todo">An entity model for a todo</param>
         public TodoDto(Todo todo)
         {
             Id = todo.Id;

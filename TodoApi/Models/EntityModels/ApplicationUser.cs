@@ -4,16 +4,13 @@ using TodoApi.Models.ViewModels;
 
 namespace TodoApi.Models.EntityModels
 {
-    /// <summary>
-    /// The user as stored in the database.
-    /// </summary>
+    /// <inheritdoc />
     public class ApplicationUser : IdentityUser
     {
-        /// <summary>
-        /// No argument constructor.
-        /// </summary>
+        /// <inheritdoc />
         public ApplicationUser() { }
 
+        /// <inheritdoc />
         /// <summary>
         /// Map a view model to entity.
         /// </summary>

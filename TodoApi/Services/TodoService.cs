@@ -151,13 +151,13 @@ namespace TodoApi.Services
         private async Task<IEnumerable<TodoDto>> GetAllTodosOrderedByDueWithNoFilterAsync(string userId)
         {
             var cacheKey = CacheConstants.GetAllTodosCacheKey(userId);
-            if (!_cache.TryGetValue(cacheKey, out IEnumerable<TodoDto> todos))
+            if (!_cache.TryGetValue(cacheKey, out List<TodoDto> todos))
             {
                 todos = await (from t in _db.Todo
                                where t.Owner.Id == userId
                                orderby t.Due
                                select new TodoDto(t)).ToListAsync();
-                if (todos.Count() > 0)
+                if (todos.Any())
                 {
                     _cache.Set(cacheKey, CacheConstants.GetDefaultCacheOptions());
                 }
@@ -173,13 +173,13 @@ namespace TodoApi.Services
         private async Task<IEnumerable<TodoDto>> GetAllTodosForDayOrderedByDueAsync(DateTime date, string userId)
         {
             var cacheKey = CacheConstants.GetAllTodosForDayCacheKey(userId, date);
-            if (!_cache.TryGetValue(cacheKey, out IEnumerable<TodoDto> todos))
+            if (!_cache.TryGetValue(cacheKey, out List<TodoDto> todos))
             {
                 todos = await (from t in _db.Todo
                                where t.Due.Date == date && t.Owner.Id == userId
                                orderby t.Due
                                select new TodoDto(t)).ToListAsync();
-                if (todos.Count() > 0)
+                if (todos.Any())
                 {
                     _cache.Set(cacheKey, CacheConstants.GetDefaultCacheOptions());
                 }

@@ -61,8 +61,8 @@ namespace TodoApi.Services
         /// <inheritdoc />
         public async Task<IEnumerable<ApplicationUserDto>> GetAllUsersOrderedByNameAsync()
         {
-            var cacheKey = CacheConstants.AllUsersCacheKey;
-            if (!_cache.TryGetValue(cacheKey, out IEnumerable<ApplicationUserDto> users))
+            const string cacheKey = CacheConstants.AllUsersCacheKey;
+            if (!_cache.TryGetValue(cacheKey, out List<ApplicationUserDto> users))
             {
                 users = await _userManager
                         .Users
@@ -76,7 +76,6 @@ namespace TodoApi.Services
 
         /// <inheritdoc />
         /// <exception cref="UserNotFoundException">Thrown when user is not found</exception>
-        /// <exception cref="RemoveUserFailedException">Thrown if we fail to remove user</exception>
         public async Task RemoveUserByIdAsync(string userId)
         {
             var userToRemove = await _userManager.FindByIdAsync(userId);
@@ -87,7 +86,7 @@ namespace TodoApi.Services
             await _db.Entry(userToRemove).Collection(u => u.Todos).LoadAsync();
 
             // Clear cached todos owned by the user
-            foreach (Todo todo in userToRemove.Todos)
+            foreach (var todo in userToRemove.Todos)
             {
                 _cache.Remove(CacheConstants.GetSingleTodoCacheKey(
                     todo.Id, userToRemove.Id));

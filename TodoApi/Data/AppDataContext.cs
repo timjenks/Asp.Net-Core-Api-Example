@@ -14,7 +14,7 @@ namespace TodoApi.Data
         /// <summary>
         /// A constructor that allows for injecting SQL Server or in-memory SQlite options.
         /// </summary>
-        public AppDataContext(DbContextOptions<AppDataContext> options) : base(options) { }
+        public AppDataContext(DbContextOptions options) : base(options) { }
 
         /// <summary>
         /// All todos in database.

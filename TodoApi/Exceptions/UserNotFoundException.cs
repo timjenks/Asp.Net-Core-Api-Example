@@ -2,6 +2,7 @@
 
 namespace TodoApi.Exceptions
 {
+    /// <inheritdoc />
     /// <summary>
     /// Thrown in service when user is not found.
     /// </summary>

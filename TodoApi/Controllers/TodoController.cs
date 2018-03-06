@@ -40,9 +40,7 @@ namespace TodoApi.Controllers
         {
             try
             {
-                var userId = User.Claims.SingleOrDefault(c => 
-                    c.Type == ClaimTypes.NameIdentifier).Value;
-                return Ok(await _todoService.GetTodoByIdAsync(todoId, userId));
+                return Ok(await _todoService.GetTodoByIdAsync(todoId, GetUserId()));
             }
             catch (TodoNotFoundException)
             {
@@ -65,9 +63,7 @@ namespace TodoApi.Controllers
             [FromQuery] string day = null
         )
         {
-            var userId = User.Claims.SingleOrDefault(c => 
-                c.Type == ClaimTypes.NameIdentifier).Value;
-            return Ok(await _todoService.GetAllTodosOrderedByDueAsync(year, month, day, userId));
+            return Ok(await _todoService.GetAllTodosOrderedByDueAsync(year, month, day, GetUserId()));
         }
 
         /// <summary>
@@ -89,9 +85,7 @@ namespace TodoApi.Controllers
             }
             try
             {
-                var userId = User.Claims.SingleOrDefault(c => 
-                    c.Type == ClaimTypes.NameIdentifier).Value;
-                var id = await _todoService.CreateTodoAsync(model, userId);
+                var id = await _todoService.CreateTodoAsync(model, GetUserId());
                 return CreatedAtRoute(
                     MethodNames.GetSingleTodoMethodName,
                     new { todoId = id }, 
@@ -115,9 +109,7 @@ namespace TodoApi.Controllers
         {
             try
             {
-                var userId = User.Claims.SingleOrDefault(c => 
-                    c.Type == ClaimTypes.NameIdentifier).Value;
-                await _todoService.RemoveTodoByIdAsync(todoId, userId);
+                await _todoService.RemoveTodoByIdAsync(todoId, GetUserId());
                 return NoContent();
             }
             catch (TodoNotFoundException)
@@ -145,9 +137,7 @@ namespace TodoApi.Controllers
             }
             try
             {
-                var userId = User.Claims.SingleOrDefault(c => 
-                    c.Type == ClaimTypes.NameIdentifier).Value;
-                await _todoService.EditTodoAsync(changedTodo, userId);
+                await _todoService.EditTodoAsync(changedTodo, GetUserId());
                 return Ok();
             }
             catch (TodoNotFoundException)
@@ -155,5 +145,18 @@ namespace TodoApi.Controllers
                 return NotFound();
             }
         }
+
+        #region Helpers
+
+        /// <summary>
+        /// Get the user id from the controller's claim.
+        /// </summary>
+        /// <returns>A string with the user id</returns>
+        private string GetUserId()
+        {
+            return User.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        }
+        
+        #endregion
     }
 }

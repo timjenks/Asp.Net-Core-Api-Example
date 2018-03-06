@@ -99,7 +99,7 @@ namespace TodoApi.Services
         /// <returns>A valid token for the given user</returns>
         private async Task<string> GenerateJwtToken(ApplicationUser user)
         {
-            var claims = await getClaims(user);
+            var claims = await GetClaims(user);
             var key = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(_configuration["SecretKey"]));
             var creds = new SigningCredentials(
@@ -123,10 +123,10 @@ namespace TodoApi.Services
         /// </summary>
         /// <param name="user">An ApplicationUser entity</param>
         /// <returns>A list of claims that includes email, id and name</returns>
-        private async Task<List<Claim>> getClaims(ApplicationUser user)
+        private async Task<List<Claim>> GetClaims(ApplicationUser user)
         {
             var roleClaims = (await _userManager.GetRolesAsync(user))
-                .Select(role => new Claim(ClaimTypes.Role, role));
+                .Select(role => new Claim(ClaimTypes.Role, role)).ToList();
             var claims = new List<Claim>(4 + roleClaims.Count())
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Email),
