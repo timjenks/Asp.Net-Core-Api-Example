@@ -295,7 +295,7 @@ namespace Tests.IntegrationTests
         {
             Assert.NotNull(user);
             Assert.NotNull(user.Email);
-            var body = StringJsonBuilder.LoginJsonBody(
+            var body = JsonStringBuilder.LoginJsonBody(
                 user.Email, MockApplicationUsers.UniversalPassword);
             var content = new StringContent(body);
             var response = await _endSystems.Post(Routes.AccountRoute + "/login", content);

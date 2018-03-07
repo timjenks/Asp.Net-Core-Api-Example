@@ -377,7 +377,7 @@ namespace Tests.IntegrationTests
         {
             // Arrange
             var model = MockCreateTodoViewModel.Get(0);
-            var body = StringJsonBuilder.CreateTodoJsonBody(model.Description, model.Due.ToString());
+            var body = JsonStringBuilder.CreateTodoJsonBody(model.Description, model.Due.ToString());
             var content = new StringContent(body);
             var path = Routes.TodoRoute;
 
@@ -471,7 +471,7 @@ namespace Tests.IntegrationTests
             _endSystems.SetBearerToken(userToken);
 
             var model = MockCreateTodoViewModel.Get(1);
-            var body = StringJsonBuilder.CreateTodoJsonBody(model.Description, model.Due.ToString());
+            var body = JsonStringBuilder.CreateTodoJsonBody(model.Description, model.Due.ToString());
             var content = new StringContent(body);
 
             // Act
@@ -493,7 +493,7 @@ namespace Tests.IntegrationTests
             var createPath = Routes.TodoRoute;
             _endSystems.SetBearerToken(token);
             var model = MockCreateTodoViewModel.Get(0);
-            var body = StringJsonBuilder.CreateTodoJsonBody(model.Description, model.Due.ToString());
+            var body = JsonStringBuilder.CreateTodoJsonBody(model.Description, model.Due.ToString());
             var content = new StringContent(body);
 
             // Act
@@ -540,7 +540,7 @@ namespace Tests.IntegrationTests
         {
             Assert.NotNull(user);
             Assert.NotNull(user.Email);
-            var body = StringJsonBuilder.LoginJsonBody(
+            var body = JsonStringBuilder.LoginJsonBody(
                 user.Email, MockApplicationUsers.UniversalPassword);
             var content = new StringContent(body);
             var response = await _endSystems.Post(Routes.AccountRoute + "/login", content);

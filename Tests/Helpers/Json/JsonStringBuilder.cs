@@ -2,7 +2,7 @@
 
 namespace Tests.Helpers.Json
 {
-    public static class StringJsonBuilder
+    public static class JsonStringBuilder
     {
         /// <summary>
         /// Create a json string body for registration.
@@ -79,7 +79,7 @@ namespace Tests.Helpers.Json
         /// <returns>A json string</returns>
         public static string CreateTodoJsonBody(string description, string date)
         {
-            return new StringBuilder(21 + description.Length + date.Length)
+            return new StringBuilder(27 + description.Length + date.Length)
                 .Append('{')
                 .Append('"')
                 .Append("Description")

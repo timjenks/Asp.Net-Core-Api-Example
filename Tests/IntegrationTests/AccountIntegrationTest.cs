@@ -91,7 +91,7 @@ namespace Tests.IntegrationTests
         public async Task PostAccountLogin_NonExistingUser_Unauthorized()
         {
             // Arrange
-            var body = StringJsonBuilder.LoginJsonBody("invalid@mail.com", "J0hn_Carmack");
+            var body = JsonStringBuilder.LoginJsonBody("invalid@mail.com", "J0hn_Carmack");
             var content = new StringContent(body);
             var path = $"{Routes.AccountRoute}/login";
 
@@ -110,7 +110,7 @@ namespace Tests.IntegrationTests
         {
             // Arrange
             var user = MockApplicationUsers.Get(6);
-            var body = StringJsonBuilder.LoginJsonBody(user.Email, "A-Am-N0t-C0rrect");
+            var body = JsonStringBuilder.LoginJsonBody(user.Email, "A-Am-N0t-C0rrect");
             var content = new StringContent(body);
             var path = $"{Routes.AccountRoute}/login";
 
@@ -130,7 +130,7 @@ namespace Tests.IntegrationTests
             // Arrange
             var user = MockApplicationUsers.Get(6);
             var path = $"{Routes.AccountRoute}/login";
-            var body = StringJsonBuilder.LoginJsonBody(user.Email, MockApplicationUsers.UniversalPassword);
+            var body = JsonStringBuilder.LoginJsonBody(user.Email, MockApplicationUsers.UniversalPassword);
             var content = new StringContent(body);
             var role = MockRoles.Admin.Id == MockUserRoles.GetUserRoleForUser(user.Id).RoleId 
                 ? MockRoles.Admin : MockRoles.User;
@@ -206,7 +206,7 @@ namespace Tests.IntegrationTests
         public async Task PostAccountRegiser_WeakPassword_BadRequest()
         {
             // Arrange
-            var body = StringJsonBuilder.RegisterJsonBody("The Message", "grandmaster@flash.com", "onlylowercases");
+            var body = JsonStringBuilder.RegisterJsonBody("The Message", "grandmaster@flash.com", "onlylowercases");
             var content = new StringContent(body);
             var path = $"{Routes.AccountRoute}/register";
 
@@ -225,7 +225,7 @@ namespace Tests.IntegrationTests
         {
             // Arrange
             var user = MockApplicationUsers.Get(8);
-            var body = StringJsonBuilder.RegisterJsonBody(user.Name, user.Email, MockApplicationUsers.UniversalPassword);
+            var body = JsonStringBuilder.RegisterJsonBody(user.Name, user.Email, MockApplicationUsers.UniversalPassword);
             var content = new StringContent(body);
             var path = $"{Routes.AccountRoute}/register";
 
@@ -249,13 +249,13 @@ namespace Tests.IntegrationTests
                 Email = "police@thieves.com",
                 UserName = "police@thieves.com"
             };
-            var registerBody = StringJsonBuilder.RegisterJsonBody
+            var registerBody = JsonStringBuilder.RegisterJsonBody
             (
                 user.Name, 
                 user.Email,
                 MockApplicationUsers.UniversalPassword
             );
-            var loginBody = StringJsonBuilder.LoginJsonBody
+            var loginBody = JsonStringBuilder.LoginJsonBody
             (
                 user.Email,
                 MockApplicationUsers.UniversalPassword
