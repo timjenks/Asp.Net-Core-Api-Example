@@ -515,9 +515,97 @@ namespace Tests.IntegrationTests
         #endregion
 
         #region Remove
-        // 1) no token  TODO
-        // 2) token id not found  TODO
-        // 3) successs  TODO
+
+        [Fact]
+        public async Task Delete_NoToken_Unauthorized()
+        {
+            // Arrange
+            var todo = MockTodos.Get(0);
+            var path = $"{Routes.TodoRoute}/{todo.Id}";
+
+            // Act
+            var response = await _endSystems.Delete(path);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Unauthorized, response.Code);
+
+            // Tear down
+            _endSystems.Dispose();
+        }
+
+        [Fact]
+        public async Task Delete_NonExistingToken_NotFound()
+        {
+            // Arrange
+            var user = MockApplicationUsers.Get(7);
+            var token = await GetToken(user);
+            var nonExistingTokenId = 0;
+            Assert.DoesNotContain(nonExistingTokenId, MockTodos.GetAll().Select(w => w.Id).ToHashSet());
+            var path = $"{Routes.TodoRoute}/{nonExistingTokenId}";
+            _endSystems.SetBearerToken(token);
+
+            // Act
+            var response = await _endSystems.Delete(path);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.NotFound, response.Code);
+
+            // Tear down
+            _endSystems.Dispose();
+        }
+
+        [Fact]
+        public async Task Delete_TokenNotOwnedByUser_NotFound()
+        {
+            // Arrange
+            var user = MockApplicationUsers.Get(7);
+            var token = await GetToken(user);
+            var todoNotOwnedByUser = MockTodos
+                .GetAll()
+                .Where(w => w.Owner.Id != user.Id)
+                .FirstOrDefault();
+            Assert.NotNull(todoNotOwnedByUser);
+            var path = $"{Routes.TodoRoute}/{todoNotOwnedByUser.Id}";
+            _endSystems.SetBearerToken(token);
+
+            // Act
+            var response = await _endSystems.Delete(path);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.NotFound, response.Code);
+
+            // Tear down
+            _endSystems.Dispose();
+        }
+
+        [Fact]
+        public async Task Delete_TokenOwnedByUser_NoContent()
+        {
+            // Arrange
+            var user = MockApplicationUsers.Get(5);
+            var token = await GetToken(user);
+            var todoOwnedByUser = MockTodos
+                .GetAll()
+                .Where(z => z.Owner.Id == user.Id)
+                .FirstOrDefault();
+            Assert.NotNull(todoOwnedByUser);
+            _endSystems.SetBearerToken(token);
+            var path = $"{Routes.TodoRoute}/{todoOwnedByUser.Id}";
+
+            // Act
+            var getResponse1 = await _endSystems.Get(path);
+            var deleteResponse = await _endSystems.Delete(path);
+            var getResponse2 = await _endSystems.Get(path);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, getResponse1.Code);
+            Assert.Equal(HttpStatusCode.NoContent, deleteResponse.Code);
+            Assert.Equal(HttpStatusCode.NotFound, getResponse2.Code);
+
+            // Tear down
+            _endSystems.Dispose();
+        }
+
         #endregion
 
         #region Edit
