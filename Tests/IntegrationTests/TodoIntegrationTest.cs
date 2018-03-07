@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Tests.Helpers.EndSystems;
 using Tests.Helpers.Json;
 using Tests.MockData.EntityModels;
+using Tests.MockData.ViewModels;
 using TodoApi.Models.DtoModels;
 using TodoApi.Models.EntityModels;
 using TodoApi.Utils.Constants;
@@ -370,15 +371,162 @@ namespace Tests.IntegrationTests
         #endregion
 
         #region Create
-        // todo
+
+        [Fact]
+        public async Task Create_NoToken_Unauthorized()
+        {
+            // Arrange
+            var model = MockCreateTodoViewModel.Get(0);
+            var body = StringJsonBuilder.CreateTodoJsonBody(model.Description, model.Due.ToString());
+            var content = new StringContent(body);
+            var path = Routes.TodoRoute;
+
+            // Act
+            var response = await _endSystems.Post(path, content);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Unauthorized, response.Code);
+
+            // Tear down
+            _endSystems.Dispose();
+        }
+
+        [Fact]
+        public async Task Create_InvalidContentType_UnsupportedMediaType()
+        {
+            // Arrange
+            var user = MockApplicationUsers.Get(5);
+            var content = new StringContent("I go out on Friday night and I come home on Saturday morning");
+            var path = Routes.TodoRoute;
+            var token = await GetToken(user);
+            _endSystems.SetBearerToken(token);
+
+            // Act
+            var response = await _endSystems.Post(path, content, "application/text");
+
+            // Assert
+            Assert.Equal(HttpStatusCode.UnsupportedMediaType, response.Code);
+
+            // Tear down
+            _endSystems.Dispose();
+        }
+
+        [Fact]
+        public async Task Create_NoContent_BadRequest()
+        {
+            // Arrange
+            var user = MockApplicationUsers.Get(5);
+            var content = new StringContent("");
+            var path = Routes.TodoRoute;
+            var token = await GetToken(user);
+            _endSystems.SetBearerToken(token);
+
+            // Act
+            var response = await _endSystems.Post(path, content);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.BadRequest, response.Code);
+
+            // Tear down
+            _endSystems.Dispose();
+        }
+
+        [Fact]
+        public async Task Create_InvalidContent_BadRequest()
+        {
+            // Arrange
+            var user = MockApplicationUsers.Get(5);
+            var content = new StringContent("{}");
+            var path = Routes.TodoRoute;
+            var token = await GetToken(user);
+            _endSystems.SetBearerToken(token);
+
+            // Act
+            var response = await _endSystems.Post(path, content);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.BadRequest, response.Code);
+
+            // Tear down
+            _endSystems.Dispose();
+        }
+
+        [Fact]
+        public async Task Create_UserDoesNotExistAnymote_Unauthorized()
+        {
+            // Arrange
+            var user = MockApplicationUsers.Get(5);
+            var admin = MockApplicationUsers.Get(0);
+
+            var userToken = await GetToken(user);
+            var adminToken = await GetToken(admin);
+
+            var deletePath = $"{Routes.UserRoute}/{user.Id}";
+            var createPath = Routes.TodoRoute;
+            _endSystems.SetBearerToken(adminToken);
+            var deleteResponse = await _endSystems.Delete(deletePath);
+            Assert.Equal(HttpStatusCode.NoContent, deleteResponse.Code);
+
+            _endSystems.RemoveBearerToken();
+            _endSystems.SetBearerToken(userToken);
+
+            var model = MockCreateTodoViewModel.Get(1);
+            var body = StringJsonBuilder.CreateTodoJsonBody(model.Description, model.Due.ToString());
+            var content = new StringContent(body);
+
+            // Act
+            var response = await _endSystems.Post(createPath, content);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Unauthorized, response.Code);
+
+            // Tear down
+            _endSystems.Dispose();
+        }
+
+        [Fact]
+        public async Task Create_UserDoesExist_CreatedAtRoute()
+        {
+            // Arrange
+            var user = MockApplicationUsers.Get(8);
+            var token = await GetToken(user);
+            var createPath = Routes.TodoRoute;
+            _endSystems.SetBearerToken(token);
+            var model = MockCreateTodoViewModel.Get(0);
+            var body = StringJsonBuilder.CreateTodoJsonBody(model.Description, model.Due.ToString());
+            var content = new StringContent(body);
+
+            // Act
+            var createResponse = await _endSystems.Post(createPath, content);
+            var location = createResponse.Headers.Location.ToString();
+            var getResponse = await _endSystems.Get(location);
+            var dto = JsonStringSerializer.GetTodoDto(getResponse.Body);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Created, createResponse.Code);
+            Assert.Equal(HttpStatusCode.OK, getResponse.Code);
+            Assert.Equal(model.Description, dto.Description);
+            Assert.Equal(model.Due, dto.Due);
+
+            // Tear down
+            _endSystems.Dispose();
+        }
+
         #endregion
 
         #region Remove
-        // todo
+        // 1) no token  TODO
+        // 2) token id not found  TODO
+        // 3) successs  TODO
         #endregion
 
         #region Edit
-        // todo
+        // 1) no token  TODO
+        // 2) invalid content type  TODO
+        // 3) no content  TODO
+        // 4) invalid content  TODO
+        // 5) todo not found  TODO
+        // 6) success  TODO
         #endregion
 
         #region Helpers

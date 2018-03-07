@@ -45,7 +45,7 @@ namespace Tests.Helpers.EndSystems
         /// <summary>
         /// Clear the default request headers of Authentication field.
         /// </summary>
-        public void RemoveBearerTokeN()
+        public void RemoveBearerToken()
         {
             _client.DefaultRequestHeaders.Remove("Authentication");
         }
