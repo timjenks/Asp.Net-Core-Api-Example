@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using Tests.MockData.EntityModels;
 using Tests.MockData.ViewModels;
 using TodoApi.Models.DtoModels;
 using TodoApi.Models.EntityModels;
+using TodoApi.Models.ViewModels;
 using TodoApi.Utils.Constants;
 using Xunit;
 
@@ -609,12 +611,188 @@ namespace Tests.IntegrationTests
         #endregion
 
         #region Edit
-        // 1) no token  TODO
-        // 2) invalid content type  TODO
-        // 3) no content  TODO
-        // 4) invalid content  TODO
-        // 5) todo not found  TODO
-        // 6) success  TODO
+
+        [Fact]
+        public async Task Edit_NoToken_Unauthorized()
+        {
+            // Arrange
+            var model = MockEditTodoViewModel.Get(0);
+            var body = JsonStringBuilder.EditTodoJsonBody(
+                model.Description, model.Due.ToString(), model.Id.ToString());
+            var content = new StringContent(body);
+            var path = Routes.TodoRoute;
+
+            // Act
+            var response = await _endSystems.Put(path, content);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Unauthorized, response.Code);
+
+            // Tear down
+            _endSystems.Dispose();
+        }
+
+        [Fact]
+        public async Task Edit_InvalidContentType_UnsupportedMediaType()
+        {
+            // Arrange
+            var user = MockApplicationUsers.Get(5);
+            var content = new StringContent("I'll take your brain to another dimension - Pay close attention");
+            var path = Routes.TodoRoute;
+            var token = await GetToken(user);
+            _endSystems.SetBearerToken(token);
+
+            // Act
+            var response = await _endSystems.Put(path, content, "application/text");
+
+            // Assert
+            Assert.Equal(HttpStatusCode.UnsupportedMediaType, response.Code);
+
+            // Tear down
+            _endSystems.Dispose();
+        }
+
+        [Fact]
+        public async Task Edit_NoContent_BadRequest()
+        {
+            // Arrange
+            var user = MockApplicationUsers.Get(5);
+            var content = new StringContent("");
+            var path = Routes.TodoRoute;
+            var token = await GetToken(user);
+            _endSystems.SetBearerToken(token);
+
+            // Act
+            var response = await _endSystems.Put(path, content);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.BadRequest, response.Code);
+
+            // Tear down
+            _endSystems.Dispose();
+        }
+
+        [Fact]
+        public async Task Edit_InvalidContent_BadRequest()
+        {
+            // Arrange
+            var user = MockApplicationUsers.Get(5);
+            var content = new StringContent("{}");
+            var path = Routes.TodoRoute;
+            var token = await GetToken(user);
+            _endSystems.SetBearerToken(token);
+
+            // Act
+            var response = await _endSystems.Put(path, content);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.BadRequest, response.Code);
+
+            // Tear down
+            _endSystems.Dispose();
+        }
+
+        [Fact]
+        public async Task Edit_NonExistingTodo_NotFound()
+        {
+            // Arrange
+            var user = MockApplicationUsers.Get(5);
+            var token = await GetToken(user);
+            var model = new EditTodoViewModel
+            {
+                Id = 0,
+                Due = DateTime.Now,
+                Description = "Intergalactic, planetary, planetary, intergalactic"
+            };
+            var body = JsonStringBuilder.EditTodoJsonBody(
+                model.Description, model.Due.ToString(), model.Id.ToString());
+            var content = new StringContent(body);
+            var path = Routes.TodoRoute;
+            _endSystems.SetBearerToken(token);
+
+            // Act
+            var response = await _endSystems.Put(path, content);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.NotFound, response.Code);
+
+            // Tear down
+            _endSystems.Dispose();
+        }
+
+        [Fact]
+        public async Task Edit_ExistingTodoButNotOwnedByTokenOwner_NotFound()
+        {
+            // Arrange
+            var user = MockApplicationUsers.Get(5);
+            var todoToEdit = MockTodos.GetAll().Where(z => z.Owner.Id != user.Id).FirstOrDefault();
+            Assert.NotNull(todoToEdit);
+            var token = await GetToken(user);
+            var model = new EditTodoViewModel
+            {
+                Id = todoToEdit.Id,
+                Due = DateTime.Now,
+                Description = "Listen all of y'all it's a sabotage"
+            };
+            var body = JsonStringBuilder.EditTodoJsonBody(
+                model.Description, model.Due.ToString(), model.Id.ToString());
+            var content = new StringContent(body);
+            var path = Routes.TodoRoute;
+            _endSystems.SetBearerToken(token);
+
+            // Act
+            var response = await _endSystems.Put(path, content);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.NotFound, response.Code);
+
+            // Tear down
+            _endSystems.Dispose();
+        }
+
+        [Fact]
+        public async Task Edit_ExistingTodoOwnedByTokenOwner_Ok()
+        {
+            // Arrange
+            var user = MockApplicationUsers.Get(2);
+            var todoToEdit = MockTodos.GetAll().Where(z => z.Owner.Id == user.Id).LastOrDefault();
+            Assert.NotNull(todoToEdit);
+            var token = await GetToken(user);
+            var model = new EditTodoViewModel
+            {
+                Id = todoToEdit.Id,
+                Due = new DateTime(2014, 12, 24, 10, 11, 12),
+                Description = "It's like a jungle sometimes - It makes me wonder how I keep from goin' under"
+            };
+            var body = JsonStringBuilder.EditTodoJsonBody(
+                model.Description, model.Due.ToString(), model.Id.ToString());
+            var content = new StringContent(body);
+            _endSystems.SetBearerToken(token);
+            var getPath = $"{Routes.TodoRoute}/{model.Id}";
+            var putPath = Routes.TodoRoute;
+
+            // Act
+            var getResponse1 = await _endSystems.Get(getPath);
+            var editResponse = await _endSystems.Put(putPath, content);
+            var getResponse2 = await _endSystems.Get(getPath);
+            var dtoBefore = JsonStringSerializer.GetTodoDto(getResponse1.Body);
+            var dtoAfter = JsonStringSerializer.GetTodoDto(getResponse2.Body);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, getResponse1.Code);
+            Assert.Equal(HttpStatusCode.OK, editResponse.Code);
+            Assert.Equal(HttpStatusCode.OK, getResponse2.Code);
+            Assert.Equal(todoToEdit.Id, dtoBefore.Id);
+            Assert.Equal(todoToEdit.Due, dtoBefore.Due);
+            Assert.Equal(todoToEdit.Description, dtoBefore.Description);
+            Assert.Equal(model.Id, dtoAfter.Id);
+            Assert.Equal(model.Due, dtoAfter.Due);
+            Assert.Equal(model.Description, dtoAfter.Description);
+
+            // Tear down
+            _endSystems.Dispose();
+        }
+
         #endregion
 
         #region Helpers

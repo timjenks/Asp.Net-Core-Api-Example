@@ -99,5 +99,43 @@ namespace Tests.Helpers.Json
                 .Append('}')
                 .ToString();
         }
+
+        /// <summary>
+        /// Create a json string body for editing todo.
+        /// </summary>
+        /// <param name="description">The description of todo</param>
+        /// <param name="date">The due time of a todo in string format</param>
+        /// <param name="id">The id of the todo as string</param>
+        /// <returns>A json string</returns>
+        public static string EditTodoJsonBody(string description, string date, string id)
+        {
+            return new StringBuilder(35 + description.Length + date.Length + id.Length)
+                .Append('{')
+                .Append('"')
+                .Append("Id")
+                .Append('"')
+                .Append(':')
+                .Append('"')
+                .Append(id)
+                .Append('"')
+                .Append(',')
+                .Append('"')
+                .Append("Description")
+                .Append('"')
+                .Append(':')
+                .Append('"')
+                .Append(description)
+                .Append('"')
+                .Append(',')
+                .Append('"')
+                .Append("Due")
+                .Append('"')
+                .Append(':')
+                .Append('"')
+                .Append(date)
+                .Append('"')
+                .Append('}')
+                .ToString();
+        }
     }
 }
