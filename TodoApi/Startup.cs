@@ -1,19 +1,24 @@
 ﻿using System;
-using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.PlatformAbstractions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using TodoApi.Utils.Constants;
 using TodoApi.Data;
 using TodoApi.Models.EntityModels;
 using TodoApi.Services;
 using TodoApi.Services.Interfaces;
+using Swashbuckle.AspNetCore.Swagger;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace TodoApi
 {
@@ -88,9 +93,45 @@ namespace TodoApi
             services.AddTransient<IUserService, UserService>();
 
             services.AddCors();
+
             services.AddMvc();
+
             services.AddMemoryCache();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc
+                (
+                    Routes.Version,
+                    new Info
+                    {
+                        Title = "Todo API",
+                        Version = Routes.Version,
+                        Description = "An example restful api project in dotnet core",
+                        Contact = new Contact
+                        {
+                            Name = "Jón Steinn Elíasson",
+                            Email = "jonsteinn@gmail.com",
+                            Url = "https://github.com/jonsteinn"
+                        },
+                        License = new License
+                        {
+                            Name = "MIT",
+                            Url = "https://opensource.org/licenses/MIT",
+                        }
+                    }
+                );
+                var filePath = Path.Combine
+                (
+                    PlatformServices.Default.Application.ApplicationBasePath, 
+                    "TodoApiDocumentation.xml"
+                );
+                c.IncludeXmlComments(filePath);
+                c.OperationFilter<AuthorizationInputOperationFilter>();
+            });
+
         }
+        
         /// <summary>
         /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         /// </summary>
@@ -102,6 +143,7 @@ namespace TodoApi
             {
                 app.UseDeveloperExceptionPage();
             }
+
             app.UseCors(builder =>
                 builder
                     .AllowAnyHeader()
@@ -109,8 +151,39 @@ namespace TodoApi
                     .AllowAnyMethod()
                     .WithExposedHeaders("Location")
             );
+
             app.UseAuthentication();
+
             app.UseMvc();
+            
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint(Routes.SwaggerRoute, "Todo Example API" );
+            }); 
+        }
+
+        /// <summary>
+        /// Authorization filter for swagger to add authorization field to all requests.
+        /// </summary>
+        private class AuthorizationInputOperationFilter : IOperationFilter
+        {
+            public void Apply(Operation operation, OperationFilterContext context)
+            {
+                if (operation.Parameters == null)
+                {
+                    operation.Parameters = new List<IParameter>();
+                }
+
+                operation.Parameters.Add(new NonBodyParameter
+                {
+                    Name = "Authorization",
+                    In = "header",
+                    Description = "Bearer token if required, e.g. 'Bearer {token}'",
+                    Required = false,
+                    Type = "string"
+                });
+            }
         }
     }
 }

@@ -8,9 +8,14 @@
     public static class Routes
     {
         /// <summary>
+        /// The current version.
+        /// </summary>
+        public const string Version = "v1";
+
+        /// <summary>
         /// The route prefix for all controllers.
         /// </summary>
-        private const string VersionPrefix = "api/v1/";
+        private const string VersionPrefix = "api/" + Version + "/";
 
         /// <summary>
         /// The route prefix for TodoController.
@@ -26,5 +31,10 @@
         /// The route prefix for UserController.
         /// </summary>
         public const string UserRoute = VersionPrefix + "user";
+
+        /// <summary>
+        /// The route for Swagger documentation.
+        /// </summary>
+        public const string SwaggerRoute = "/swagger/" + Version + "/swagger.json";
     }
 }
