@@ -20,11 +20,5 @@ namespace TodoApi.Data
         /// All todos in database.
         /// </summary>
         public DbSet<Todo> Todo { get; set; }
-
-        /// <inheritdoc />
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
-        }
     }
 }

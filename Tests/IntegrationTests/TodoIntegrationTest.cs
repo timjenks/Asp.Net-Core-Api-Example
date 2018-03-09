@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -57,7 +58,7 @@ namespace Tests.IntegrationTests
         {
             // Arrange
             var user = MockApplicationUsers.Get(3);
-            var todoId = 0;
+            const int todoId = 0;
             var path = $"{Routes.TodoRoute}/{todoId}";
             var token = await GetToken(user);
             _endSystems.SetBearerToken(token);
@@ -86,6 +87,7 @@ namespace Tests.IntegrationTests
                     break;
                 }
             }
+            Assert.NotNull(todo);
             var path = $"{Routes.TodoRoute}/{todo.Id}";
             var token = await GetToken(user);
             _endSystems.SetBearerToken(token);
@@ -134,7 +136,7 @@ namespace Tests.IntegrationTests
         public async Task GetAllTodos_NoToken_Unauthorized()
         {
             // Arrange
-            var path = Routes.TodoRoute;
+            const string path = Routes.TodoRoute;
 
             // Act
             var response = await _endSystems.Get(path);
@@ -381,7 +383,7 @@ namespace Tests.IntegrationTests
             var model = MockCreateTodoViewModel.Get(0);
             var body = JsonStringBuilder.CreateTodoJsonBody(model.Description, model.Due.ToString());
             var content = new StringContent(body);
-            var path = Routes.TodoRoute;
+            const string path = Routes.TodoRoute;
 
             // Act
             var response = await _endSystems.Post(path, content);
@@ -399,7 +401,7 @@ namespace Tests.IntegrationTests
             // Arrange
             var user = MockApplicationUsers.Get(5);
             var content = new StringContent("I go out on Friday night and I come home on Saturday morning");
-            var path = Routes.TodoRoute;
+            const string path = Routes.TodoRoute;
             var token = await GetToken(user);
             _endSystems.SetBearerToken(token);
 
@@ -419,7 +421,7 @@ namespace Tests.IntegrationTests
             // Arrange
             var user = MockApplicationUsers.Get(5);
             var content = new StringContent("");
-            var path = Routes.TodoRoute;
+            const string path = Routes.TodoRoute;
             var token = await GetToken(user);
             _endSystems.SetBearerToken(token);
 
@@ -439,7 +441,7 @@ namespace Tests.IntegrationTests
             // Arrange
             var user = MockApplicationUsers.Get(5);
             var content = new StringContent("{}");
-            var path = Routes.TodoRoute;
+            const string path = Routes.TodoRoute;
             var token = await GetToken(user);
             _endSystems.SetBearerToken(token);
 
@@ -464,7 +466,7 @@ namespace Tests.IntegrationTests
             var adminToken = await GetToken(admin);
 
             var deletePath = $"{Routes.UserRoute}/{user.Id}";
-            var createPath = Routes.TodoRoute;
+            const string createPath = Routes.TodoRoute;
             _endSystems.SetBearerToken(adminToken);
             var deleteResponse = await _endSystems.Delete(deletePath);
             Assert.Equal(HttpStatusCode.NoContent, deleteResponse.Code);
@@ -472,7 +474,11 @@ namespace Tests.IntegrationTests
             _endSystems.RemoveBearerToken();
             _endSystems.SetBearerToken(userToken);
 
-            var model = MockCreateTodoViewModel.Get(1);
+            var model = new CreateTodoViewModel
+            {
+                Description = "They paved paradise and put up a parking lot",
+                Due = new DateTime(2000,1,1)
+            };
             var body = JsonStringBuilder.CreateTodoJsonBody(model.Description, model.Due.ToString());
             var content = new StringContent(body);
 
@@ -492,9 +498,13 @@ namespace Tests.IntegrationTests
             // Arrange
             var user = MockApplicationUsers.Get(8);
             var token = await GetToken(user);
-            var createPath = Routes.TodoRoute;
+            const string createPath = Routes.TodoRoute;
             _endSystems.SetBearerToken(token);
-            var model = MockCreateTodoViewModel.Get(0);
+            var model = new CreateTodoViewModel
+            {
+                Description = "I am your doctor, when you need, want some coke? Have some weed",
+                Due = new DateTime(2000, 1, 1)
+            };
             var body = JsonStringBuilder.CreateTodoJsonBody(model.Description, model.Due.ToString());
             var content = new StringContent(body);
 
@@ -541,7 +551,7 @@ namespace Tests.IntegrationTests
             // Arrange
             var user = MockApplicationUsers.Get(7);
             var token = await GetToken(user);
-            var nonExistingTokenId = 0;
+            const int nonExistingTokenId = 0;
             Assert.DoesNotContain(nonExistingTokenId, MockTodos.GetAll().Select(w => w.Id).ToHashSet());
             var path = $"{Routes.TodoRoute}/{nonExistingTokenId}";
             _endSystems.SetBearerToken(token);
@@ -564,8 +574,7 @@ namespace Tests.IntegrationTests
             var token = await GetToken(user);
             var todoNotOwnedByUser = MockTodos
                 .GetAll()
-                .Where(w => w.Owner.Id != user.Id)
-                .FirstOrDefault();
+                .FirstOrDefault(w => w.Owner.Id != user.Id);
             Assert.NotNull(todoNotOwnedByUser);
             var path = $"{Routes.TodoRoute}/{todoNotOwnedByUser.Id}";
             _endSystems.SetBearerToken(token);
@@ -588,8 +597,7 @@ namespace Tests.IntegrationTests
             var token = await GetToken(user);
             var todoOwnedByUser = MockTodos
                 .GetAll()
-                .Where(z => z.Owner.Id == user.Id)
-                .FirstOrDefault();
+                .FirstOrDefault(z => z.Owner.Id == user.Id);
             Assert.NotNull(todoOwnedByUser);
             _endSystems.SetBearerToken(token);
             var path = $"{Routes.TodoRoute}/{todoOwnedByUser.Id}";
@@ -620,7 +628,7 @@ namespace Tests.IntegrationTests
             var body = JsonStringBuilder.EditTodoJsonBody(
                 model.Description, model.Due.ToString(), model.Id.ToString());
             var content = new StringContent(body);
-            var path = Routes.TodoRoute;
+            const string path = Routes.TodoRoute;
 
             // Act
             var response = await _endSystems.Put(path, content);
@@ -638,7 +646,7 @@ namespace Tests.IntegrationTests
             // Arrange
             var user = MockApplicationUsers.Get(5);
             var content = new StringContent("I'll take your brain to another dimension - Pay close attention");
-            var path = Routes.TodoRoute;
+            const string path = Routes.TodoRoute;
             var token = await GetToken(user);
             _endSystems.SetBearerToken(token);
 
@@ -658,7 +666,7 @@ namespace Tests.IntegrationTests
             // Arrange
             var user = MockApplicationUsers.Get(5);
             var content = new StringContent("");
-            var path = Routes.TodoRoute;
+            const string path = Routes.TodoRoute;
             var token = await GetToken(user);
             _endSystems.SetBearerToken(token);
 
@@ -678,7 +686,7 @@ namespace Tests.IntegrationTests
             // Arrange
             var user = MockApplicationUsers.Get(5);
             var content = new StringContent("{}");
-            var path = Routes.TodoRoute;
+            const string path = Routes.TodoRoute;
             var token = await GetToken(user);
             _endSystems.SetBearerToken(token);
 
@@ -707,7 +715,7 @@ namespace Tests.IntegrationTests
             var body = JsonStringBuilder.EditTodoJsonBody(
                 model.Description, model.Due.ToString(), model.Id.ToString());
             var content = new StringContent(body);
-            var path = Routes.TodoRoute;
+            const string path = Routes.TodoRoute;
             _endSystems.SetBearerToken(token);
 
             // Act
@@ -725,7 +733,7 @@ namespace Tests.IntegrationTests
         {
             // Arrange
             var user = MockApplicationUsers.Get(5);
-            var todoToEdit = MockTodos.GetAll().Where(z => z.Owner.Id != user.Id).FirstOrDefault();
+            var todoToEdit = MockTodos.GetAll().FirstOrDefault(z => z.Owner.Id != user.Id);
             Assert.NotNull(todoToEdit);
             var token = await GetToken(user);
             var model = new EditTodoViewModel
@@ -755,13 +763,13 @@ namespace Tests.IntegrationTests
         {
             // Arrange
             var user = MockApplicationUsers.Get(2);
-            var todoToEdit = MockTodos.GetAll().Where(z => z.Owner.Id == user.Id).LastOrDefault();
+            var todoToEdit = MockTodos.GetAll().LastOrDefault(z => z.Owner.Id == user.Id);
             Assert.NotNull(todoToEdit);
             var token = await GetToken(user);
             var model = new EditTodoViewModel
             {
                 Id = todoToEdit.Id,
-                Due = new DateTime(2014, 12, 24, 10, 11, 12),
+                Due = new DateTime(2014, 12, 12, 10, 11, 12),
                 Description = "It's like a jungle sometimes - It makes me wonder how I keep from goin' under"
             };
             var body = JsonStringBuilder.EditTodoJsonBody(
@@ -822,11 +830,11 @@ namespace Tests.IntegrationTests
         /// </summary>
         /// <param name="todos">The todos some user owns</param>
         /// <param name="dtos">The dtos from a response</param>
-        private void CheckOrderAndEqual(Todo[] todos, TodoDto[] dtos)
+        private static void CheckOrderAndEqual(IReadOnlyList<Todo> todos, IReadOnlyList<TodoDto> dtos)
         {
             TodoDto last = null;
-            Assert.Equal(todos.Count(), dtos.Length);
-            for (var i = 0; i < dtos.Length; i++)
+            Assert.Equal(todos.Count, dtos.Count);
+            for (var i = 0; i < todos.Count; i++)
             {
                 Assert.Equal(todos[i].Id, dtos[i].Id);
                 Assert.Equal(todos[i].Due, dtos[i].Due);

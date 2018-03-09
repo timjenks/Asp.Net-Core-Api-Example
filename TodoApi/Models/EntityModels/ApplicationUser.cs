@@ -5,7 +5,7 @@ using TodoApi.Models.ViewModels;
 namespace TodoApi.Models.EntityModels
 {
     /// <inheritdoc />
-    public class ApplicationUser : IdentityUser
+    public sealed class ApplicationUser : IdentityUser
     {
         /// <inheritdoc />
         public ApplicationUser() { }
