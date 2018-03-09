@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿#region Imports
+
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -18,6 +20,8 @@ using TodoApi.Models.EntityModels;
 using TodoApi.Services;
 using TodoApi.Services.Interfaces;
 
+#endregion
+
 namespace Tests.Helpers.EndSystems
 {
     /// <summary>
@@ -25,6 +29,17 @@ namespace Tests.Helpers.EndSystems
     /// </summary>
     public class StartUp
     {
+        #region Fields
+
+        /// <summary>
+        /// Configuration interface object.
+        /// </summary>
+        public IConfiguration Configuration { get; }
+
+        #endregion
+
+        #region Constructors 
+
         /// <summary>
         /// Constructor for mock startup.
         /// </summary>
@@ -34,10 +49,9 @@ namespace Tests.Helpers.EndSystems
             Configuration = new MockConfiguration();
         }
 
-        /// <summary>
-        /// Configuration interface object.
-        /// </summary>
-        public IConfiguration Configuration { get; }
+        #endregion
+
+        #region Configure Services
 
         /// <summary>
         /// This method gets called by the runtime. Use this method to add services to the container.
@@ -54,6 +68,7 @@ namespace Tests.Helpers.EndSystems
                 options.Password = PasswordLimits.PasswordSettings;
             }).AddEntityFrameworkStores<AppDataContext>().AddDefaultTokenProviders();
 
+            #region JWT
             // JWT Authentication
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             services
@@ -81,6 +96,7 @@ namespace Tests.Helpers.EndSystems
                         ClockSkew = TimeSpan.Zero
                     };
                 });
+            #endregion
 
             // Inject services
             services.AddTransient<ITodoService, TodoService>();
@@ -92,6 +108,10 @@ namespace Tests.Helpers.EndSystems
             services.AddMvc();
             services.AddMemoryCache();
         }
+
+        #endregion
+
+        #region Configure
 
         /// <summary>
         /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -116,6 +136,10 @@ namespace Tests.Helpers.EndSystems
             app.UseMvc();
         }
 
+        #endregion
+
+        #region Helpers
+
         /// <summary>
         /// Fills the database with mock data.
         /// </summary>
@@ -134,5 +158,7 @@ namespace Tests.Helpers.EndSystems
             db.Todo.AddRange(MockTodos.GetAll());
             db.SaveChanges();
         }
+
+        #endregion
     }
 }

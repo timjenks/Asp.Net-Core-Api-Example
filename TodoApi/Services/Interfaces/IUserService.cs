@@ -1,6 +1,10 @@
-﻿using System.Collections.Generic;
+﻿#region Imports
+
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TodoApi.Models.DtoModels;
+
+#endregion
 
 namespace TodoApi.Services.Interfaces
 {

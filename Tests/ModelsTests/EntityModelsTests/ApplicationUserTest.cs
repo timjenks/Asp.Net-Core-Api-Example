@@ -1,9 +1,13 @@
-﻿using System.Collections.Generic;
+﻿#region Imports
+
+using System.Collections.Generic;
 using System.Linq;
 using Tests.MockData.EntityModels;
 using Tests.MockData.ViewModels;
 using TodoApi.Models.EntityModels;
 using Xunit;
+
+#endregion
 
 namespace Tests.ModelsTests.EntityModelsTests
 {

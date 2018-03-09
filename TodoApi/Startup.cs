@@ -1,4 +1,6 @@
-﻿using System;
+﻿#region Imports
+
+using System;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
@@ -20,6 +22,8 @@ using TodoApi.Services.Interfaces;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
+#endregion
+
 namespace TodoApi
 {
     /// <summary>
@@ -27,6 +31,17 @@ namespace TodoApi
     /// </summary>
     public class Startup
     {
+        #region Fields
+        
+        /// <summary>
+        /// variable that stores configuration.
+        /// </summary>
+        public IConfiguration Configuration { get; }
+
+        #endregion
+
+        #region Constructors
+
         /// <summary>
         /// Constructor that injects configuration.
         /// </summary>
@@ -36,10 +51,9 @@ namespace TodoApi
             Configuration = configuration;
         }
 
-        /// <summary>
-        /// variable that stores configuration.
-        /// </summary>
-        public IConfiguration Configuration { get; }
+        #endregion
+
+        #region Configure Services
 
         /// <summary>
         /// This method gets called by the runtime. Use this method to add services to the container.
@@ -59,7 +73,7 @@ namespace TodoApi
                 options.Password = PasswordLimits.PasswordSettings;
             }).AddEntityFrameworkStores<AppDataContext>().AddDefaultTokenProviders();
 
-            // JWT Authentication
+            #region JWT
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             services
                 .AddAuthentication(options =>
@@ -86,6 +100,7 @@ namespace TodoApi
                         ClockSkew = TimeSpan.Zero
                     };
                 });
+            #endregion
 
             // Inject services
             services.AddTransient<ITodoService, TodoService>();
@@ -98,6 +113,7 @@ namespace TodoApi
 
             services.AddMemoryCache();
 
+            #region Swagger
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc
@@ -129,9 +145,13 @@ namespace TodoApi
                 c.IncludeXmlComments(filePath);
                 c.OperationFilter<AuthorizationInputOperationFilter>();
             });
-
+            #endregion
         }
-        
+
+        #endregion
+
+        #region Configure
+
         /// <summary>
         /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         /// </summary>
@@ -163,6 +183,10 @@ namespace TodoApi
             }); 
         }
 
+        #endregion
+
+        #region Helpers
+
         /// <summary>
         /// Authorization filter for swagger to add authorization field to all requests.
         /// </summary>
@@ -185,5 +209,7 @@ namespace TodoApi
                 });
             }
         }
+
+        #endregion
     }
 }

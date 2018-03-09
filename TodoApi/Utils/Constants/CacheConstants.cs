@@ -1,5 +1,9 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿#region Imports
+
+using Microsoft.Extensions.Caching.Memory;
 using System;
+
+#endregion
 
 namespace TodoApi.Utils.Constants
 {

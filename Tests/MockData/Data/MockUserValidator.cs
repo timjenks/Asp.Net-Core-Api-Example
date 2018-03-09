@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿#region Imports
+
+using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using TodoApi.Models.EntityModels;
+
+#endregion
 
 namespace Tests.MockData.Data
 {

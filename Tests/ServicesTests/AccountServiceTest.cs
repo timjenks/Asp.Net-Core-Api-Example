@@ -1,4 +1,6 @@
-﻿using Jwt;
+﻿#region Imports
+
+using Jwt;
 using Newtonsoft.Json.Linq;
 using System.Linq;
 using System.Security.Claims;
@@ -12,6 +14,8 @@ using TodoApi.Models.ViewModels;
 using TodoApi.Services;
 using Xunit;
 
+#endregion
+
 namespace Tests.ServicesTests
 {
     /// <summary>
@@ -20,9 +24,15 @@ namespace Tests.ServicesTests
     /// </summary>
     public class AccountServiceTest
     {
+        #region Fields
+
         private readonly AccountService _service;
         private readonly MockConfiguration _config;
         private readonly AppDataContext _ctx;
+
+        #endregion
+
+        #region Constructors
 
         /// <summary>
         /// Before each.
@@ -35,6 +45,8 @@ namespace Tests.ServicesTests
             _config = new MockConfiguration();
             _service = new AccountService(userManager, signInManager, _config, _ctx);
         }
+
+        #endregion
 
         #region Login
 

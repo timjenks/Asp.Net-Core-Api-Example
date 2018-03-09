@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿#region Imports
+
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using System.Collections.Generic;
@@ -11,6 +13,8 @@ using TodoApi.Models.DtoModels;
 using TodoApi.Models.EntityModels;
 using TodoApi.Services.Interfaces;
 
+#endregion
+
 namespace TodoApi.Services
 {
     /// <inheritdoc />
@@ -19,10 +23,15 @@ namespace TodoApi.Services
     /// </summary>
     public class UserService : IUserService
     {
+        #region Fields
+
         private readonly AppDataContext _db;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMemoryCache _cache;
 
+        #endregion
+
+        #region Constructores
         /// <summary>
         /// A constructor that injects AppDataContext, UserManager and MemoryCache.
         /// </summary>
@@ -41,6 +50,10 @@ namespace TodoApi.Services
             _cache = cache;
         }
 
+        #endregion
+
+        #region GetUser
+
         /// <inheritdoc />
         /// <exception cref="UserNotFoundException">Thrown when user is not found</exception>
         public async Task<ApplicationUserDto> GetUserByIdAsync(string userId)
@@ -58,6 +71,10 @@ namespace TodoApi.Services
             return new ApplicationUserDto(user);
         }
 
+        #endregion
+
+        #region GetAllUsers
+
         /// <inheritdoc />
         public async Task<IEnumerable<ApplicationUserDto>> GetAllUsersOrderedByNameAsync()
         {
@@ -73,6 +90,10 @@ namespace TodoApi.Services
             }
             return users;
         }
+
+        #endregion
+
+        #region Delete
 
         /// <inheritdoc />
         /// <exception cref="UserNotFoundException">Thrown when user is not found</exception>
@@ -103,5 +124,7 @@ namespace TodoApi.Services
             _cache.Remove(CacheConstants.GetSingleUserCacheKey(userToRemove.Id));
             _cache.Remove(CacheConstants.AllUsersCacheKey);
         }
+
+        #endregion
     }
 }

@@ -1,9 +1,13 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿#region Imports
+
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 using TodoApi.Models.EntityModels;
+
+#endregion
 
 namespace Tests.MockData.Data
 {
@@ -13,6 +17,8 @@ namespace Tests.MockData.Data
     /// </summary>
     public class MockUserManager : UserManager<ApplicationUser>
     {
+        #region Constructors
+
         /// <inheritdoc />
         /// <summary>
         /// Calls super class with a store from the context and 
@@ -35,5 +41,7 @@ namespace Tests.MockData.Data
         )
         {
         }
+
+        #endregion
     }
 }

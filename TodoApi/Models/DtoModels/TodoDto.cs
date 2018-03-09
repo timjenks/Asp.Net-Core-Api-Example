@@ -1,5 +1,9 @@
-﻿using System;
+﻿#region Imports
+
+using System;
 using TodoApi.Models.EntityModels;
+
+#endregion
 
 namespace TodoApi.Models.DtoModels
 {
@@ -8,6 +12,27 @@ namespace TodoApi.Models.DtoModels
     /// </summary>
     public class TodoDto
     {
+        #region Fields
+
+        /// <summary>
+        /// A unique identifier for the todo.
+        /// </summary>
+        public int Id { get; set; }
+
+        /// <summary>
+        /// The due date of the todo.
+        /// </summary> 
+        public DateTime Due { get; set; }
+
+        /// <summary>
+        /// A description of the todo.
+        /// </summary>
+        public string Description { get; set; }
+
+        #endregion
+
+        #region Constructors
+
         /// <summary>
         /// No argument constructor.
         /// </summary>
@@ -24,19 +49,6 @@ namespace TodoApi.Models.DtoModels
             Description = string.Copy(todo.Description);
         }
 
-        /// <summary>
-        /// A unique identifier for the todo.
-        /// </summary>
-        public int Id { get; set; }
-
-        /// <summary>
-        /// The due date of the todo.
-        /// </summary> 
-        public DateTime Due { get; set; }
-
-        /// <summary>
-        /// A description of the todo.
-        /// </summary>
-        public string Description { get; set; }
+        #endregion
     }
 }

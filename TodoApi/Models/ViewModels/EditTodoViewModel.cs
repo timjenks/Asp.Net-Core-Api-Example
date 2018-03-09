@@ -1,6 +1,10 @@
-﻿using System;
+﻿#region Imports
+
+using System;
 using System.ComponentModel.DataAnnotations;
 using TodoApi.Utils.Constants;
+
+#endregion
 
 namespace TodoApi.Models.ViewModels
 {
@@ -9,6 +13,8 @@ namespace TodoApi.Models.ViewModels
     /// </summary>
     public class EditTodoViewModel
     {
+        #region Fields
+
         /// <summary>
         /// The id of the todo to edit.
         /// </summary>
@@ -28,5 +34,7 @@ namespace TodoApi.Models.ViewModels
         [Required(ErrorMessage = ErrorMessages.TodoDescriptionRequired)]
         [MaxLength(TodoLimits.DescriptionMaxLength, ErrorMessage = ErrorMessages.TodoDescriptionMaxLength)]
         public string Description { get; set; }
+
+        #endregion
     }
 }

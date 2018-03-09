@@ -1,7 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿#region Imports
+
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
+#endregion
 
 namespace Tests.MockData.EntityModels
 {
@@ -10,10 +14,16 @@ namespace Tests.MockData.EntityModels
     /// </summary>
     public static class MockUserRoles
     {
+        #region Data
+
         /// <summary>
         /// A dictionary between user ids and their role.
         /// </summary>
         private static readonly Dictionary<string, IdentityUserRole<string>> Data = InitialzieData();
+
+        #endregion
+
+        #region Getters
 
         /// <summary>
         /// Get the UserRole for the userId. In this scenario, each one has only one
@@ -30,6 +40,10 @@ namespace Tests.MockData.EntityModels
             }
             return Data[userId];
         }
+
+        #endregion
+
+        #region Helpers
 
         /// <summary>
         /// Dictionary builder.
@@ -63,5 +77,7 @@ namespace Tests.MockData.EntityModels
             }
             return hashMap;
         }
+
+        #endregion
     }
 }

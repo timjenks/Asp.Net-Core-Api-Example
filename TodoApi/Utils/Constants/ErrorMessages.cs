@@ -5,6 +5,8 @@
     /// </summary>
     public static class ErrorMessages
     {
+        #region Todo
+
         /// <summary>
         /// When todo due date is missing.
         /// </summary>
@@ -28,6 +30,10 @@
         /// </summary>
         public const string TodoIdRequired = "Todo id is required";
 
+        #endregion
+
+        #region Account
+
         /// <summary>
         /// When email is missing in login or register.
         /// </summary>
@@ -47,6 +53,10 @@
             + " and "
             + PasswordLimits.AccountMaxPasswordLengthString;
 
+        #endregion
+
+        #region User
+
         /// <summary>
         /// When name of user is missing.
         /// </summary>
@@ -59,5 +69,7 @@
             "Names can be of length "
             + UserLimits.NameMaxLengthString
             + " at most";
+
+        #endregion
     }
 }

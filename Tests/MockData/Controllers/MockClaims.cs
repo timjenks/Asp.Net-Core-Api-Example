@@ -1,8 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿#region Imports
+
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System.Collections.Generic;
 using System.Security.Claims;
+
+#endregion
 
 namespace Tests.MockData.Controllers
 {

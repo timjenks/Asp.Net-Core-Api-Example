@@ -1,8 +1,12 @@
-﻿using System.Linq;
+﻿#region Imports
+
+using System.Linq;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Tests.MockData.EntityModels;
 using TodoApi.Data;
+
+#endregion
 
 namespace Tests.MockData.Data
 {
@@ -12,6 +16,8 @@ namespace Tests.MockData.Data
     /// </summary>
     public sealed class InMemoryAppDataContext : AppDataContext
     {
+        #region Constructors 
+
         /// <inheritdoc />
         /// <summary>
         /// Constructor for in memory database.
@@ -23,6 +29,10 @@ namespace Tests.MockData.Data
 
             PopulateDatabaseWithMockData();
         }
+
+        #endregion
+
+        #region Helpers
 
         /// <summary>
         /// Fill the in memory database with our mock data.
@@ -54,6 +64,8 @@ namespace Tests.MockData.Data
             var builder = new DbContextOptionsBuilder<AppDataContext>();
             return builder.UseSqlite(connection).Options;
         }
+
+        #endregion
     }
 }
 

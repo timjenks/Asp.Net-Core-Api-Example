@@ -1,9 +1,13 @@
-﻿using System;
+﻿#region Imports
+
+using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+
+#endregion
 
 namespace Tests.Helpers.EndSystems
 {
@@ -13,14 +17,23 @@ namespace Tests.Helpers.EndSystems
     /// </summary>
     public class MockServerAndClient
     {
+
+        #region Fields
+
         private const string BaseAddress = "http://localhost";
         private readonly TestServer _server;
         private readonly HttpClient _client;
 
+        #endregion
+
+        #region Constructors
+
         /// <summary>
         /// Create a server using the EndSystems setup file.
         /// </summary>
-        public MockServerAndClient()
+        /// <param name="acceptJsonOnly">Adds {Accept, application/json} 
+        /// field to all request headers if true</param>
+        public MockServerAndClient(bool acceptJsonOnly = true)
         {
             var builder = new WebHostBuilder()
                 .UseEnvironment("Development")
@@ -30,8 +43,16 @@ namespace Tests.Helpers.EndSystems
             _server = new TestServer(builder);
             _client = _server.CreateClient();
             _client.BaseAddress = new Uri(BaseAddress);
+            if (acceptJsonOnly)
+            {
+                _client.DefaultRequestHeaders.Add("Accept", "application/json");
+            }
         }
-        
+
+        #endregion
+
+        #region Token settings
+
         /// <summary>
         /// Add a bearer token to default request headers.
         /// </summary>
@@ -49,6 +70,10 @@ namespace Tests.Helpers.EndSystems
         {
             _client.DefaultRequestHeaders.Remove("Authentication");
         }
+
+        #endregion
+
+        #region Http methods
 
         /// <summary>
         /// Make a GET request from the client to the server.
@@ -98,6 +123,8 @@ namespace Tests.Helpers.EndSystems
             return await Response(await _client.DeleteAsync(route));
         }
 
+        #endregion
+
         /// <summary>
         /// Cleans up resources of both the server and client.
         /// </summary>
@@ -106,6 +133,8 @@ namespace Tests.Helpers.EndSystems
             _client.Dispose();
             _server.Dispose();
         }
+
+        #region Helpers
 
         /// <summary>
         /// Converts a HttpResponseMessage to a mock response.
@@ -124,5 +153,7 @@ namespace Tests.Helpers.EndSystems
                 Headers = headers
             };
         }
+
+        #endregion
     }
 }

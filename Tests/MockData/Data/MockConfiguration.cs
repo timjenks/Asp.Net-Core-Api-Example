@@ -1,7 +1,11 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿#region Imports
+
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
+
+#endregion
 
 namespace Tests.MockData.Data
 {
@@ -19,6 +23,33 @@ namespace Tests.MockData.Data
         /// <exception cref="T:System.NotImplementedException">Thrown when non-jwt related key is accessed or if set</exception>
         /// <returns>The value of the given key</returns>
         public string this[string key] { get => GetHelper(key); set => throw new NotImplementedException(); }
+
+        #region Helpers
+
+        /// <summary>
+        /// Helper for [] access.
+        /// </summary>
+        /// <exception cref="NotImplementedException">Thrown if key not in {Issuer, SecretKey, TokenExpireDays}</exception>
+        /// <param name="key">Key for jwt-related value</param>
+        /// <returns>Value of key</returns>
+        private static string GetHelper(string key)
+        {
+            switch (key)
+            {
+                case "Issuer":
+                    return "http://put-your-domain.com";
+                case "SecretKey":
+                    return "58p%__ScZgmBuVRquZfq^8A2?uTUSeuvYm8EFJbcFW%Egz&+N!cRdTcgrwNX4&$3ceXUwPjrH-XC&d9wXEf73%DzLLeQ4RUy*gCvXBsyup=-um=pLz9q9GNNg^8EC?#a";
+                case "TokenExpireDays":
+                    return "30";
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        #endregion
+
+        #region Not Used
 
         /// <inheritdoc />
         /// <summary>
@@ -54,25 +85,6 @@ namespace Tests.MockData.Data
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Helper for [] access.
-        /// </summary>
-        /// <exception cref="NotImplementedException">Thrown if key not in {Issuer, SecretKey, TokenExpireDays}</exception>
-        /// <param name="key">Key for jwt-related value</param>
-        /// <returns>Value of key</returns>
-        private static string GetHelper(string key)
-        {
-            switch (key)
-            {
-                case "Issuer":
-                    return "http://put-your-domain.com";
-                case "SecretKey":
-                    return "58p%__ScZgmBuVRquZfq^8A2?uTUSeuvYm8EFJbcFW%Egz&+N!cRdTcgrwNX4&$3ceXUwPjrH-XC&d9wXEf73%DzLLeQ4RUy*gCvXBsyup=-um=pLz9q9GNNg^8EC?#a";
-                case "TokenExpireDays":
-                    return "30";
-                default:
-                    throw new NotImplementedException();
-            }
-        }
+        #endregion
     }
 }

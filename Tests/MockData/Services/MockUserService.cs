@@ -1,8 +1,12 @@
-﻿using System;
+﻿#region Imports
+
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TodoApi.Models.DtoModels;
 using TodoApi.Services.Interfaces;
+
+#endregion
 
 namespace Tests.MockData.Services
 {

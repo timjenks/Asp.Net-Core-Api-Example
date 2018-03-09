@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿#region Imports
+
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Tests.MockData.Services;
@@ -7,6 +9,8 @@ using TodoApi.Utils.Constants;
 using TodoApi.Controllers;
 using TodoApi.Exceptions;
 using Xunit;
+
+#endregion
 
 namespace Tests.ControllersTests
 {

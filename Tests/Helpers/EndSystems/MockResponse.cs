@@ -1,5 +1,9 @@
-﻿using System.Net;
+﻿#region Imports
+
+using System.Net;
 using System.Net.Http.Headers;
+
+#endregion
 
 namespace Tests.Helpers.EndSystems
 {
@@ -8,6 +12,8 @@ namespace Tests.Helpers.EndSystems
     /// </summary>
     public class MockResponse
     {
+        #region Fields
+
         /// <summary>
         /// The status code of the response.
         /// </summary>
@@ -22,5 +28,7 @@ namespace Tests.Helpers.EndSystems
         /// The body of the response.
         /// </summary>
         public string Body { get; set; }
+
+        #endregion
     }
 }

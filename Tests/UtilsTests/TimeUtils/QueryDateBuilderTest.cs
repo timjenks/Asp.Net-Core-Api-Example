@@ -1,6 +1,10 @@
-﻿using System;
+﻿#region Imports
+
+using System;
 using TodoApi.Utils.TimeUtils;
 using Xunit;
+
+#endregion
 
 namespace Tests.UtilsTests.TimeUtils
 {

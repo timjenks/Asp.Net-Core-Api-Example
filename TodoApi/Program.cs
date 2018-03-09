@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore;
+﻿#region Imports
+
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+
+#endregion
 
 namespace TodoApi
 {

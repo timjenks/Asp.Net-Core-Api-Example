@@ -1,12 +1,32 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿#region Imports
+
+using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using TodoApi.Models.ViewModels;
+
+# endregion
 
 namespace TodoApi.Models.EntityModels
 {
     /// <inheritdoc />
     public class ApplicationUser : IdentityUser
     {
+        #region Fields
+
+        /// <summary>
+        /// The name of the user (UserName field is used for email).
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// A colletion of all todos belonging to this user.
+        /// </summary>
+        public ICollection<Todo> Todos { get; set; }
+
+        #endregion
+
+        #region Constructors
+
         /// <inheritdoc />
         public ApplicationUser() { }
 
@@ -22,14 +42,6 @@ namespace TodoApi.Models.EntityModels
             Name = string.Copy(model.Name);
         }
 
-        /// <summary>
-        /// The name of the user (UserName field is used for email).
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// A colletion of all todos belonging to this user.
-        /// </summary>
-        public ICollection<Todo> Todos { get; set; }
+        #endregion
     }
 }

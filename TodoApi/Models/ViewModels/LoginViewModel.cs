@@ -1,5 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿#region Imports
+
+using System.ComponentModel.DataAnnotations;
 using TodoApi.Utils.Constants;
+
+#endregion
 
 namespace TodoApi.Models.ViewModels
 {
@@ -8,6 +12,8 @@ namespace TodoApi.Models.ViewModels
     /// </summary>
     public class LoginViewModel
     {
+        #region Fields
+
         /// <summary>
         /// The email of a user.
         /// </summary>
@@ -26,5 +32,7 @@ namespace TodoApi.Models.ViewModels
             MinimumLength = PasswordLimits.AccountMinPasswordLength)]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+
+        #endregion
     }
 }

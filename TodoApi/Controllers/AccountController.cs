@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿#region Imports
+
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using TodoApi.Utils.Constants;
 using TodoApi.Exceptions;
@@ -6,16 +8,25 @@ using TodoApi.Models.ViewModels;
 using TodoApi.Services.Interfaces;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
+#endregion
+
 namespace TodoApi.Controllers
 {
     /// <inheritdoc />
     /// <summary>
     /// A controller for all account related requests.
     /// </summary>
+    [Produces("application/json")]
     [Route(Routes.AccountRoute)]
     public class AccountController : Controller
     {
+        #region Fields
+
         private readonly IAccountService _accountService;
+
+        #endregion
+
+        #region Constructors
 
         /// <summary>
         /// Constructor that injects a service.
@@ -26,10 +37,14 @@ namespace TodoApi.Controllers
             _accountService = accountService;
         }
 
+        #endregion
+
+        #region Login
+
         /// <summary>
         /// Request a token for an existing user.
-        /// POST api/{version}/account/login
         /// </summary>
+        /// <remarks>POST api/{version}/account/login</remarks>
         /// <param name="model">A model with login information</param>
         /// <response code="200">Token received</response>
         /// <response code="400">Invalid data in body</response>
@@ -61,10 +76,14 @@ namespace TodoApi.Controllers
             }
         }
 
+        #endregion
+
+        #region Register
+
         /// <summary>
         /// Request a token for a new user.
-        /// POST api/{version}/account/register
         /// </summary>
+        /// <remarks>POST api/{version}/account/register</remarks>
         /// <param name="model">A model with register information</param>
         /// <response code="201">Token received</response>
         /// <response code="400">Invalid data in body</response>
@@ -99,5 +118,7 @@ namespace TodoApi.Controllers
                 return Unauthorized();
             }
         }
+
+        #endregion
     }
 }

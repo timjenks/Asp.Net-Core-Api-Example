@@ -1,5 +1,9 @@
-﻿using System;
+﻿#region Imports
+
+using System;
 using TodoApi.Models.ViewModels;
+
+#endregion
 
 namespace TodoApi.Models.EntityModels
 {
@@ -8,33 +12,7 @@ namespace TodoApi.Models.EntityModels
     /// </summary>
     public class Todo
     {
-        /// <summary>
-        /// No argument constructor.
-        /// </summary>
-        public Todo() { }
-
-        /// <summary>
-        /// Map a view model to a corresponding entity.
-        /// </summary>
-        /// <param name="model">A model for creating todos</param>
-        /// <param name="user">The owner of this todo</param>
-        public Todo(CreateTodoViewModel model, ApplicationUser user)
-        {
-            //Due = model.Due.Value;
-            if (model.Due != null) Due = model.Due.Value;
-            Description = string.Copy(model.Description);
-            Owner = user;
-        }
-
-        /// <summary>
-        /// Edit this entity using a editing view model.
-        /// </summary>
-        /// <param name="model">A view model containing changed fields</param>
-        public void Edit(EditTodoViewModel model)
-        {
-            if (model.Due != null) Due = model.Due.Value;
-            Description = string.Copy(model.Description);
-        }
+        #region Fields
 
         /// <summary>
         /// A unique identifier for todos.
@@ -55,5 +33,39 @@ namespace TodoApi.Models.EntityModels
         /// The owner of this todo.
         /// </summary>
         public ApplicationUser Owner { get; set; }
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// No argument constructor.
+        /// </summary>
+        public Todo() { }
+
+        /// <summary>
+        /// Map a view model to a corresponding entity.
+        /// </summary>
+        /// <param name="model">A model for creating todos</param>
+        /// <param name="user">The owner of this todo</param>
+        public Todo(CreateTodoViewModel model, ApplicationUser user)
+        {
+            //Due = model.Due.Value;
+            if (model.Due != null) Due = model.Due.Value;
+            Description = string.Copy(model.Description);
+            Owner = user;
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Edit this entity using a editing view model.
+        /// </summary>
+        /// <param name="model">A view model containing changed fields</param>
+        public void Edit(EditTodoViewModel model)
+        {
+            if (model.Due != null) Due = model.Due.Value;
+            Description = string.Copy(model.Description);
+        }
     }
 }

@@ -1,7 +1,11 @@
-﻿using Tests.MockData.DtoModels;
+﻿#region Imports
+
+using Tests.MockData.DtoModels;
 using Tests.MockData.EntityModels;
 using TodoApi.Models.DtoModels;
 using Xunit;
+
+#endregion
 
 namespace Tests.ModelsTests.DtoModelsTests
 {

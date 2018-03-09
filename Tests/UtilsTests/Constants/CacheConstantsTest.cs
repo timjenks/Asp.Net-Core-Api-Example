@@ -1,6 +1,10 @@
-﻿using System;
+﻿#region Imports
+
+using System;
 using TodoApi.Utils.Constants;
 using Xunit;
+
+#endregion
 
 namespace Tests.UtilsTests.Constants
 {

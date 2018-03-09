@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿#region Imports
+
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Tests.Helpers.EndSystems;
@@ -10,6 +12,9 @@ using TodoApi.Models.EntityModels;
 using Xunit;
 using System.Linq;
 using System;
+using Newtonsoft.Json.Linq;
+
+#endregion
 
 namespace Tests.IntegrationTests
 {
@@ -21,7 +26,13 @@ namespace Tests.IntegrationTests
     /// </summary>
     public class UserIntegrationTest
     {
+        #region Fields
+
         private readonly MockServerAndClient _endSystems;
+
+        #endregion
+
+        #region Constructors
 
         /// <summary>
         /// Before each.
@@ -30,6 +41,8 @@ namespace Tests.IntegrationTests
         {
             _endSystems = new MockServerAndClient();
         }
+
+        #endregion
 
         #region GetUser
 
@@ -300,7 +313,7 @@ namespace Tests.IntegrationTests
             var content = new StringContent(body);
             var response = await _endSystems.Post(Routes.AccountRoute + "/login", content);
             Assert.NotNull(response);
-            var token = response.Body;
+            var token = JToken.Parse(response.Body).ToString();
             Assert.NotNull(token);
             return token;
         }

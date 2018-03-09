@@ -1,10 +1,14 @@
-﻿using System.Linq;
+﻿#region Imports
+
+using System.Linq;
 using System.Text;
 using Tests.Helpers.Models;
 using Tests.MockData.ViewModels;
 using TodoApi.Utils.Constants;
 using TodoApi.Models.ViewModels;
 using Xunit;
+
+#endregion
 
 namespace Tests.ModelsTests.ViewModelsTests
 {

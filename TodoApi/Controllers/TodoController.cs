@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿#region Imports
+
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,17 +13,26 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using TodoApi.Models.DtoModels;
 using System.Collections.Generic;
 
+#endregion
+
 namespace TodoApi.Controllers
 {
     /// <inheritdoc />
     /// <summary>
     /// A controller for all todo related requests.
     /// </summary>
+    [Produces("application/json")]
     [Route(Routes.TodoRoute)]
     [Authorize(Roles = "Admin, User")]
     public class TodoController : Controller
     {
+        #region Fields
+
         private readonly ITodoService _todoService;
+
+        #endregion
+
+        #region Constructors
 
         /// <summary>
         /// Constructor that injects a service.
@@ -32,10 +43,14 @@ namespace TodoApi.Controllers
             _todoService = todoService;
         }
 
+        #endregion
+
+        #region GetTodo
+
         /// <summary>
         /// Get a specific todo given its id.
-        /// GET api/{version}/todo/{id}
         /// </summary>
+        /// <remarks>GET api/{version}/todo/{id}</remarks>
         /// <param name="todoId">The id of the todo requested</param>
         /// <response code="200">todo received</response>
         /// <response code="401">Token required</response>
@@ -57,10 +72,14 @@ namespace TodoApi.Controllers
             }
         }
 
+        #endregion
+
+        #region GetAllTodos
+
         /// <summary>
         /// Returning all todos.
-        /// GET api/{version}/tood
         /// </summary>
+        /// <remarks>GET api/{version}/tood</remarks>
         /// <param name="year">With given due date year</param>
         /// <param name="month">With given due date month</param>
         /// <param name="day">With given due date daay</param>
@@ -79,10 +98,14 @@ namespace TodoApi.Controllers
             return Ok(await _todoService.GetAllTodosOrderedByDueAsync(year, month, day, GetUserId()));
         }
 
+        #endregion
+
+        #region Create
+
         /// <summary>
         /// Create a new todo.
-        /// POST api/{version}/todo
         /// </summary>
+        /// <remarks>POST api/{version}/todo</remarks>
         /// <param name="model">A model with necessary fields to create a todo</param>
         /// <response code="201">Todo created</response>
         /// <response code="400">Invalid data in body</response>
@@ -117,10 +140,14 @@ namespace TodoApi.Controllers
             }
         }
 
+        #endregion
+
+        #region Delete
+
         /// <summary>
         /// Delete a specific todo.
-        /// DELETE api/{version}/todo/{id}
         /// </summary>
+        /// <remarks>DELETE api/{version}/todo/{id}</remarks>
         /// <param name="todoId">The id of the todo requested</param>
         /// <response code="204">Todo removed</response>
         /// <response code="401">Token required</response>
@@ -143,10 +170,14 @@ namespace TodoApi.Controllers
             }
         }
 
+        #endregion
+
+        #region Edit
+
         /// <summary>
         /// Edit an existing todo.
-        /// PUT api/{version}/dodo
         /// </summary>
+        /// <remarks>PUT api/{version}/dodo</remarks>
         /// <param name="changedTodo">Data containing id of the todo to edit and edited fields</param>
         /// <response code="200">Todo modified</response>
         /// <response code="400">Invalid data in body</response>
@@ -178,6 +209,8 @@ namespace TodoApi.Controllers
                 return NotFound();
             }
         }
+
+        #endregion
 
         #region Helpers
 

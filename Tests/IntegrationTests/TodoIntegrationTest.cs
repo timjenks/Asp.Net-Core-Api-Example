@@ -1,4 +1,7 @@
-﻿using System;
+﻿#region Imports
+
+using Newtonsoft.Json.Linq;
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -13,6 +16,8 @@ using TodoApi.Models.ViewModels;
 using TodoApi.Utils.Constants;
 using Xunit;
 
+#endregion
+
 namespace Tests.IntegrationTests
 {
     /// <summary>
@@ -23,7 +28,13 @@ namespace Tests.IntegrationTests
     /// </summary>
     public class TodoIntegrationTest
     {
+        #region Fields
+
         private readonly MockServerAndClient _endSystems;
+
+        #endregion
+
+        #region Constructors
 
         /// <summary>
         /// Before each.
@@ -32,6 +43,8 @@ namespace Tests.IntegrationTests
         {
             _endSystems = new MockServerAndClient();
         }
+
+        #endregion
 
         #region GetTodo
 
@@ -811,7 +824,7 @@ namespace Tests.IntegrationTests
             var content = new StringContent(body);
             var response = await _endSystems.Post(Routes.AccountRoute + "/login", content);
             Assert.NotNull(response);
-            var token = response.Body;
+            var token = JToken.Parse(response.Body).ToString();
             Assert.NotNull(token);
             return token;
         }

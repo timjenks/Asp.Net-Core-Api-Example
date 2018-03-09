@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿#region Imports
+
+using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
+
+#endregion
 
 namespace TodoApi.Utils.Constants
 {
@@ -51,6 +55,8 @@ namespace TodoApi.Utils.Constants
         /// </summary>
         public static readonly HashSet<string> SettingsErrorMessages = GetErrorCodes();
 
+        #region Helpers
+
         /// <summary>
         /// Construct a set of possible error codes from password settings.
         /// </summary>
@@ -80,5 +86,7 @@ namespace TodoApi.Utils.Constants
             }
             return set;
         }
+
+        #endregion
     }
 }

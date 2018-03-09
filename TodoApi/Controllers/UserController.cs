@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿#region Imports
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using TodoApi.Utils.Constants;
@@ -8,17 +10,26 @@ using TodoApi.Models.DtoModels;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Collections.Generic;
 
+#endregion
+
 namespace TodoApi.Controllers
 {
     /// <inheritdoc />
     /// <summary>
     /// A controller for all user data related requests.
     /// </summary>
+    [Produces("application/json")]
     [Route(Routes.UserRoute)]
     [Authorize(Roles = "Admin")]
     public class UserController : Controller
     {
+        #region Fields
+
         private readonly IUserService _userService;
+
+        #endregion
+
+        #region Constructors
 
         /// <summary>
         /// Constructor that injects a service.
@@ -29,10 +40,14 @@ namespace TodoApi.Controllers
             _userService = userService;
         }
 
+        #endregion
+
+        #region GetUser
+
         /// <summary>
         /// Get a specific user given his id.
-        /// GET api/{version}/user/{id}
         /// </summary>
+        /// <remarks>GET api/{version}/user/{id}</remarks>
         /// <param name="userId">The id of the requested user</param>
         /// <response code="200">User received</response>
         /// <response code="401">Token required</response>
@@ -56,10 +71,14 @@ namespace TodoApi.Controllers
             }
         }
 
+        #endregion
+
+        #region GetAllUsers
+
         /// <summary>
         /// Get all users.
-        /// GET api/{version}/user
         /// </summary>
+        /// <remarks>GET api/{version}/user</remarks>
         /// <response code="200">Users received</response>
         /// <response code="401">Token required</response>
         /// <response code="403">Token owner does not have required access to this resource</response>
@@ -73,10 +92,14 @@ namespace TodoApi.Controllers
             return Ok(await _userService.GetAllUsersOrderedByNameAsync());
         }
 
+        #endregion
+
+        #region Delete
+
         /// <summary>
         /// Delete a specific user.
-        /// DELETE api/{version}/user/{id}
         /// </summary>
+        /// <remarks>DELETE api/{version}/user/{id}</remarks>
         /// <param name="userId">The id of the requested user</param>
         /// <response code="204">User deleted</response>
         /// <response code="401">Token required</response>
@@ -100,5 +123,7 @@ namespace TodoApi.Controllers
                 return NotFound();
             }
         }
+
+        #endregion
     }
 }

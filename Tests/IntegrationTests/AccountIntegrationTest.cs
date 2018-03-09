@@ -1,4 +1,6 @@
-﻿using System;
+﻿#region Imports
+
+using System;
 using Jwt;
 using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json.Linq;
@@ -14,6 +16,8 @@ using TodoApi.Utils.Constants;
 using TodoApi.Models.EntityModels;
 using Xunit;
 
+#endregion
+
 namespace Tests.IntegrationTests
 {
     /// <summary>
@@ -24,7 +28,13 @@ namespace Tests.IntegrationTests
     /// </summary>
     public class AccountIntegrationTest
     {
+        #region Fields
+
         private readonly MockServerAndClient _endSystems;
+
+        #endregion
+
+        #region Constructors
 
         /// <summary>
         /// Before each.
@@ -33,6 +43,8 @@ namespace Tests.IntegrationTests
         {
             _endSystems = new MockServerAndClient();
         }
+
+        #endregion
 
         #region Login
 
@@ -137,7 +149,7 @@ namespace Tests.IntegrationTests
 
             // Act
             var response = await _endSystems.Post(path, content);
-            var token = response.Body;
+            var token = JToken.Parse(response.Body).ToString();
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.Code);
@@ -268,8 +280,9 @@ namespace Tests.IntegrationTests
             // Act
             var registerResponse = await _endSystems.Post(registerPath, registerContent);
             var loginResponse = await _endSystems.Post(loginPath, loginContent);
-            var registerToken = registerResponse.Body;
-            var loginToken = loginResponse.Body;
+
+            var registerToken = JToken.Parse(registerResponse.Body).ToString();
+            var loginToken = JToken.Parse(loginResponse.Body).ToString();
 
             // Assert
             Assert.Equal(HttpStatusCode.Created, registerResponse.Code);

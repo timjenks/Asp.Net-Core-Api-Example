@@ -1,7 +1,11 @@
-﻿using System;
+﻿#region Imports
+
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using TodoApi.Models.EntityModels;
+
+#endregion
 
 namespace Tests.MockData.EntityModels
 {

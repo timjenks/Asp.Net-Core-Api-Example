@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿#region Imports
+
+using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,6 +12,8 @@ using TodoApi.Models.ViewModels;
 using TodoApi.Services;
 using Xunit;
 
+#endregion
+
 namespace Tests.ServicesTests
 {
     /// <summary>
@@ -17,8 +21,14 @@ namespace Tests.ServicesTests
     /// </summary>
     public class TodoServiceTest
     {
+        #region Fields
+
         private readonly TodoService _service;
         private readonly AppDataContext _ctx;
+
+        #endregion
+
+        #region Constructors
 
         /// <summary>
         /// Before each.
@@ -29,6 +39,8 @@ namespace Tests.ServicesTests
             var userManager = new MockUserManager(_ctx);
             _service = new TodoService(_ctx, userManager, new MemoryCache(new MemoryCacheOptions()));
         }
+
+        #endregion
 
         #region GetTodo
 

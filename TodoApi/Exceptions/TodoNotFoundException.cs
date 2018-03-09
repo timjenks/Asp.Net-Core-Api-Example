@@ -1,4 +1,8 @@
-﻿using System;
+﻿#region Imports
+
+using System;
+
+#endregion
 
 namespace TodoApi.Exceptions
 {

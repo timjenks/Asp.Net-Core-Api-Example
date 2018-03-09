@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿#region Imports
+
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -15,6 +17,8 @@ using TodoApi.Models.EntityModels;
 using TodoApi.Models.ViewModels;
 using TodoApi.Services.Interfaces;
 
+#endregion
+
 namespace TodoApi.Services
 {
     /// <inheritdoc />
@@ -23,10 +27,17 @@ namespace TodoApi.Services
     /// </summary>
     public class AccountService : IAccountService
     {
+
+        #region Fields
+
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
         private readonly AppDataContext _db;
+
+        #endregion
+
+        #region Constructors 
 
         /// <summary>
         /// A constructor that injects SignInManager, UserManager, IConfiguration and AppDataContext.
@@ -48,6 +59,10 @@ namespace TodoApi.Services
             _db = db;
         }
 
+        #endregion
+
+        #region Login 
+
         /// <inheritdoc />
         /// <exception cref="LoginFailException">When user is not found</exception>
         public async Task<string> Login(LoginViewModel model)
@@ -64,6 +79,10 @@ namespace TodoApi.Services
             }
             return await GenerateJwtToken(appUser);
         }
+
+        #endregion
+
+        #region Register
 
         /// <inheritdoc />
         /// <exception cref="RegisterFailException">When email already in use</exception>
@@ -89,6 +108,8 @@ namespace TodoApi.Services
             await _db.SaveChangesAsync();
             return await GenerateJwtToken(user);
         }
+
+        #endregion
 
         #region Helpers
 

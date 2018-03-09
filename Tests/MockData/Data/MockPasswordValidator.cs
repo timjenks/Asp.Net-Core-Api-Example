@@ -1,9 +1,13 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿#region Imports
+
+using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TodoApi.Utils.Constants;
 using TodoApi.Models.EntityModels;
+
+#endregion
 
 namespace Tests.MockData.Data
 {
@@ -56,6 +60,8 @@ namespace Tests.MockData.Data
             return errors.Any() ? IdentityResult.Failed(errors.ToArray()) : IdentityResult.Success;
         }
 
+        #region Helpers
+
         /// <summary>
         /// Check if password contains the minimum amount of unique characters.
         /// </summary>
@@ -105,5 +111,7 @@ namespace Tests.MockData.Data
         {
             return !PasswordLimits.PasswordSettings.RequireNonAlphanumeric || !pw.All(char.IsLetterOrDigit);
         }
+
+        #endregion
     }
 }

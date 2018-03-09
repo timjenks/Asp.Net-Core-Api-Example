@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿#region Imports
+
+using Microsoft.AspNetCore.Identity;
+
+#endregion
 
 namespace Tests.MockData.EntityModels
 {
@@ -7,6 +11,8 @@ namespace Tests.MockData.EntityModels
     /// </summary>
     public static class MockRoles
     {
+        #region Data 
+
         /// <summary>
         /// The admin role.
         /// </summary>
@@ -28,5 +34,7 @@ namespace Tests.MockData.EntityModels
             Name = "User",
             NormalizedName = "USER"
         };
+
+        #endregion
     }
 }

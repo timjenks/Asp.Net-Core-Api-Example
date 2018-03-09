@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿#region Imports
+
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -7,6 +9,8 @@ using Moq;
 using System.Threading.Tasks;
 using Tests.MockData.EntityModels;
 using TodoApi.Models.EntityModels;
+
+#endregion
 
 namespace Tests.MockData.Data
 {
@@ -23,6 +27,8 @@ namespace Tests.MockData.Data
     /// </summary>
     public class MockSignInManager : SignInManager<ApplicationUser>
     {
+        #region Constructors
+
         /// <inheritdoc />
         /// <summary>
         /// Takes a usermanager but mocks all other object past to super class.
@@ -36,6 +42,8 @@ namespace Tests.MockData.Data
                   new Mock<ILogger<SignInManager<ApplicationUser>>>().Object,
                   new Mock<IAuthenticationSchemeProvider>().Object)
         { }
+
+        #endregion
 
         /// <inheritdoc />
         /// <summary>

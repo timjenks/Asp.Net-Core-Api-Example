@@ -1,4 +1,8 @@
-﻿using TodoApi.Models.EntityModels;
+﻿#region Imports
+
+using TodoApi.Models.EntityModels;
+
+#endregion
 
 namespace TodoApi.Models.DtoModels
 {
@@ -7,6 +11,27 @@ namespace TodoApi.Models.DtoModels
     /// </summary>
     public class ApplicationUserDto
     {
+        #region Fields
+
+        /// <summary>
+        /// A unique identifier for a user.
+        /// </summary>
+        public string Id { get; set; }
+
+        /// <summary>
+        /// A unique email for a user.
+        /// </summary>
+        public string Email { get; set; }
+
+        /// <summary>
+        /// The name of a user.
+        /// </summary>
+        public string Name { get; set; }
+
+        #endregion
+
+        #region Constructors 
+
         /// <summary>
         /// A no argument constructor.
         /// </summary>
@@ -23,19 +48,6 @@ namespace TodoApi.Models.DtoModels
             Id = string.Copy(user.Id);
         }
 
-        /// <summary>
-        /// A unique identifier for a user.
-        /// </summary>
-        public string Id { get; set; }
-
-        /// <summary>
-        /// A unique email for a user.
-        /// </summary>
-        public string Email { get; set; }
-
-        /// <summary>
-        /// The name of a user.
-        /// </summary>
-        public string Name { get; set; }
+        #endregion
     }
 }

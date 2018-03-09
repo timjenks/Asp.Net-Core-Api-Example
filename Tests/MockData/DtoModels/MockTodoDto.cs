@@ -1,6 +1,10 @@
-﻿using System;
+﻿#region Imports
+
+using System;
 using System.Collections.Generic;
 using TodoApi.Models.DtoModels;
+
+#endregion
 
 namespace Tests.MockData.DtoModels
 {

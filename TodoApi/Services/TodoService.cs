@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿#region Imports
+
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
@@ -14,6 +16,8 @@ using Microsoft.AspNetCore.Identity;
 using TodoApi.Services.Interfaces;
 using TodoApi.Utils.Constants;
 
+#endregion
+
 namespace TodoApi.Services
 {
     /// <inheritdoc />
@@ -22,9 +26,15 @@ namespace TodoApi.Services
     /// </summary>
     public class TodoService : ITodoService
     {
+        #region Fields
+
         private readonly AppDataContext _db;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMemoryCache _cache;
+
+        #endregion
+
+        #region Constructors 
 
         /// <summary>
         /// A constructor that injects AppDataContext, UserManager and MemoryCache.
@@ -44,6 +54,10 @@ namespace TodoApi.Services
             _cache = cache;
         }
 
+        #endregion
+
+        #region GetTodo
+
         /// <inheritdoc />
         /// <exception cref="TodoNotFoundException">When todo is not found</exception>
         public async Task<TodoDto> GetTodoByIdAsync(int todoId, string userId)
@@ -62,6 +76,10 @@ namespace TodoApi.Services
             return new TodoDto(todo);
         }
 
+        #endregion
+
+        #region GetAllTodos
+
         /// <inheritdoc />
         public async Task<IEnumerable<TodoDto>> GetAllTodosOrderedByDueAsync(
             string year, string month, string day, string userId)
@@ -77,6 +95,10 @@ namespace TodoApi.Services
                 new List<TodoDto>() :
                 await GetAllTodosForDayOrderedByDueAsync(date.Value, userId);
         }
+
+        #endregion
+
+        #region Create
 
         /// <inheritdoc />
         /// <exception cref="UserNotFoundException">When todo is not found</exception>
@@ -100,6 +122,10 @@ namespace TodoApi.Services
             return newTodo.Id;
         }
 
+        #endregion
+
+        #region Delete
+
         /// <inheritdoc />
         /// <exception cref="TodoNotFoundException">When todo is not found</exception>
         public async Task RemoveTodoByIdAsync(int todoId, string userId)
@@ -117,6 +143,10 @@ namespace TodoApi.Services
             _cache.Remove(CacheConstants.GetAllTodosCacheKey(userId));
             _cache.Remove(CacheConstants.GetAllTodosForDayCacheKey(userId, todo.Due));
         }
+
+        #endregion
+
+        #region Edit
 
         /// <inheritdoc />
         /// <exception cref="TodoNotFoundException">When todo is not found</exception>
@@ -141,6 +171,8 @@ namespace TodoApi.Services
                 _cache.Remove(CacheConstants.GetAllTodosForDayCacheKey(userId, todo.Due));
             }
         }
+
+        #endregion
 
         #region Helpers
 
@@ -169,6 +201,7 @@ namespace TodoApi.Services
         /// Filters the list by a date (ignoring time).
         /// </summary>
         /// <param name="date">Valid date to filter by</param>
+        /// <param name="userId">The token owner's id</param>
         /// <returns>List of todos</returns>
         private async Task<IEnumerable<TodoDto>> GetAllTodosForDayOrderedByDueAsync(DateTime date, string userId)
         {

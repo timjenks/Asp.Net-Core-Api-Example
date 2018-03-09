@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿#region Imports
+
+using Microsoft.AspNetCore.Identity;
+
+#endregion
 
 namespace Tests.MockData.Data
 {

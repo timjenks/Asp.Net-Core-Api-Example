@@ -1,5 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿#region Imports
+
+using System.Threading.Tasks;
 using TodoApi.Models.ViewModels;
+
+#endregion
 
 namespace TodoApi.Services.Interfaces
 {
