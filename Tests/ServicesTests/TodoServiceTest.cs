@@ -173,6 +173,45 @@ namespace Tests.ServicesTests
         }
 
         [Fact]
+        public async Task GetAllTodosOrderedByDueAsync_InvalidFilterYear_EmptyList()
+        {
+            // Arrange
+            var owner = MockApplicationUsers.Get(9);
+
+            // Act
+            var all = await _service.GetAllTodosOrderedByDueAsync("A", "2", "29", owner.Id);
+
+            // Assert
+            Assert.Empty(all);
+        }
+
+        [Fact]
+        public async Task GetAllTodosOrderedByDueAsync_InvalidFilterMonth_EmptyList()
+        {
+            // Arrange
+            var owner = MockApplicationUsers.Get(9);
+
+            // Act
+            var all = await _service.GetAllTodosOrderedByDueAsync("2000", "A", "29", owner.Id);
+
+            // Assert
+            Assert.Empty(all);
+        }
+
+        [Fact]
+        public async Task GetAllTodosOrderedByDueAsync_InvalidFilterDay_EmptyList()
+        {
+            // Arrange
+            var owner = MockApplicationUsers.Get(9);
+
+            // Act
+            var all = await _service.GetAllTodosOrderedByDueAsync("2000", "4", "A", owner.Id);
+
+            // Assert
+            Assert.Empty(all);
+        }
+
+        [Fact]
         public async Task GetAllTodosOrderedByDueAsync_ValidFilter_OnlyWithGivenDates()
         {
             // Arrange

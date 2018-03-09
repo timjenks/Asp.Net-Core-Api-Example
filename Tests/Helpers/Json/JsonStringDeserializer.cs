@@ -1,7 +1,5 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
 using TodoApi.Models.DtoModels;
 
 namespace Tests.Helpers.Json
@@ -12,7 +10,6 @@ namespace Tests.Helpers.Json
     /// </summary>
     public static class JsonStringSerializer
     {
-        private static readonly JsonSerializer Serializer = new JsonSerializer();
 
         /// <summary>
         /// Convert a string json body to an ApplicationUserDto.
@@ -21,7 +18,7 @@ namespace Tests.Helpers.Json
         /// <returns>An user extracted from the json object</returns>
         public static ApplicationUserDto GetApplicationUserDto(string body)
         {
-            return (ApplicationUserDto)Serializer
+            return (ApplicationUserDto)new JsonSerializer()
                 .Deserialize
                 (
                     new JTokenReader(JObject.Parse(body)), 
@@ -36,7 +33,7 @@ namespace Tests.Helpers.Json
         /// <returns>An array of users extracted from json</returns>
         public static ApplicationUserDto[] GetListOfApplicationUserDto(string body)
         {
-            return (ApplicationUserDto[])Serializer
+            return (ApplicationUserDto[])new JsonSerializer()
                     .Deserialize
                     (
                         new JTokenReader(JArray.Parse(body)),
@@ -51,7 +48,7 @@ namespace Tests.Helpers.Json
         /// <returns>A todo extracted from the json object</returns>
         public static TodoDto GetTodoDto(string body)
         {
-            return (TodoDto)Serializer
+            return (TodoDto)new JsonSerializer()
                 .Deserialize
                 (
                     new JTokenReader(JObject.Parse(body)),
@@ -66,7 +63,7 @@ namespace Tests.Helpers.Json
         /// <returns>A todo of users extracted from json</returns>
         public static TodoDto[] GetListOfTodoto(string body)
         {
-            return (TodoDto[])Serializer
+            return (TodoDto[])new JsonSerializer()
                     .Deserialize
                     (
                         new JTokenReader(JArray.Parse(body)),

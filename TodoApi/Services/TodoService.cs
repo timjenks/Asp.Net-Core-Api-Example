@@ -179,6 +179,7 @@ namespace TodoApi.Services
         /// <summary>
         /// Returns all todos with no filtering.
         /// </summary>
+        /// <param name="userId">The id of the tokwn owner</param>
         /// <returns>List of todos</returns>
         private async Task<IEnumerable<TodoDto>> GetAllTodosOrderedByDueWithNoFilterAsync(string userId)
         {
@@ -201,7 +202,7 @@ namespace TodoApi.Services
         /// Filters the list by a date (ignoring time).
         /// </summary>
         /// <param name="date">Valid date to filter by</param>
-        /// <param name="userId">The token owner's id</param>
+        /// <param name="userId">The id of the token owner</param>
         /// <returns>List of todos</returns>
         private async Task<IEnumerable<TodoDto>> GetAllTodosForDayOrderedByDueAsync(DateTime date, string userId)
         {

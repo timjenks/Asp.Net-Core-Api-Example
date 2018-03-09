@@ -190,7 +190,7 @@ namespace TodoApi
         /// <summary>
         /// Authorization filter for swagger to add authorization field to all requests.
         /// </summary>
-        private class AuthorizationInputOperationFilter : IOperationFilter
+        private abstract class AuthorizationInputOperationFilter : IOperationFilter
         {
             public void Apply(Operation operation, OperationFilterContext context)
             {

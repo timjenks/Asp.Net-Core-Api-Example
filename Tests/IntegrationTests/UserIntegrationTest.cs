@@ -136,8 +136,7 @@ namespace Tests.IntegrationTests
         public async Task GetAllUsers_NoToken_Unauthorized()
         {
             // Arrange
-            var userToFind = MockApplicationUsers.Get(4);
-            var path = Routes.UserRoute;
+            const string path = Routes.UserRoute;
 
             // Act
             var response = await _endSystems.Get(path);
@@ -154,7 +153,7 @@ namespace Tests.IntegrationTests
         {
             // Arrange
             var user = MockApplicationUsers.Get(5);
-            var path = Routes.UserRoute;
+            const string path = Routes.UserRoute;
             var token = await GetToken(user);
             _endSystems.SetBearerToken(token);
 
@@ -173,7 +172,7 @@ namespace Tests.IntegrationTests
         {
             // Arrange
             var requestingUser = MockApplicationUsers.Get(0);
-            var path = Routes.UserRoute;
+            const string path = Routes.UserRoute;
             var token = await GetToken(requestingUser);
             _endSystems.SetBearerToken(token);
             var expectedDtos = 

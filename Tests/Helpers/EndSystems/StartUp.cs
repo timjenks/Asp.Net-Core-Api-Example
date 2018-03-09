@@ -43,9 +43,14 @@ namespace Tests.Helpers.EndSystems
         /// <summary>
         /// Constructor for mock startup.
         /// </summary>
-        /// <param name="configuration">The configureation injected</param>
+        /// <param name="configuration">The configuration injected</param>
         public StartUp(IConfiguration configuration)
         {
+            if (configuration == null)
+            {
+                // Temp warning supression.
+                // TODO: remove configuration parameter
+            }
             Configuration = new MockConfiguration();
         }
 
@@ -77,7 +82,6 @@ namespace Tests.Helpers.EndSystems
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-
                 })
                 .AddJwtBearer(options =>
                 {
@@ -155,6 +159,7 @@ namespace Tests.Helpers.EndSystems
             {
                 db.UserRoles.Add(MockUserRoles.GetUserRoleForUser(user.Id));
             }
+
             db.Todo.AddRange(MockTodos.GetAll());
             db.SaveChanges();
         }
