@@ -43,14 +43,8 @@ namespace Tests.Helpers.EndSystems
         /// <summary>
         /// Constructor for mock startup.
         /// </summary>
-        /// <param name="configuration">The configuration injected</param>
-        public StartUp(IConfiguration configuration)
-        {
-            if (configuration == null)
-            {
-                // Temp warning supression.
-                // TODO: remove configuration parameter
-            }
+        public StartUp()
+        { 
             Configuration = new MockConfiguration();
         }
 
