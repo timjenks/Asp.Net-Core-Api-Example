@@ -21,6 +21,7 @@ using TodoApi.Services;
 using TodoApi.Services.Interfaces;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using Castle.Core.Logging;
 
 #endregion
 
@@ -113,6 +114,8 @@ namespace TodoApi
 
             services.AddMemoryCache();
 
+            
+
             #region Swagger
             services.AddSwaggerGen(c =>
             {
@@ -180,7 +183,7 @@ namespace TodoApi
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint(Routes.SwaggerRoute, "Todo Example API" );
-            }); 
+            });
         }
 
         #endregion
@@ -190,8 +193,13 @@ namespace TodoApi
         /// <summary>
         /// Authorization filter for swagger to add authorization field to all requests.
         /// </summary>
-        private abstract class AuthorizationInputOperationFilter : IOperationFilter
+        public class AuthorizationInputOperationFilter : IOperationFilter
         {
+            /// <summary>
+            /// TODO
+            /// </summary>
+            /// <param name="operation">TODO</param>
+            /// <param name="context">TODO</param>
             public void Apply(Operation operation, OperationFilterContext context)
             {
                 if (operation.Parameters == null)

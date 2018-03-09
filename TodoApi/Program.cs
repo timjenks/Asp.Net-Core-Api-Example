@@ -2,6 +2,9 @@
 
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using TodoApi.Data;
 
 #endregion
 
@@ -18,7 +21,19 @@ namespace TodoApi
         /// <param name="args">Command line arguments</param>
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            var host = BuildWebHost(args);
+            using (var scope = host.Services.CreateScope())
+            {
+                try
+                {
+                    var serviceProvider = scope.ServiceProvider.GetRequiredService<IServiceProvider>();
+                    Seed.CreateRoles(serviceProvider).Wait();
+                }
+                catch (Exception)
+                {
+                }
+            }
+            host.Run();
         }
 
         /// <summary>
