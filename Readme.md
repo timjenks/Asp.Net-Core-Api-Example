@@ -2,6 +2,12 @@
 
 Example restful api project in dotnet core.
 
+## Add migrations
+```sh
+Add-Migration <name> -o Data/Migrations
+Update-Database
+```
+
 ## Features
 - Authentication with bearer tokens
 - Role based authentication decorators
@@ -11,4 +17,4 @@ Example restful api project in dotnet core.
 - MS SQL server database
 - Swagger
 - 100% coverage in all layers
-- 100% coverage in integration tes
+- 100% coverage in integration test
