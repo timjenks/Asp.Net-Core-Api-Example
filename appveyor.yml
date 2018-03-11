@@ -12,11 +12,11 @@ branches:
   except:
   - gh-pages
 services:
-- mssql2016
+- mssql2017
 nuget:
   disable_publish_on_pr: true
 build_script:
-- cmd: build.cmd Pack
+- cmd: .\Build.ps1
 test: off
 artifacts:
 - path: artifacts/*.nupkg
