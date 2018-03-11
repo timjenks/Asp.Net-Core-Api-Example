@@ -26,8 +26,7 @@ namespace TodoApi
             {
                 try
                 {
-                    var serviceProvider = scope.ServiceProvider.GetRequiredService<IServiceProvider>();
-                    Seed.CreateRoles(serviceProvider).Wait();
+                    Seed.CreateAll(scope.ServiceProvider.GetRequiredService<IServiceProvider>()).Wait();
                 }
                 catch (Exception)
                 {

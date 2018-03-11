@@ -21,7 +21,6 @@ using TodoApi.Services;
 using TodoApi.Services.Interfaces;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using Castle.Core.Logging;
 
 #endregion
 
