@@ -1,0 +1,41 @@
+#######################################
+# Owner: https://github.com/quartznet #
+#######################################
+
+configuration: Release
+image: Visual Studio 2017
+  
+version: '{build}'
+pull_requests:
+  do_not_increment_build_number: true
+branches:
+  except:
+  - gh-pages
+services:
+- mssql2016
+nuget:
+  disable_publish_on_pr: true
+build_script:
+- cmd: build.cmd Pack
+test: off
+artifacts:
+- path: artifacts/*.nupkg
+  name: NuGet
+- path: artifacts/*.zip
+  name: Zip
+#deploy:
+#- provider: NuGet
+#  server: https://www.myget.org/F/quartznetdev/api/v2/package
+#  api_key:
+#    secure: XXX
+#  skip_symbols: true
+#  on:
+#    branch: master
+#- provider: NuGet
+#  name: production
+#  api_key:
+#    secure: XXX
+#  on:
+#    branch: master
+#    appveyor_repo_tag: true
+#
