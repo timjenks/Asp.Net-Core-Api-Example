@@ -15,8 +15,11 @@ services:
 - mssql2017
 nuget:
   disable_publish_on_pr: true
+dotnet_csproj:
+  patch: true
+  file: '**\*.csproj;**\*.props;**\*.fsproj;**\*.xml'
 build_script:
-- cmd: .\Build.ps1
+- ps: .\Build.ps1
 test: off
 artifacts:
 - path: artifacts/*.nupkg
