@@ -11,7 +11,6 @@ using TodoApi.Services.Interfaces;
 using System.Security.Claims;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using TodoApi.Models.DtoModels;
-using System.Collections.Generic;
 
 #endregion
 
@@ -21,9 +20,10 @@ namespace TodoApi.Controllers
     /// <summary>
     /// A controller for all todo related requests.
     /// </summary>
+    [SwaggerOperationFilter(typeof(Swagger.AuthorizationInputOperationFilter))]
     [Produces("application/json")]
-    [Route(Routes.TodoRoute)]
     [Authorize(Roles = "Admin, User")]
+    [Route(Routes.TodoRoute)]
     public class TodoController : Controller
     {
         #region Fields
@@ -86,7 +86,7 @@ namespace TodoApi.Controllers
         /// <response code="200">todos received</response>
         /// <response code="401">Token required</response>
         /// <returns>200 and a list of all of the todos</returns>
-        [SwaggerResponse(200, typeof(IEnumerable<TodoDto>))]
+        [SwaggerResponse(200, typeof(TodoDto[]))]
         [SwaggerResponse(401, typeof(void))]
         [HttpGet("")]
         public async Task<IActionResult> GetAllTodos(

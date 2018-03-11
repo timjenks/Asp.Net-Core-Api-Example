@@ -8,7 +8,6 @@ using TodoApi.Exceptions;
 using TodoApi.Services.Interfaces;
 using TodoApi.Models.DtoModels;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Collections.Generic;
 
 #endregion
 
@@ -18,6 +17,7 @@ namespace TodoApi.Controllers
     /// <summary>
     /// A controller for all user data related requests.
     /// </summary>
+    [SwaggerOperationFilter(typeof(Swagger.AuthorizationInputOperationFilter))]
     [Produces("application/json")]
     [Route(Routes.UserRoute)]
     [Authorize(Roles = "Admin")]
@@ -83,7 +83,7 @@ namespace TodoApi.Controllers
         /// <response code="401">Token required</response>
         /// <response code="403">Token owner does not have required access to this resource</response>
         /// <returns>200 and a list of user dto</returns>
-        [SwaggerResponse(200, typeof(IEnumerable<ApplicationUserDto>))]
+        [SwaggerResponse(200, typeof(ApplicationUserDto[]))]
         [SwaggerResponse(401, typeof(void))]
         [SwaggerResponse(403, typeof(void))]
         [HttpGet("")]
