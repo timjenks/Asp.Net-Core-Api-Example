@@ -63,7 +63,6 @@ namespace TodoApi
         {
             // DbContext 
             var connection = Configuration.GetConnectionString("DefaultConnection");
-
             services.AddDbContext<AppDataContext>(options =>
                 options.UseSqlServer(connection, b => b.MigrationsAssembly("TodoApi")));
 
@@ -74,6 +73,7 @@ namespace TodoApi
             }).AddEntityFrameworkStores<AppDataContext>().AddDefaultTokenProviders();
 
             #region JWT
+
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             services
                 .AddAuthentication(options =>
@@ -100,6 +100,7 @@ namespace TodoApi
                         ClockSkew = TimeSpan.Zero
                     };
                 });
+
             #endregion
 
             // Inject services
@@ -113,9 +114,8 @@ namespace TodoApi
 
             services.AddMemoryCache();
 
-            
-
             #region Swagger
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc
@@ -147,6 +147,7 @@ namespace TodoApi
                 c.IncludeXmlComments(filePath);
                 c.OperationFilter<AuthorizationInputOperationFilter>();
             });
+
             #endregion
         }
 
@@ -195,10 +196,10 @@ namespace TodoApi
         public class AuthorizationInputOperationFilter : IOperationFilter
         {
             /// <summary>
-            /// TODO
+            /// Add Authorization parameter to swagger requests.
             /// </summary>
-            /// <param name="operation">TODO</param>
-            /// <param name="context">TODO</param>
+            /// <param name="operation">Swagger operation</param>
+            /// <param name="context">Swagger context</param>
             public void Apply(Operation operation, OperationFilterContext context)
             {
                 if (operation.Parameters == null)

@@ -21,18 +21,7 @@ namespace TodoApi
         /// <param name="args">Command line arguments</param>
         public static void Main(string[] args)
         {
-            var host = BuildWebHost(args);
-            using (var scope = host.Services.CreateScope())
-            {
-                try
-                {
-                    Seed.CreateAll(scope.ServiceProvider.GetRequiredService<IServiceProvider>()).Wait();
-                }
-                catch (Exception)
-                {
-                }
-            }
-            host.Run();
+            StartUpSeed(BuildWebHost(args)).Run();
         }
 
         /// <summary>
@@ -44,5 +33,28 @@ namespace TodoApi
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
                 .Build();
+
+        /// <summary>
+        /// Seeds on startup.
+        /// </summary>
+        /// <param name="host">Injected IWebHost for services</param>
+        /// <returns>The same IWebHost is returned for chaining</returns>
+        private static IWebHost StartUpSeed(IWebHost host)
+        {
+            try
+            {
+                using (var scope = host.Services.CreateScope())
+                {
+                    Seed.CreateAll
+                    (
+                        scope.ServiceProvider.GetRequiredService<IServiceProvider>()
+                    ).Wait();
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return host;
+        }
     }
 }
