@@ -2,6 +2,9 @@
 
 A simple example restful api project in dotnet core.
 
+## Badges
+[![Build status](https://ci.appveyor.com/api/projects/status/0g549qq2uoxb914b?svg=true)](https://ci.appveyor.com/project/JonSteinn/asp-net-core-api-example)
+
 ## Migrations and database
 From root folder:
 ```sh
