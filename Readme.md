@@ -35,3 +35,19 @@ Service | 33
 Controller | 27
 Integration | 54
 Total | 168
+
+## Get Started
+
+Update database connection string  
+  
+Run migrations
+
+    cd TodoApi
+    dotnet ef migrations add init -o Data/Migrations
+    dotnet ef database update
+
+Test
+
+    dotnet run
+
+    http://localhost:5000/swagger
